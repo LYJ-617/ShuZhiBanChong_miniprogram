@@ -1,0 +1,16 @@
+{
+  "description": "养宠日志小程序项目配置",
+  "setting": {
+    "useCompilerPlugins": ["typescript", "less"],
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true
+  },
+  "appid": "",
+  "projectname": "pet-log-miniprogram",
+  "libVersion": "2.29.2",
+  "packOptions": {
+    "ignore": []
+  }
+}

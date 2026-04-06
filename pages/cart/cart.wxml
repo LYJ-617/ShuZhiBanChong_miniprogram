@@ -1,0 +1,47 @@
+<view class="container">
+  <!-- 购物车列表 -->
+  <view class="cart-list">
+    <view wx:for="{{cartItems}}" wx:key="cartItemId" class="cart-item">
+      <view class="item-checkbox">
+        <checkbox checked="{{item.selected}}" bindtap="toggleItemSelection" data-id="{{item.cartItemId}}" />
+      </view>
+      <image src="{{item.image}}" mode="aspectFill" class="item-image" catchtap="goToProductDetail" data-id="{{item.id}}" />
+      <view class="item-info">
+        <view class="item-name">{{item.name}}</view>
+        <view class="item-spec" wx:if="{{item.spec}}">规格：{{item.spec}}</view>
+        <view class="item-footer">
+          <view class="item-price">¥{{item.price}}</view>
+          <view class="quantity-control">
+            <text class="quantity-btn" catchtap="decreaseQuantity" data-id="{{item.cartItemId}}">-</text>
+            <text class="quantity-value">{{item.quantity}}</text>
+            <text class="quantity-btn" catchtap="increaseQuantity" data-id="{{item.cartItemId}}">+</text>
+          </view>
+        </view>
+      </view>
+      <text class="delete-btn" catchtap="deleteItem" data-id="{{item.cartItemId}}">🗑️</text>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{cartItems.length === 0}}" class="empty-cart">
+    <text class="empty-icon">🛒</text>
+    <text class="empty-text">购物车还是空的</text>
+    <button class="go-shopping-btn" catchtap="goToMall">去逛逛</button>
+  </view>
+
+  <!-- 底部结算栏 -->
+  <view class="checkout-bar" wx:if="{{cartItems.length > 0}}">
+    <view class="select-all-wrapper">
+      <checkbox checked="{{allSelected}}" bindtap="toggleSelectAll" />
+      <text class="select-all-text">全选</text>
+    </view>
+    <view class="checkout-info">
+      <view class="total-price">
+        <text class="total-label">合计：</text>
+        <text class="total-value">¥{{selectedTotal}}</text>
+      </view>
+      <text class="item-count">已选{{selectedCount}}件</text>
+    </view>
+    <button class="checkout-btn" bindtap="checkout">结算({{selectedCount}})</button>
+  </view>
+</view>

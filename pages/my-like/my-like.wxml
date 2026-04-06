@@ -1,0 +1,22 @@
+<view class="my-like-page">
+  <!-- 点赞列表 -->
+  <view class="like-list">
+    <view class="like-item" wx:for="{{likeList}}" wx:key="id" data-id="{{item.id}}" bindtap="goToDetail">
+      <view class="item-cover">
+        <image wx:if="{{item.cover}}" src="{{item.cover}}" mode="aspectFill"></image>
+        <text wx:else>❤️</text>
+      </view>
+      <view class="item-info">
+        <text class="item-title">{{item.title}}</text>
+        <text class="item-time">{{item.likeTime}}</text>
+      </view>
+      <view class="cancel-btn" data-id="{{item.id}}" catchtap="cancelLike">取消</view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{likeList.length === 0}}">
+    <text class="empty-icon">❤️</text>
+    <text class="empty-text">你还没有点赞过任何内容</text>
+  </view>
+</view>

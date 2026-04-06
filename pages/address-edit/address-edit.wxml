@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="form-group">
+    <view class="form-item">
+      <text class="item-label">收货人</text>
+      <input class="item-input" placeholder="请输入收货人姓名" value="{{formData.name}}" bindinput="onNameInput"></input>
+    </view>
+    <view class="form-item">
+      <text class="item-label">手机号</text>
+      <input class="item-input" type="number" placeholder="请输入手机号" value="{{formData.phone}}" bindinput="onPhoneInput" maxlength="11"></input>
+    </view>
+    <view class="form-item">
+      <text class="item-label">省市区</text>
+      <view class="item-input region-input" bindtap="selectRegion">
+        <text class="input-value {{!formData.region ? 'placeholder' : ''}}">{{formData.region || '请选择省市区'}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="item-label">详细地址</text>
+      <textarea class="item-textarea" placeholder="请输入详细地址，如街道、楼牌号等" value="{{formData.detail}}" bindinput="onDetailInput" maxlength="100"></textarea>
+    </view>
+    <view class="form-item switch-item">
+      <text class="item-label">设为默认地址</text>
+      <switch class="item-switch" checked="{{formData.isDefault}}" bindchange="onDefaultChange"></switch>
+    </view>
+  </view>
+
+  <view class="btn-group">
+    <view class="save-btn" bindtap="saveAddress">
+      <text class="save-text">保存</text>
+    </view>
+  </view>
+</view>

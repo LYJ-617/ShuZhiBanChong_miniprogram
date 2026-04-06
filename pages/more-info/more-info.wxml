@@ -1,0 +1,127 @@
+<view class="container">
+  <view class="form-group">
+    <view class="form-label">性别</view>
+    <view class="form-input-group">
+      <view class="radio-group">
+        <view class="radio-item {{userInfo.gender === '男' ? 'active' : ''}}" bindtap="selectGender" data-value="男">
+          <text class="radio-icon">{{userInfo.gender === '男' ? '●' : '○'}}</text>
+          <text class="radio-text">男</text>
+        </view>
+        <view class="radio-item {{userInfo.gender === '女' ? 'active' : ''}}" bindtap="selectGender" data-value="女">
+          <text class="radio-icon">{{userInfo.gender === '女' ? '●' : '○'}}</text>
+          <text class="radio-text">女</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-group">
+    <view class="form-label">地区</view>
+    <view class="form-input" bindtap="selectRegion">
+      <text class="input-value {{!userInfo.region ? 'placeholder' : ''}}">{{userInfo.region || '请选择地区'}}</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <view class="form-group">
+    <view class="form-label">个性签名</view>
+    <view class="form-textarea">
+      <textarea class="textarea-input" placeholder="请输入个性签名" value="{{userInfo.signature}}" bindinput="onSignatureInput" maxlength="50"></textarea>
+      <text class="char-count">{{signatureLength}}/50</text>
+    </view>
+  </view>
+
+  <view class="form-group">
+    <view class="form-label">生日</view>
+    <view class="form-input" bindtap="showYearPicker">
+      <text class="input-value {{!userInfo.birthday ? 'placeholder' : ''}}">{{userInfo.birthday || '请选择生日'}}</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <view class="save-btn" bindtap="saveInfo">
+    <text class="save-text">保存</text>
+  </view>
+
+  <!-- 年份选择器 -->
+  <view wx:if="{{showYearPickerFlag}}" class="picker-popup" catchtap="hideYearPicker">
+    <view class="picker-content" catchtap="">
+      <view class="picker-header">
+        <text class="picker-title">选择年份</text>
+        <text class="picker-close" bindtap="hideYearPicker">✕</text>
+      </view>
+      <scroll-view class="picker-scroll" scroll-y>
+        <view wx:for="{{yearList}}" wx:key="*this" class="picker-item" bindtap="selectYear" data-year="{{item}}">
+          <text class="picker-text">{{item}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 月份选择器 -->
+  <view wx:if="{{showMonthPickerFlag}}" class="picker-popup" catchtap="hideMonthPicker">
+    <view class="picker-content" catchtap="">
+      <view class="picker-header">
+        <text class="picker-title">选择月份</text>
+        <text class="picker-close" bindtap="hideMonthPicker">✕</text>
+      </view>
+      <scroll-view class="picker-scroll" scroll-y>
+        <view wx:for="{{monthList}}" wx:key="*this" class="picker-item" bindtap="selectMonth" data-month="{{item}}">
+          <text class="picker-text">{{item}}月</text>
+          <text class="arrow">›</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 日期选择器 -->
+  <view wx:if="{{showDayPickerFlag}}" class="picker-popup" catchtap="hideDayPicker">
+    <view class="picker-content" catchtap="">
+      <view class="picker-header">
+        <text class="picker-title">选择日期</text>
+        <text class="picker-close" bindtap="hideDayPicker">✕</text>
+      </view>
+      <scroll-view class="picker-scroll" scroll-y>
+        <view wx:for="{{dayList}}" wx:key="*this" class="picker-item" bindtap="selectDay" data-day="{{item}}">
+          <text class="picker-text">{{item}}日</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 地区选择器 -->
+  <view wx:if="{{showRegionPickerFlag}}" class="picker-popup" catchtap="hideRegionPicker">
+    <view class="picker-content" catchtap="">
+      <view class="picker-header">
+        <text class="picker-title">选择地区</text>
+        <text class="picker-close" bindtap="hideRegionPicker">✕</text>
+      </view>
+      <view class="region-tabs">
+        <view class="region-tab {{regionTab === 0 ? 'active' : ''}}" bindtap="switchRegionTab" data-tab="0">
+          <text class="tab-text">省</text>
+        </view>
+        <view class="region-tab {{regionTab === 1 ? 'active' : ''}}" bindtap="switchRegionTab" data-tab="1">
+          <text class="tab-text">市</text>
+        </view>
+        <view class="region-tab {{regionTab === 2 ? 'active' : ''}}" bindtap="switchRegionTab" data-tab="2">
+          <text class="tab-text">区</text>
+        </view>
+      </view>
+      <scroll-view class="picker-scroll" scroll-y>
+        <view wx:if="{{regionTab === 0}}" wx:for="{{provinces}}" wx:key="*this" class="picker-item {{selectedProvince === item ? 'selected' : ''}}" bindtap="selectProvince" data-province="{{item}}">
+          <text class="picker-text">{{item}}</text>
+          <text wx:if="{{selectedProvince === item}}" class="picker-check">✓</text>
+        </view>
+        <view wx:if="{{regionTab === 1}}" wx:for="{{cities}}" wx:key="*this" class="picker-item {{selectedCity === item ? 'selected' : ''}}" bindtap="selectCity" data-city="{{item}}">
+          <text class="picker-text">{{item}}</text>
+          <text wx:if="{{selectedCity === item}}" class="picker-check">✓</text>
+        </view>
+        <view wx:if="{{regionTab === 2}}" wx:for="{{districts}}" wx:key="*this" class="picker-item {{selectedDistrict === item ? 'selected' : ''}}" bindtap="selectDistrict" data-district="{{item}}">
+          <text class="picker-text">{{item}}</text>
+          <text wx:if="{{selectedDistrict === item}}" class="picker-check">✓</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

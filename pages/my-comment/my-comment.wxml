@@ -1,0 +1,24 @@
+<view class="my-comment-page">
+  <!-- 评论列表 -->
+  <view class="comment-list">
+    <view class="comment-item" wx:for="{{commentList}}" wx:key="id">
+      <view class="comment-content">
+        <text class="comment-text">{{item.content}}</text>
+        <view class="comment-meta">
+          <text class="comment-time">{{item.createTime}}</text>
+          <text class="post-title">评论了: {{item.postTitle}}</text>
+        </view>
+      </view>
+      <view class="comment-actions">
+        <text class="detail-btn" data-post-id="{{item.postId}}" bindtap="goToDetail">查看</text>
+        <text class="delete-btn" data-id="{{item.id}}" catchtap="deleteComment">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{commentList.length === 0}}">
+    <text class="empty-icon">💬</text>
+    <text class="empty-text">你还没有发表过评论</text>
+  </view>
+</view>

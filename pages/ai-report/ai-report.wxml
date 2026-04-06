@@ -1,0 +1,70 @@
+<view class="container">
+  <view class="pet-selector">
+    <view class="tag-list">
+      <view wx:for="{{petList}}" wx:key="id" class="tag {{selectedPetId === item.id ? 'active' : ''}}" bindtap="selectPet" data-pet-id="{{item.id}}">{{item.petName}}</view>
+    </view>
+  </view>
+  <view wx:if="{{report}}" class="report-container">
+    <view class="report-header">
+      <text class="report-title">{{report.petName}}的AI健康分析报告</text>
+      <view class="risk-level level-{{report.riskLevel}}">
+        风险等级：{{report.riskLevel === 'low' ? '低风险' : report.riskLevel === 'medium' ? '中风险' : '高风险'}}
+      </view>
+    </view>
+
+    <view class="report-section" wx:if="{{report.tips.length > 0}}">
+      <view class="section-title">健康提示</view>
+      <view class="tips-list">
+        <view wx:for="{{report.tips}}" wx:key="*this" class="tip-item">
+          <text class="tip-dot">•</text>
+          <text class="tip-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="report-section" wx:if="{{report.possibleDiseases.length > 0}}">
+      <view class="section-title">可能疾病风险</view>
+      <view class="disease-list">
+        <view wx:for="{{report.possibleDiseases}}" wx:key="*this" class="disease-item">
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="report-section" wx:if="{{report.recommendProducts && report.recommendProducts.length > 0}}">
+      <view class="section-title">推荐商品</view>
+      <view class="product-list">
+        <view wx:for="{{report.recommendProducts}}" wx:key="*this" class="product-tag">
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <view class="report-section" wx:if="{{report.recommendDoctors && report.recommendDoctors.length > 0}}">
+      <view class="section-title">推荐专家</view>
+      <view class="doctor-list">
+        <view wx:for="{{report.recommendDoctors}}" wx:key="*this" class="doctor-tag">
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <view class="report-section" wx:if="{{report.recommendHospitals && report.recommendHospitals.length > 0}}">
+      <view class="section-title">推荐医院</view>
+      <view class="hospital-list">
+        <view wx:for="{{report.recommendHospitals}}" wx:key="*this" class="hospital-tag">
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <view class="disclaimer">
+      <view class="disclaimer-title">免责声明</view>
+      <text class="disclaimer-text">以上AI分析结果仅供参考，不能替代专业医疗诊断。具体用药请务必咨询专业兽医，在专业指导下进行。</text>
+    </view>
+  </view>
+  <view wx:else class="empty-tip">
+    <text>请选择宠物并生成报告</text>
+  </view>
+  <button class="btn" bindtap="generateReport" disabled="{{!selectedPetId}}">生成AI分析报告</button>
+</view>

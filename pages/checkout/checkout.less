@@ -1,0 +1,280 @@
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 120rpx;
+}
+
+/* 地址信息 */
+.address-section {
+  background-color: #fff;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.address-info {
+  display: flex;
+  align-items: center;
+}
+
+.address-header {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 12rpx;
+}
+
+.address-name {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.address-phone {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.address-detail {
+  flex: 1;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.address-arrow {
+  font-size: 32rpx;
+  color: #999;
+  margin-left: 16rpx;
+}
+
+.no-address {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx 0;
+}
+
+.no-address-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 商品列表 */
+.products-section,
+.payment-section {
+  background-color: #fff;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+}
+
+.order-products {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.order-product-item {
+  display: flex;
+  gap: 20rpx;
+}
+
+.product-image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-name {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.product-spec {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12rpx;
+}
+
+.product-price {
+  font-size: 28rpx;
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.product-quantity {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 优惠信息 */
+.coupon-section,
+.fee-section,
+.remark-section {
+  background-color: #fff;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.coupon-row,
+.fee-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 0;
+}
+
+.coupon-label,
+.fee-label {
+  font-size: 26rpx;
+  color: #333;
+}
+
+.coupon-value,
+.fee-value {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.fee-value.discount {
+  color: #FF6B6B;
+}
+
+.points-switch {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.points-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 备注 */
+.remark-input {
+  width: 100%;
+  min-height: 120rpx;
+  padding: 16rpx;
+  background-color: #f8f8f8;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+/* 支付方式 */
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.payment-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  background-color: #f8f8f8;
+  border-radius: 12rpx;
+  border: 2rpx solid transparent;
+
+  &.active {
+    border-color: #FF6B6B;
+    background-color: #fff5f5;
+  }
+}
+
+.payment-left {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.payment-icon {
+  font-size: 40rpx;
+}
+
+.payment-name {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.payment-check {
+  font-size: 32rpx;
+  color: #FF6B6B;
+}
+
+/* 底部提交栏 */
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 24rpx;
+  background-color: #fff;
+  border-top: 1rpx solid #f0f0f0;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+  z-index: 999;
+}
+
+.submit-left {
+  flex: 1;
+}
+
+.total-price {
+  display: flex;
+  align-items: baseline;
+}
+
+.price-label {
+  font-size: 26rpx;
+  color: #333;
+}
+
+.price-value {
+  font-size: 40rpx;
+  color: #FF6B6B;
+  font-weight: bold;
+  margin-left: 4rpx;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+  border: none;
+  border-radius: 30rpx;
+  padding: 16rpx 48rpx;
+  font-size: 28rpx;
+  line-height: 1;
+}

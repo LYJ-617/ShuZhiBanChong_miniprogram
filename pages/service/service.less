@@ -1,0 +1,154 @@
+.container {
+  padding: 20rpx;
+}
+
+.pet-selector {
+  margin-bottom: 30rpx;
+}
+
+.tag-list {
+  display: flex;
+  gap: 16rpx;
+  overflow-x: auto;
+  padding: 8rpx 0;
+}
+
+.tag {
+  padding: 12rpx 24rpx;
+  background: #f5f5f5;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #666;
+  white-space: nowrap;
+}
+
+.tag.active {
+  background: #3cc51f;
+  color: #fff;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+}
+
+.service-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx 20rpx;
+  background: #f8f8f8;
+  border-radius: 12rpx;
+}
+
+.service-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-bottom: 16rpx;
+}
+
+.service-icon.mall-icon {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+}
+
+.service-icon.consult-icon {
+  background: linear-gradient(135deg, #4ECDC4, #6EE7DE);
+}
+
+.service-icon.reservation-icon {
+  background: linear-gradient(135deg, #95E1D3, #B8E6D8);
+}
+
+.service-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.recommendation-section {
+  margin-top: 40rpx;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.product-list,
+.doctor-list,
+.hospital-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.product-item,
+.doctor-item,
+.hospital-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+}
+
+.product-info,
+.doctor-info,
+.hospital-info {
+  flex: 1;
+}
+
+.product-name,
+.doctor-name,
+.hospital-name {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.product-reason,
+.doctor-specialty,
+.hospital-distance {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.product-right {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.product-price {
+  font-size: 32rpx;
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.buy-btn,
+.consult-btn,
+.reserve-btn {
+  padding: 12rpx 32rpx;
+  background: #3cc51f;
+  color: #fff;
+  border: none;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+}
+
+.consult-btn {
+  background: #4ECDC4;
+}
+
+.reserve-btn {
+  background: #95E1D3;
+}

@@ -1,0 +1,37 @@
+<view class="consult-list-page">
+  <!-- 状态标签 -->
+  <view class="tabs">
+    <view class="tab-item {{activeTab === 'all' ? 'active' : ''}}" data-tab="all" bindtap="switchTab">全部</view>
+    <view class="tab-item {{activeTab === 'pending_reply' ? 'active' : ''}}" data-tab="pending_reply" bindtap="switchTab">待回复</view>
+    <view class="tab-item {{activeTab === 'completed' ? 'active' : ''}}" data-tab="completed" bindtap="switchTab">已完成</view>
+    <view class="tab-item {{activeTab === 'cancelled' ? 'active' : ''}}" data-tab="cancelled" bindtap="switchTab">已取消</view>
+  </view>
+
+  <!-- 问诊列表 -->
+  <view class="consult-list">
+    <view class="consult-item" wx:for="{{consultList}}" wx:key="id" data-id="{{item.id}}" bindtap="goToDetail">
+      <view class="expert-info">
+        <view class="expert-avatar">
+          <text>{{item.expertAvatar || '👨‍⚕️'}}</text>
+        </view>
+        <view class="expert-detail">
+          <text class="expert-name">{{item.expertName}}</text>
+          <text class="consult-time">{{item.createTime}}</text>
+        </view>
+        <view class="consult-status {{item.status}}">
+          <text>{{item.statusText}}</text>
+        </view>
+      </view>
+      <view class="consult-content">
+        <text>{{item.content}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{consultList.length === 0}}">
+    <text class="empty-icon">👨‍⚕️</text>
+    <text class="empty-text">暂无问诊记录</text>
+    <view class="empty-btn" bindtap="goToConsult">去问诊</view>
+  </view>
+</view>

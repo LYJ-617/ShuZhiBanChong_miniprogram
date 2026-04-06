@@ -1,0 +1,29 @@
+<view class="coupon-list-page">
+  <!-- 分类标签 -->
+  <view class="tabs">
+    <view class="tab-item {{activeTab === 'coupon' ? 'active' : ''}}" data-tab="coupon" bindtap="switchTab">优惠券</view>
+    <view class="tab-item {{activeTab === 'member' ? 'active' : ''}}" data-tab="member" bindtap="switchTab">会员卡</view>
+    <view class="tab-item {{activeTab === 'trial' ? 'active' : ''}}" data-tab="trial" bindtap="switchTab">体验券</view>
+  </view>
+
+  <!-- 卡券列表 -->
+  <view class="coupon-list">
+    <view class="coupon-item" wx:for="{{couponList}}" wx:key="id">
+      <view class="coupon-left">
+        <text class="coupon-value">¥{{item.value}}</text>
+        <text class="coupon-condition">{{item.condition}}</text>
+      </view>
+      <view class="coupon-right">
+        <text class="coupon-name">{{item.name}}</text>
+        <text class="coupon-expire">有效期至 {{item.expireTime}}</text>
+        <view class="use-btn" data-id="{{item.id}}" bindtap="useCoupon">立即使用</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{couponList.length === 0}}">
+    <text class="empty-icon">🎫</text>
+    <text class="empty-text">暂无可用卡券</text>
+  </view>
+</view>

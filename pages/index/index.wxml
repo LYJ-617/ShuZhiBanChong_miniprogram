@@ -1,0 +1,66 @@
+<view class="container">
+  <view class="welcome-section">
+    <text class="welcome-text">欢迎回来，{{username || '养宠达人'}}</text>
+  </view>
+
+  <view class="reminder-section">
+    <view class="section-header">
+      <text class="section-title">日程提醒</text>
+      <text class="add-btn" bindtap="addReminder">+ 添加</text>
+    </view>
+    <view class="reminder-list">
+      <view wx:for="{{reminders}}" wx:key="id" class="reminder-item">
+        <text class="reminder-text">{{item.content}}</text>
+        <view class="reminder-right">
+          <text class="reminder-time">{{item.time}}</text>
+          <text class="delete-btn" catchtap="deleteReminder" data-id="{{item.id}}">删除</text>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{reminders.length === 0}}" class="empty-reminder">
+      <text>暂无提醒，点击上方"添加"设置日程</text>
+    </view>
+  </view>
+
+  <view class="core-feature">
+    <view class="feature-card primary" bindtap="goToLog">
+      <view class="feature-icon">📝</view>
+      <view class="feature-info">
+        <text class="feature-title">养宠日志</text>
+        <text class="feature-desc">记录毛孩子每一天的成长</text>
+      </view>
+      <text class="feature-arrow">→</text>
+      <view class="tip-badge" wx:if="{{hasUnrecorded}}">
+        今天还没有记录毛孩子的状态哦~
+      </view>
+    </view>
+  </view>
+
+  <view class="function-section">
+    <view class="section-header">
+      <text class="section-title">更多服务</text>
+    </view>
+    <view class="function-grid">
+      <view class="function-item" bindtap="goToService">
+        <view class="function-icon service-icon">🛒</view>
+        <text class="function-text">服务</text>
+        <text class="function-desc">商城·问诊·预约</text>
+      </view>
+      <view class="function-item" bindtap="goToCommunity">
+        <view class="function-icon community-icon">💬</view>
+        <text class="function-text">社区</text>
+        <text class="function-desc">分享·交流</text>
+      </view>
+      <view class="function-item" bindtap="goToMine">
+        <view class="function-icon mine-icon">👤</view>
+        <text class="function-text">我的</text>
+        <text class="function-desc">个人信息</text>
+      </view>
+      <view class="function-item" bindtap="goToService">
+        <view class="function-icon report-icon">📊</view>
+        <text class="function-text">AI分析</text>
+        <text class="function-desc">健康报告</text>
+      </view>
+    </view>
+  </view>
+</view>

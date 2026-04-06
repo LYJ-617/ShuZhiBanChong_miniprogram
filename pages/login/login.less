@@ -1,0 +1,120 @@
+.container {
+  min-height: 100vh;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+
+// 顶部 Logo 和标题
+.header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 120px;
+  margin-bottom: 60px;
+}
+
+.logo-wrapper {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+}
+
+.title-wrapper {
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.4;
+}
+
+// 协议复选框
+.agreement-section {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #999;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+
+  &.checked {
+    background-color: #07c160;
+    border-color: #07c160;
+  }
+}
+
+.check-icon {
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.agreement-text {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+// 登录按钮
+.button-section {
+  width: 100%;
+}
+
+.login-btn {
+  width: 100%;
+  height: 50px;
+  border-radius: 25px;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.3s ease;
+
+  &.active {
+    background-color: #07c160;
+    color: #fff;
+
+    &:active {
+      background-color: #06ad56;
+      transform: scale(0.98);
+    }
+  }
+
+  &.disabled {
+    background-color: #e5e5e5;
+    color: #999;
+  }
+}

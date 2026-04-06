@@ -1,0 +1,30 @@
+<view class="my-favorite-page">
+  <!-- 分类标签 -->
+  <view class="tabs">
+    <view class="tab-item {{activeTab === 'community' ? 'active' : ''}}" data-tab="community" bindtap="switchTab">社区动态</view>
+    <view class="tab-item {{activeTab === 'product' ? 'active' : ''}}" data-tab="product" bindtap="switchTab">商品</view>
+    <view class="tab-item {{activeTab === 'expert' ? 'active' : ''}}" data-tab="expert" bindtap="switchTab">兽医专家</view>
+    <view class="tab-item {{activeTab === 'shop' ? 'active' : ''}}" data-tab="shop" bindtap="switchTab">线下商家</view>
+  </view>
+
+  <!-- 收藏列表 -->
+  <view class="favorite-list">
+    <view class="favorite-item" wx:for="{{favorites}}" wx:key="id" data-id="{{item.id}}" data-type="{{item.type}}" bindtap="goToDetail">
+      <view class="item-cover">
+        <image wx:if="{{item.cover}}" src="{{item.cover}}" mode="aspectFill"></image>
+        <text wx:else>📷</text>
+      </view>
+      <view class="item-info">
+        <text class="item-title">{{item.title}}</text>
+        <text class="item-desc">{{item.desc}}</text>
+      </view>
+      <view class="cancel-btn" data-id="{{item.id}}" catchtap="cancelFavorite">取消</view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{favorites.length === 0}}">
+    <text class="empty-icon">⭐</text>
+    <text class="empty-text">暂无收藏内容</text>
+  </view>
+</view>

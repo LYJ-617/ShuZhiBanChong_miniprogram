@@ -1,0 +1,181 @@
+<view class="mine-page">
+  <!-- 顶部个人信息卡片 -->
+  <view class="user-card" bindtap="goToProfile">
+    <view class="avatar-wrapper" bindtap="chooseAvatar">
+      <image wx:if="{{userInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="avatar-img" mode="aspectFill"></image>
+      <view wx:else class="avatar-placeholder">
+        <text>🐾</text>
+      </view>
+      <view class="avatar-edit-icon">✎</view>
+    </view>
+    <view class="user-info">
+      <text class="username">{{userInfo && userInfo.username || '未登录'}}</text>
+      <text class="phone">{{userInfo && userInfo.maskedPhone || '绑定手机号'}}</text>
+    </view>
+    <view class="arrow-icon">›</view>
+  </view>
+
+  <!-- 核心业务功能列表 -->
+  <view class="menu-section">
+    <!-- 第一组：宠物核心管理 -->
+    <view class="menu-group">
+      <view class="menu-item" data-url="/pages/pet-list/pet-list" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">🐶</text>
+          <text class="menu-text">我的宠物</text>
+        </view>
+        <view class="menu-right">
+          <text class="menu-hint">{{petCount > 0 ? '已绑定 ' + petCount + ' 只' : '去添加'}}</text>
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 第二组：内容与互动管理 -->
+    <view class="menu-group">
+      <view class="group-title">内容与互动</view>
+      <view class="menu-item" data-url="/pages/my-logs/my-logs" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">📔</text>
+          <text class="menu-text">我的日志</text>
+        </view>
+        <view class="menu-right">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-url="/pages/my-favorite/my-favorite" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">⭐</text>
+          <text class="menu-text">我的收藏</text>
+        </view>
+        <view class="menu-right">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-url="/pages/my-like/my-like" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">❤️</text>
+          <text class="menu-text">我的点赞</text>
+        </view>
+        <view class="menu-right">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-url="/pages/my-comment/my-comment" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">💬</text>
+          <text class="menu-text">我的评论</text>
+        </view>
+        <view class="menu-right">
+          <view wx:if="{{hasUnreadComment}}" class="unread-dot"></view>
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 第三组：服务与订单管理 -->
+    <view class="menu-group">
+      <view class="group-title">服务与订单</view>
+      <view class="menu-item" data-url="/pages/order-list/order-list" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">🛍️</text>
+          <text class="menu-text">我的订单</text>
+        </view>
+        <view class="menu-right">
+          <view wx:if="{{hasUnreadOrder}}" class="unread-dot"></view>
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-url="/pages/consult-list/consult-list" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">👨‍⚕️</text>
+          <text class="menu-text">我的问诊</text>
+        </view>
+        <view class="menu-right">
+          <view wx:if="{{hasUnreadConsult}}" class="unread-dot"></view>
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-url="/pages/appointment-list/appointment-list" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">📅</text>
+          <text class="menu-text">我的预约</text>
+        </view>
+        <view class="menu-right">
+          <view wx:if="{{hasUnreadAppointment}}" class="unread-dot"></view>
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-url="/pages/coupon-list/coupon-list" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">🎫</text>
+          <text class="menu-text">我的卡券</text>
+        </view>
+        <view class="menu-right">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 第四组：设置与合规管理 -->
+    <view class="menu-group">
+      <view class="group-title">设置</view>
+      <view class="menu-item" data-url="/pages/notification-setting/notification-setting" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">🔔</text>
+          <text class="menu-text">消息通知</text>
+        </view>
+        <view class="menu-right">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-url="/pages/help-center/help-center" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">❓</text>
+          <text class="menu-text">帮助与客服</text>
+        </view>
+        <view class="menu-right">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-url="/pages/about/about" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">ℹ️</text>
+          <text class="menu-text">关于我们</text>
+        </view>
+        <view class="menu-right">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-url="/pages/account-security/account-security" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">🛡️</text>
+          <text class="menu-text">账号与安全</text>
+        </view>
+        <view class="menu-right">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+      <view class="menu-item" data-type="agreement" bindtap="handleMenuTap">
+        <view class="menu-left">
+          <text class="menu-icon">📄</text>
+          <text class="menu-text">合规协议</text>
+        </view>
+        <view class="menu-right">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部退出登录 -->
+  <view class="logout-btn" bindtap="handleLogout" wx:if="{{userInfo}}">
+    <text>退出登录</text>
+  </view>
+
+  <!-- 未登录提示 -->
+  <view class="login-prompt" wx:if="{{!userInfo}}">
+    <text>登录后可查看更多功能</text>
+    <view class="login-btn" bindtap="goToLogin">立即登录</view>
+  </view>
+</view>

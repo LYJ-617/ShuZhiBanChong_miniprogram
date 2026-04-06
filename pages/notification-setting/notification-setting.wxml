@@ -1,0 +1,50 @@
+<view class="notification-setting-page">
+  <view class="setting-list">
+    <view class="setting-item">
+      <view class="setting-left">
+        <text class="setting-icon">👍</text>
+        <text class="setting-text">点赞通知</text>
+      </view>
+      <switch checked="{{notifications.like}}" data-key="like" bindchange="toggleNotification" color="#07c160"/>
+    </view>
+    <view class="setting-item">
+      <view class="setting-left">
+        <text class="setting-icon">💬</text>
+        <text class="setting-text">评论通知</text>
+      </view>
+      <switch checked="{{notifications.comment}}" data-key="comment" bindchange="toggleNotification" color="#07c160"/>
+    </view>
+    <view class="setting-item">
+      <view class="setting-left">
+        <text class="setting-icon">👨‍⚕️</text>
+        <text class="setting-text">问诊回复</text>
+      </view>
+      <switch checked="{{notifications.consultReply}}" data-key="consultReply" bindchange="toggleNotification" color="#07c160"/>
+    </view>
+    <view class="setting-item">
+      <view class="setting-left">
+        <text class="setting-icon">📅</text>
+        <text class="setting-text">预约状态变更</text>
+      </view>
+      <switch checked="{{notifications.appointmentChange}}" data-key="appointmentChange" bindchange="toggleNotification" color="#07c160"/>
+    </view>
+    <view class="setting-item">
+      <view class="setting-left">
+        <text class="setting-icon">⏰</text>
+        <text class="setting-text">日程提醒</text>
+      </view>
+      <switch checked="{{notifications.scheduleReminder}}" data-key="scheduleReminder" bindchange="toggleNotification" color="#07c160"/>
+    </view>
+    <view class="setting-item">
+      <view class="setting-left">
+        <text class="setting-icon">🎫</text>
+        <text class="setting-text">优惠推送</text>
+      </view>
+      <switch checked="{{notifications.couponPush}}" data-key="couponPush" bindchange="toggleNotification" color="#07c160"/>
+    </view>
+  </view>
+
+  <view class="tip">
+    <text>关闭开关后将不再接收对应通知</text>
+  </view>
+</view>

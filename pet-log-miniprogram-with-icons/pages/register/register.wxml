@@ -1,0 +1,58 @@
+<view class="container">
+  <view class="title">欢迎注册养宠日志</view>
+  <view class="input-group">
+    <input class="input" placeholder="请输入用户名" bindinput="onUsernameInput" value="{{username}}" />
+  </view>
+  <view class="pet-section">
+    <view class="section-title">宠物信息</view>
+    <view wx:for="{{petList}}" wx:key="id" class="pet-item">
+      <view class="pet-header">
+        <text>宠物{{index + 1}}</text>
+        <button size="mini" bindtap="removePet" data-index="{{index}}">删除</button>
+      </view>
+      <input class="input" placeholder="请输入宠物名" bindinput="onPetNameInput" data-index="{{index}}" value="{{item.petName}}" />
+      <view class="tag-group">
+        <text class="section-subtitle">种类</text>
+        <view class="tag-list">
+          <view class="tag {{item.type === '猫' ? 'active' : ''}}" bindtap="selectPetType" data-index="{{index}}" data-type="猫">猫</view>
+          <view class="tag {{item.type === '狗' ? 'active' : ''}}" bindtap="selectPetType" data-index="{{index}}" data-type="狗">狗</view>
+          <view class="tag {{item.type === '其他' ? 'active' : ''}}" bindtap="selectPetType" data-index="{{index}}" data-type="其他">其他</view>
+        </view>
+      </view>
+      <view class="tag-group">
+        <text class="section-subtitle">品种</text>
+        <view class="tag-list">
+          <view class="tag {{item.breed === '英短' ? 'active' : ''}}" bindtap="selectPetBreed" data-index="{{index}}" data-breed="英短">英短</view>
+          <view class="tag {{item.breed === '金毛' ? 'active' : ''}}" bindtap="selectPetBreed" data-index="{{index}}" data-breed="金毛">金毛</view>
+          <view class="tag {{item.breed === '其他' ? 'active' : ''}}" bindtap="selectPetBreed" data-index="{{index}}" data-breed="其他">其他</view>
+        </view>
+      </view>
+      <view class="tag-group">
+        <text class="section-subtitle">性别</text>
+        <view class="tag-list">
+          <view class="tag {{item.gender === '公' ? 'active' : ''}}" bindtap="selectPetGender" data-index="{{index}}" data-gender="公">公</view>
+          <view class="tag {{item.gender === '母' ? 'active' : ''}}" bindtap="selectPetGender" data-index="{{index}}" data-gender="母">母</view>
+        </view>
+      </view>
+      <input class="input" placeholder="请输入生日（YYYY-MM-DD）" bindinput="onPetBirthdayInput" data-index="{{index}}" value="{{item.birthday}}" />
+      <view class="tag-group">
+        <text class="section-subtitle">性格</text>
+        <view class="tag-list">
+          <view class="tag {{item.personality === '活泼' ? 'active' : ''}}" bindtap="selectPetPersonality" data-index="{{index}}" data-personality="活泼">活泼</view>
+          <view class="tag {{item.personality === '温顺' ? 'active' : ''}}" bindtap="selectPetPersonality" data-index="{{index}}" data-personality="温顺">温顺</view>
+          <view class="tag {{item.personality === '胆小' ? 'active' : ''}}" bindtap="selectPetPersonality" data-index="{{index}}" data-personality="胆小">胆小</view>
+        </view>
+      </view>
+      <view class="tag-group">
+        <text class="section-subtitle">喜好</text>
+        <view class="tag-list">
+          <view class="tag {{item.hobby === '吃零食' ? 'active' : ''}}" bindtap="selectPetHobby" data-index="{{index}}" data-hobby="吃零食">吃零食</view>
+          <view class="tag {{item.hobby === '玩玩具' ? 'active' : ''}}" bindtap="selectPetHobby" data-index="{{index}}" data-hobby="玩玩具">玩玩具</view>
+          <view class="tag {{item.hobby === '睡觉' ? 'active' : ''}}" bindtap="selectPetHobby" data-index="{{index}}" data-hobby="睡觉">睡觉</view>
+        </view>
+      </view>
+    </view>
+    <button class="btn add-pet-btn" bindtap="addPet">添加宠物</button>
+  </view>
+  <button class="btn submit-btn" bindtap="submitRegister" disabled="{{!canSubmit}}">注册</button>
+</view>

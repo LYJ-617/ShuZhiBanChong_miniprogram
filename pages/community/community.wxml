@@ -1,0 +1,211 @@
+<view class="container">
+  <!-- 顶部搜索栏 -->
+  <view class="header">
+    <view class="search-bar">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" placeholder="搜索帖子、话题" placeholder-class="search-placeholder" bindinput="onSearchInput" />
+    </view>
+    <view class="header-right">
+      <text class="icon-btn" bindtap="showNotifications">🔔</text>
+    </view>
+  </view>
+
+  <!-- 分类标签 -->
+  <view class="category-tabs">
+    <scroll-view scroll-x class="category-scroll" show-scrollbar="{{false}}">
+      <view class="tab {{selectedTag === '' ? 'active' : ''}}" bindtap="selectTag" data-tag="">
+        <text class="tab-text">关注</text>
+      </view>
+      <view class="tab {{selectedTag === '全部' ? 'active' : ''}}" bindtap="selectTag" data-tag="全部">
+        <text class="tab-text">发现</text>
+      </view>
+      <view class="tab {{selectedTag === '日常记录' ? 'active' : ''}}" bindtap="selectTag" data-tag="日常记录">
+        <text class="tab-text">日常</text>
+      </view>
+      <view class="tab {{selectedTag === '医疗知识' ? 'active' : ''}}" bindtap="selectTag" data-tag="医疗知识">
+        <text class="tab-text">医疗</text>
+      </view>
+      <view class="tab {{selectedTag === '好物分享' ? 'active' : ''}}" bindtap="selectTag" data-tag="好物分享">
+        <text class="tab-text">好物</text>
+      </view>
+      <view class="tab {{selectedTag === '科普知识' ? 'active' : ''}}" bindtap="selectTag" data-tag="科普知识">
+        <text class="tab-text">科普</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 瀑布流内容 -->
+  <scroll-view scroll-y class="content-scroll" bindscrolltolower="loadMore">
+    <view class="waterfall">
+      <view class="waterfall-left">
+        <view wx:for="{{leftPosts}}" wx:key="id" class="card" bindtap="goToPostDetail" data-post-id="{{item.id}}">
+          <!-- 卡片图片区域 -->
+          <view class="card-image" wx:if="{{item.images && item.images.length > 0}}">
+            <image src="{{item.images[0]}}" mode="aspectFill" class="post-image"></image>
+            <view wx:if="{{item.images.length > 1}}" class="image-count">
+              <text>{{item.images.length}}图</text>
+            </view>
+          </view>
+
+          <!-- 卡片内容 -->
+          <view class="card-body">
+            <text class="card-title">{{item.title || item.content}}</text>
+            <view class="card-user">
+              <image class="card-avatar" src="{{item.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill"></image>
+              <text class="card-username">{{item.username}}</text>
+              <view class="card-stats">
+                <text class="stat">❤️ {{item.likeCount}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="waterfall-right">
+        <view wx:for="{{rightPosts}}" wx:key="id" class="card" bindtap="goToPostDetail" data-post-id="{{item.id}}">
+          <!-- 卡片图片区域 -->
+          <view class="card-image" wx:if="{{item.images && item.images.length > 0}}">
+            <image src="{{item.images[0]}}" mode="aspectFill" class="post-image"></image>
+            <view wx:if="{{item.images.length > 1}}" class="image-count">
+              <text>{{item.images.length}}图</text>
+            </view>
+          </view>
+
+          <!-- 卡片内容 -->
+          <view class="card-body">
+            <text class="card-title">{{item.title || item.content}}</text>
+            <view class="card-user">
+              <image class="card-avatar" src="{{item.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill"></image>
+              <text class="card-username">{{item.username}}</text>
+              <view class="card-stats">
+                <text class="stat">❤️ {{item.likeCount}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && leftPosts.length === 0 && rightPosts.length === 0}}" class="empty-state">
+      <image class="empty-image" src="/static/empty.png" mode="aspectFit"></image>
+      <text class="empty-text">暂无内容</text>
+      <text class="empty-sub">快来发布第一篇帖子吧~</text>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
+  <!-- 浮动发布按钮 -->
+  <view class="fab-publish" bindtap="showPublishModal">
+    <text class="fab-icon">✏️</text>
+  </view>
+
+  <!-- 发布帖子弹窗 -->
+  <view wx:if="{{publishModalVisible}}" class="modal-mask" bindtap="hidePublishModal">
+    <view class="publish-modal" catchtap="">
+      <view class="publish-header">
+        <text class="publish-title">发布帖子</text>
+        <text class="publish-close" bindtap="hidePublishModal">✕</text>
+      </view>
+      <scroll-view class="publish-content" scroll-y>
+        <community-publish bind:postData="onPostDataChange" />
+      </scroll-view>
+      <view class="publish-footer">
+        <button class="publish-submit" bindtap="submitPost">发布</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 帖子详情弹窗 -->
+  <view wx:if="{{showDetailModal}}" class="detail-modal-mask" bindtap="hideDetailModal">
+    <view class="detail-modal" catchtap="">
+      <scroll-view class="detail-content" scroll-y>
+        <view class="detail-header">
+          <view class="detail-user">
+            <image class="detail-avatar" src="{{currentDetailPost.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill"></image>
+            <view class="user-details">
+              <text class="detail-username">{{currentDetailPost.username}}</text>
+              <text class="detail-time">{{formatTime(currentDetailPost.createTime)}}</text>
+            </view>
+          </view>
+          <text class="detail-close" catchtap="hideDetailModal">✕</text>
+        </view>
+
+        <!-- 详情图片 -->
+        <view class="detail-images" wx:if="{{currentDetailPost.images && currentDetailPost.images.length > 0}}">
+          <image wx:for="{{currentDetailPost.images}}" wx:key="*this" src="{{item}}" mode="widthFix" class="detail-image"></image>
+        </view>
+
+        <view class="detail-main-content">
+          <text class="detail-title">{{currentDetailPost.title}}</text>
+          <text class="detail-text">{{currentDetailPost.content}}</text>
+        </view>
+
+        <view class="detail-tags" wx:if="{{currentDetailPost.tags && currentDetailPost.tags.length > 0}}">
+          <text class="detail-tag" wx:for="{{currentDetailPost.tags}}" wx:key="*this">#{{item}}</text>
+        </view>
+
+        <view class="detail-stats">
+          <text>{{currentDetailPost.createTime}}</text>
+          <text>{{currentDetailPost.views || 0}}浏览</text>
+        </view>
+
+        <view class="detail-actions">
+          <view class="detail-action {{currentDetailPost.isLiked ? 'liked' : ''}}" catchtap="likePost" data-post-id="{{currentDetailPost.id}}">
+            <text class="detail-action-icon">❤️</text>
+            <text class="detail-action-text">{{currentDetailPost.isLiked ? '已喜欢' : '喜欢'}} {{currentDetailPost.likeCount}}</text>
+          </view>
+          <view class="detail-action" catchtap="sharePost">
+            <text class="detail-action-icon">📤</text>
+            <text class="detail-action-text">分享</text>
+          </view>
+          <view class="detail-action {{currentDetailPost.isCollected ? 'collected' : ''}}" catchtap="collectPost" data-post-id="{{currentDetailPost.id}}">
+            <text class="detail-action-icon">{{currentDetailPost.isCollected ? '⭐' : '☆'}}</text>
+            <text class="detail-action-text">收藏</text>
+          </view>
+          <view class="detail-action" wx:if="{{userInfo && currentDetailPost.userId === userInfo.id}}" catchtap="deletePost" data-post-id="{{currentDetailPost.id}}">
+            <text class="detail-action-icon">🗑️</text>
+            <text class="detail-action-text">删除</text>
+          </view>
+        </view>
+
+        <view class="detail-comments-section">
+          <view class="comments-title">评论 {{currentDetailPost.comments ? currentDetailPost.comments.length : 0}}</view>
+          <view class="comments-list">
+            <view class="comment-item" wx:for="{{currentDetailPost.comments}}" wx:key="id" wx:for-item="comment">
+              <image class="comment-avatar" src="{{comment.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill"></image>
+              <view class="comment-main">
+                <view class="comment-user">
+                  <text class="comment-username">{{comment.username}}</text>
+                  <text class="comment-time">{{formatTime(comment.createTime)}}</text>
+                </view>
+                <text class="comment-text">{{comment.content}}</text>
+                <view class="comment-actions">
+                  <view class="comment-like {{comment.likedBy && comment.likedBy.includes(userInfo.id) ? 'liked' : ''}}" catchtap="likeComment" data-post-id="{{currentDetailPost.id}}" data-comment-id="{{comment.id}}">
+                    <text class="comment-like-icon">❤️</text>
+                    <text class="comment-like-count">{{comment.likeCount}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view wx:if="{{!currentDetailPost.comments || currentDetailPost.comments.length === 0}}" class="comments-empty">
+              <text>还没有评论，快来抢沙发~</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="detail-footer">
+        <view class="detail-input-wrapper">
+          <input class="detail-input" placeholder="写下你的评论..." placeholder-class="detail-input-placeholder" bindinput="onDetailCommentInput" value="{{detailCommentText}}" />
+          <button class="detail-send-btn" bindtap="submitDetailComment" disabled="{{!detailCommentText}}">发送</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

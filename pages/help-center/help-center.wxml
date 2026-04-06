@@ -1,0 +1,25 @@
+<view class="help-center-page">
+  <!-- 搜索框 -->
+  <view class="search-box">
+    <input class="search-input" placeholder="搜索常见问题" bindinput="onSearch" value="{{searchQuery}}"/>
+  </view>
+
+  <!-- FAQ 分类 -->
+  <view class="faq-section">
+    <view class="faq-category" wx:for="{{faqList}}" wx:key="category">
+      <view class="category-title">{{item.category}}</view>
+      <view class="faq-list">
+        <view class="faq-item" wx:for="{{item.questions}}" wx:for-item="q" wx:key="q">
+          <view class="question">{{q.q}}</view>
+          <view class="answer">{{q.a}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-actions">
+    <button class="contact-btn" bindtap="contactCustomerService">在线客服</button>
+    <button class="feedback-btn" bindtap="goToFeedback">意见反馈</button>
+  </view>
+</view>

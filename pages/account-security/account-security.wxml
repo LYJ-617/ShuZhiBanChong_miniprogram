@@ -1,0 +1,24 @@
+<view class="account-security-page">
+  <view class="section">
+    <view class="section-title">账号信息</view>
+    <view class="info-item">
+      <text class="label">绑定的手机号</text>
+      <view class="value-row">
+        <text class="value">{{phone}}</text>
+        <text class="change-btn" bindtap="changePhone">更换</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">账号管理</view>
+    <view class="danger-item" bindtap="accountCancellation">
+      <text class="danger-text">账号注销</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <view class="tip">
+    <text>账号注销后，所有数据将被永久清除，无法恢复</text>
+  </view>
+</view>

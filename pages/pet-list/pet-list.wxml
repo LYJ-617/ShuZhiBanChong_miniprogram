@@ -1,0 +1,32 @@
+<view class="pet-list-page">
+  <!-- 顶部添加按钮 -->
+  <view class="header">
+    <view class="add-btn" bindtap="goToAddPet">
+      <text class="add-icon">+</text>
+      <text>添加宠物</text>
+    </view>
+  </view>
+
+  <!-- 宠物列表 -->
+  <view class="pet-list" wx:if="{{petList.length > 0}}">
+    <view class="pet-card" wx:for="{{petList}}" wx:key="id" data-id="{{item.id}}" bindtap="goToPetDetail">
+      <view class="pet-avatar">
+        <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill"></image>
+        <text wx:else>🐾</text>
+      </view>
+      <view class="pet-info">
+        <text class="pet-name">{{item.petName}}</text>
+        <text class="pet-breed">{{item.type}} - {{item.breed}}</text>
+        <text class="pet-gender">{{item.gender === 'male' ? '♂' : '♀'}}</text>
+      </view>
+      <view class="edit-btn" data-id="{{item.id}}" catchtap="goToPetDetail">编辑</view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:else>
+    <text class="empty-icon">🐶</text>
+    <text class="empty-text">还没有添加宠物</text>
+    <view class="empty-btn" bindtap="goToAddPet">添加宠物</view>
+  </view>
+</view>

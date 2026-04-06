@@ -1,0 +1,18 @@
+<view class="about-page">
+  <view class="logo-section">
+    <view class="logo">
+      <text>🐾</text>
+    </view>
+    <text class="app-name">数智伴宠</text>
+    <text class="version">版本 {{version}}</text>
+  </view>
+
+  <view class="intro-section">
+    <text class="intro-title">关于我们</text>
+    <text class="intro-text">数智伴宠是一款专注于宠物健康管理的智能小程序，为宠物主人提供全方位的养宠服务。</text>
+  </view>
+
+  <view class="update-btn" bindtap="checkUpdate">
+    <text>检查更新</text>
+  </view>
+</view>

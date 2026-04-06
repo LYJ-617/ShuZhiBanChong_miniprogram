@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="service-grid">
+    <view class="service-item" bindtap="goToMall">
+      <view class="service-icon mall-icon"></view>
+      <text class="service-text">商城</text>
+    </view>
+    <view class="service-item" bindtap="goToConsult">
+      <view class="service-icon consult-icon"></view>
+      <text class="service-text">线上问诊</text>
+    </view>
+    <view class="service-item" bindtap="goToReservation">
+      <view class="service-icon reservation-icon"></view>
+      <text class="service-text">服务预约</text>
+    </view>
+  </view>
+
+  <view class="recommendation-section" wx:if="{{recommendProducts.length > 0}}">
+    <view class="section-title">为您推荐</view>
+    <view class="product-list">
+      <view wx:for="{{recommendProducts}}" wx:key="id" class="product-item">
+        <view class="product-name">{{item.name}}</view>
+        <view class="product-price">¥{{item.price}}</view>
+        <button class="buy-btn">立即购买</button>
+      </view>
+    </view>
+  </view>
+</view>

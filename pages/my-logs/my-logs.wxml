@@ -1,0 +1,31 @@
+<view class="my-logs-page">
+  <!-- 筛选标签 -->
+  <view class="filter-tabs">
+    <view class="tab-item {{filterType === 'all' ? 'active' : ''}}" data-type="all" bindtap="switchFilter">全部</view>
+    <view class="tab-item {{filterType === 'private' ? 'active' : ''}}" data-type="private" bindtap="switchFilter">私人</view>
+    <view class="tab-item {{filterType === 'community' ? 'active' : ''}}" data-type="community" bindtap="switchFilter">社区</view>
+  </view>
+
+  <!-- 日志列表 -->
+  <view class="log-list">
+    <view class="log-item" wx:for="{{logList}}" wx:key="id" data-id="{{item.id}}" bindtap="goToLogDetail">
+      <view class="log-content">
+        <text class="log-text">{{item.content}}</text>
+        <view class="log-meta">
+          <text class="log-time">{{item.createTime}}</text>
+          <text class="log-type">{{item.isPrivate ? '私人' : '社区'}}</text>
+        </view>
+      </view>
+      <view class="log-actions">
+        <text class="delete-btn" data-id="{{item.id}}" catchtap="deleteLog">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{logList.length === 0}}">
+    <text class="empty-icon">📔</text>
+    <text class="empty-text">你还没有发布过日志，快去记录毛孩子的日常吧</text>
+    <view class="empty-btn" bindtap="goToPublishLog">去发布</view>
+  </view>
+</view>

@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="header">
+    <button class="publish-btn" bindtap="showPublishModal">发布日志</button>
+    <button class="report-btn" bindtap="goToAiReport">查看AI分析报告</button>
+  </view>
+  <view class="pet-selector">
+    <view class="tag-list">
+      <view class="tag {{selectedPetId === '' ? 'active' : ''}}" bindtap="selectPet" data-pet-id="">全部宠物</view>
+      <view wx:for="{{petList}}" wx:key="id" class="tag {{selectedPetId === item.id ? 'active' : ''}}" bindtap="selectPet" data-pet-id="{{item.id}}">{{item.petName}}</view>
+    </view>
+  </view>
+  <view class="log-list">
+    <view wx:for="{{logList}}" wx:key="id" class="log-item">
+      <view class="log-header">
+        <text class="pet-name">{{getPetName(item.petId)}}</text>
+        <text class="log-time">{{formatTime(item.createTime)}}</text>
+      </view>
+      <view class="log-content">{{item.content}}</view>
+      <view class="log-tags">
+        <view class="tag" wx:for="{{item.tags}}" wx:key="*this">#{{item}}</view>
+      </view>
+      <view class="log-publish-to">
+        <text>发布到：</text>
+        <text wx:for="{{item.publishTo}}" wx:key="*this">{{item === 'petLog' ? '宠物日志' : '社区'}}</text>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{logList.length === 0}}" class="empty-tip">
+    <text>还没有日志哦，快去记录吧~</text>
+  </view>
+</view>
+
+<modal title="发布养宠日志" hidden="{{!publishModalVisible}}" confirm-text="发布" cancel-text="取消" bindconfirm="submitLog" bindcancel="hidePublishModal">
+  <log-publish bind:logData="onLogDataChange" />
+</modal>

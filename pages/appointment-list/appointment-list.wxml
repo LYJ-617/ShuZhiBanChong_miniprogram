@@ -1,0 +1,39 @@
+<view class="appointment-list-page">
+  <!-- 状态标签 -->
+  <view class="tabs">
+    <view class="tab-item {{activeTab === 'all' ? 'active' : ''}}" data-tab="all" bindtap="switchTab">全部</view>
+    <view class="tab-item {{activeTab === 'pending_confirm' ? 'active' : ''}}" data-tab="pending_confirm" bindtap="switchTab">待确认</view>
+    <view class="tab-item {{activeTab === 'confirmed' ? 'active' : ''}}" data-tab="confirmed" bindtap="switchTab">已确认</view>
+    <view class="tab-item {{activeTab === 'completed' ? 'active' : ''}}" data-tab="completed" bindtap="switchTab">已完成</view>
+    <view class="tab-item {{activeTab === 'cancelled' ? 'active' : ''}}" data-tab="cancelled" bindtap="switchTab">已取消</view>
+  </view>
+
+  <!-- 预约列表 -->
+  <view class="appointment-list">
+    <view class="appointment-item" wx:for="{{appointmentList}}" wx:key="id" data-id="{{item.id}}" bindtap="goToDetail">
+      <view class="shop-info">
+        <view class="shop-avatar">
+          <text>{{item.shopAvatar || '🏪'}}</text>
+        </view>
+        <view class="shop-detail">
+          <text class="shop-name">{{item.shopName}}</text>
+          <text class="service-name">{{item.serviceName}}</text>
+        </view>
+        <view class="appointment-status {{item.status}}">
+          <text>{{item.statusText}}</text>
+        </view>
+      </view>
+      <view class="appointment-time">
+        <text class="time-label">预约时间：</text>
+        <text class="time-value">{{item.appointmentTime}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{appointmentList.length === 0}}">
+    <text class="empty-icon">📅</text>
+    <text class="empty-text">暂无预约记录</text>
+    <view class="empty-btn" bindtap="goToAppointment">去预约</view>
+  </view>
+</view>
