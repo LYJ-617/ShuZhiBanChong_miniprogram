@@ -1,4 +1,4 @@
-import { getCommunityPosts, addCommunityPost } from '../../utils/api.js';
+const { getCommunityPosts, addCommunityPost } = require('../../utils/api.js');
 
 Page({
   data: {

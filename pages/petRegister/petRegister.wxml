@@ -1,0 +1,110 @@
+<!-- pages/petRegister/petRegister.wxml -->
+<view class="register-container">
+  <form bindsubmit="submitForm">
+    <!-- 宠物名称 -->
+    <view class="form-item">
+      <view class="form-label">宠物名称 <text class="required">*</text></view>
+      <input 
+        class="form-input" 
+        name="petName" 
+        placeholder="请输入宠物名称" 
+        value="{{formData.petName}}"
+        bindinput="onInputChange"
+        data-name="petName"
+      />
+    </view>
+
+    <!-- 宠物种类（单级picker） -->
+    <view class="form-item">
+      <view class="form-label">宠物种类 <text class="required">*</text></view>
+      <picker 
+        mode="selector" 
+        range="{{petTypeList}}" 
+        value="{{formData.petTypeIndex}}"
+        bindchange="onPetTypeChange"
+      >
+        <view class="picker-content">
+          <text class="{{formData.petTypeIndex === -1 ? 'placeholder' : 'picker-text'}}">
+            {{formData.petTypeIndex === -1 ? '请选择宠物种类' : petTypeList[formData.petTypeIndex]}}
+          </text>
+          <text class="arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 宠物品种（二级联动，根据种类动态加载） -->
+    <view class="form-item">
+      <view class="form-label">宠物品种 <text class="required">*</text></view>
+      <picker 
+        mode="selector" 
+        range="{{currentBreedList}}" 
+        value="{{formData.breedIndex}}"
+        bindchange="onBreedChange"
+        disabled="{{formData.petTypeIndex === -1}}"
+      >
+        <view class="picker-content {{formData.petTypeIndex === -1 ? 'disabled' : ''}}">
+          <text class="{{formData.breedIndex === -1 ? 'placeholder' : 'picker-text'}}">
+            {{formData.breedIndex === -1 ? '请先选择宠物种类' : currentBreedList[formData.breedIndex]}}
+          </text>
+          <text class="arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 宠物性别（单级picker） -->
+    <view class="form-item">
+      <view class="form-label">性别 <text class="required">*</text></view>
+      <picker 
+        mode="selector" 
+        range="{{genderList}}" 
+        value="{{formData.genderIndex}}"
+        bindchange="onGenderChange"
+      >
+        <view class="picker-content">
+          <text class="{{formData.genderIndex === -1 ? 'placeholder' : 'picker-text'}}">
+            {{formData.genderIndex === -1 ? '请选择宠物性别' : genderList[formData.genderIndex]}}
+          </text>
+          <text class="arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 宠物生日（日期选择器） -->
+    <view class="form-item">
+      <view class="form-label">生日 <text class="required">*</text></view>
+      <picker 
+        mode="date" 
+        value="{{formData.birthday}}"
+        bindchange="onBirthdayChange"
+        fields="day"
+        end="{{today}}"
+      >
+        <view class="picker-content">
+          <text class="{{!formData.birthday ? 'placeholder' : 'picker-text'}}">
+            {{!formData.birthday ? '请选择宠物生日' : formData.birthday}}
+          </text>
+          <text class="arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 性格/喜好（选填） -->
+    <view class="form-item">
+      <view class="form-label">性格/喜好 <text class="optional">（选填）</text></view>
+      <textarea 
+        class="form-textarea" 
+        name="petHobby" 
+        placeholder="请输入宠物的性格、喜好等信息"
+        value="{{formData.petHobby}}"
+        bindinput="onInputChange"
+        data-name="petHobby"
+        maxlength="200"
+        auto-height
+      />
+      <view class="char-count">{{formData.petHobby.length}}/200</view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <button class="submit-btn" form-type="submit">完成注册，进入首页</button>
+  </form>
+</view>

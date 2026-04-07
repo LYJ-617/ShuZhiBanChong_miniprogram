@@ -1,17 +1,9 @@
-/**
- * 数智伴宠小程序 - 宠物种类-品种完整数据库
- * 数据结构：宠物大类 → 宠物小类 → 品种列表
- * 管控类品种已标注，可通过isControlBreed函数判断
- */
-
-// 类型定义
 export interface PetSpeciesMap {
-  [大类: string]: {
-    [小类: string]: string[];
+  [category: string]: {
+    [type: string]: string[];
   };
 }
 
-// 完整宠物种类-品种数据库
 export const petSpeciesMap: PetSpeciesMap = {
   "哺乳类": {
     "犬科（狗）": [
@@ -92,88 +84,20 @@ export const petSpeciesMap: PetSpeciesMap = {
   }
 };
 
-/**
- * 工具函数：获取所有宠物大类列表
- * @returns 宠物大类数组
- */
 export const getPetCategoryList = (): string[] => {
   return Object.keys(petSpeciesMap);
 };
 
-/**
- * 工具函数：根据宠物大类，获取对应的宠物小类列表
- * @param category 宠物大类
- * @returns 宠物小类数组
- */
 export const getPetTypeList = (category: string): string[] => {
   if (!category || !petSpeciesMap[category]) return [];
   return Object.keys(petSpeciesMap[category]);
 };
 
-/**
- * 工具函数：根据宠物大类+小类，获取对应的品种列表
- * @param category 宠物大类
- * @param type 宠物小类
- * @returns 品种名称数组
- */
 export const getPetBreedList = (category: string, type: string): string[] => {
   if (!category || !type || !petSpeciesMap[category]?.[type]) return [];
   return petSpeciesMap[category][type];
 };
 
-/**
- * 工具函数：判断品种是否为管控类
- * @param breedName 品种名称
- * @returns 是否为管控类
- */
 export const isControlBreed = (breedName: string): boolean => {
   return breedName.includes("（管控）");
-};
-
-/**
- * 工具函数：获取完整的三级联动数据
- * @returns 适用于picker的二维数组
- */
-export const getPetPickerData = (): string[][] => {
-  const categories = getPetCategoryList();
-  const pickerData: string[][] = [];
-  
-  categories.forEach(category => {
-    const types = getPetTypeList(category);
-    types.forEach(type => {
-      pickerData.push([category, type]);
-    });
-  });
-  
-  return pickerData;
-};
-
-/**
- * 工具函数：根据选择结果获取品种列表
- * @param category 宠物大类
- * @param type 宠物小类
- * @param breedIndex 品种索引
- * @returns 品种名称
- */
-export const getSelectedBreed = (category: string, type: string, breedIndex: number): string => {
-  const breeds = getPetBreedList(category, type);
-  return breeds[breedIndex] || '';
-};
-
-/**
- * 工具函数：获取默认的宠物大类索引
- * @returns 默认索引
- */
-export const getDefaultCategoryIndex = (): number => {
-  return 0;
-};
-
-/**
- * 工具函数：获取默认的宠物小类索引
- * @param category 宠物大类
- * @returns 默认索引
- */
-export const getDefaultTypeIndex = (category: string): number => {
-  const types = getPetTypeList(category);
-  return types.length > 0 ? 0 : -1;
 };

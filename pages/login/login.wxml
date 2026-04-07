@@ -1,35 +1,34 @@
-<view class="container">
-  <!-- 顶部 Logo 和标题 -->
-  <view class="header">
-    <view class="logo-wrapper">
-      <image class="logo" src="../../../static/images/logo.png" mode="aspectFit" />
-    </view>
-    <view class="title-wrapper">
-      <text class="title">你好！欢迎登录阿间宠物</text>
-    </view>
+<!-- pages/login/login.wxml -->
+<view class="login-container">
+  <!-- 顶部Logo区域 -->
+  <view class="logo-wrapper">
+    <image class="logo-img" src="/images/logo.png" mode="aspectFit"></image>
   </view>
 
-  <!-- 协议复选框 -->
-  <view class="agreement-section">
-    <view class="checkbox-wrapper" catchtap="toggleAgreement">
-      <view class="checkbox {{isAgreed ? 'checked' : ''}}">
-        <text wx:if="{{isAgreed}}" class="check-icon">✓</text>
-      </view>
-      <text class="agreement-text">
-        我已阅读并同意《阿间宠物隐私政策》和《阿间宠物用户协议》
-      </text>
-    </view>
+  <!-- 欢迎标题 -->
+  <view class="welcome-title">你好！欢迎登录数智伴宠</view>
+
+  <!-- 协议勾选区域 -->
+  <view class="agreement-wrapper">
+    <checkbox-group bindchange="toggleAgree">
+      <label class="agreement-label">
+        <checkbox value="agree" checked="{{isAgree}}" color="#FFC107"></checkbox>
+        <text class="agreement-text">我已阅读并同意</text>
+        <text class="agreement-link" bindtap="goToPrivacy">《数智伴宠隐私政策》</text>
+        <text class="agreement-text">和</text>
+        <text class="agreement-link" bindtap="goToAgreement">《数智伴宠用户协议》</text>
+        <text class="agreement-text">，未注册的手机号将自动创建数智伴宠账号</text>
+      </label>
+    </checkbox-group>
   </view>
 
-  <!-- 登录按钮 -->
-  <view class="button-section">
-    <button
-      class="login-btn {{isAgreed ? 'active' : 'disabled'}}"
-      open-type="getPhoneNumber"
-      bindgetphonenumber="handleGetPhoneNumber"
-      disabled="{{!isAgreed}}"
-    >
-      手机号快捷登录
-    </button>
-  </view>
+  <!-- 手机号快捷登录按钮（微信原生规范，必须用button+open-type） -->
+  <button 
+    class="login-btn {{!isAgree ? 'btn-disabled' : ''}}" 
+    open-type="getPhoneNumber" 
+    bindgetphonenumber="getPhoneNumber"
+    disabled="{{!isAgree}}"
+  >
+    手机号快捷登录
+  </button>
 </view>

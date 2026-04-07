@@ -1,112 +1,24 @@
-<view class="container">
-  <view class="title">欢迎注册养宠日志</view>
-  <view class="input-group">
-    <input class="input" placeholder="请输入用户名" bindinput="onUsernameInput" value="{{username}}" />
+<view class="register-container">
+  <view class="form-item">
+    <text class="label">宠物大类</text>
+    <picker mode="selector" range="{{categoryList}}" bindchange="onCategoryChange" value="{{categoryIndex}}">
+      <view class="picker-text">{{categoryList[categoryIndex] || '请选择宠物大类'}}</view>
+    </picker>
   </view>
-  <view class="pet-section">
-    <view class="section-title">宠物信息</view>
-    <view wx:for="{{petList}}" wx:key="id" class="pet-item">
-      <view class="pet-header">
-        <text>宠物{{index + 1}}</text>
-        <button size="mini" bindtap="removePet" data-index="{{index}}">删除</button>
-      </view>
-      <view class="input-group">
-        <text class="input-label">名字</text>
-        <input class="input" placeholder="请输入宠物名" bindinput="onPetNameInput" data-index="{{index}}" value="{{item.petName}}" />
-      </view>
-      
-      <!-- 宠物种类三级联动选择器 -->
-      <view class="input-group">
-        <text class="input-label">种类</text>
-        <view class="input selector-input" bindtap="selectPetType" data-index="{{index}}">
-          <text class="{{item.breed ? '' : 'placeholder'}}">
-            {{item.category && item.type && item.breed ? item.category + ' - ' + item.type + ' - ' + item.breed : '请选择宠物种类'}}
-          </text>
-          <text class="arrow">▼</text>
-        </view>
-      </view>
-      
-      <view class="tag-group">
-        <text class="section-subtitle">性别</text>
-        <view class="tag-list">
-          <view class="tag {{item.gender === '公' ? 'active' : ''}}" bindtap="selectPetGender" data-index="{{index}}" data-gender="公">公</view>
-          <view class="tag {{item.gender === '母' ? 'active' : ''}}" bindtap="selectPetGender" data-index="{{index}}" data-gender="母">母</view>
-        </view>
-      </view>
-      <view class="input-group">
-        <text class="input-label">生日</text>
-        <picker mode="date" value="{{item.birthday}}" bindchange="onPetBirthdayInput" data-index="{{index}}">
-          <view class="input selector-input">
-            <text class="{{item.birthday ? '' : 'placeholder'}}">{{item.birthday || '请选择生日'}}</text>
-            <text class="arrow">▼</text>
-          </view>
-        </picker>
-      </view>
-      <view class="tag-group">
-        <text class="section-subtitle">性格</text>
-        <view class="tag-list">
-          <view class="tag {{item.personality === '活泼' ? 'active' : ''}}" bindtap="selectPetPersonality" data-index="{{index}}" data-personality="活泼">活泼</view>
-          <view class="tag {{item.personality === '温顺' ? 'active' : ''}}" bindtap="selectPetPersonality" data-index="{{index}}" data-personality="温顺">温顺</view>
-          <view class="tag {{item.personality === '胆小' ? 'active' : ''}}" bindtap="selectPetPersonality" data-index="{{index}}" data-personality="胆小">胆小</view>
-        </view>
-      </view>
-      <view class="input-group">
-        <text class="input-label">喜好</text>
-        <input class="input" placeholder="请输入喜好" bindinput="onPetHobbyInput" data-index="{{index}}" value="{{item.hobby}}" />
-      </view>
-    </view>
-    <button class="btn add-pet-btn" bindtap="addPet">添加宠物</button>
+
+  <view class="form-item">
+    <text class="label">宠物小类</text>
+    <picker mode="selector" range="{{typeList}}" bindchange="onTypeChange" value="{{typeIndex}}" disabled="{{!categoryList.length}}">
+      <view class="picker-text">{{typeList[typeIndex] || '请先选择宠物大类'}}</view>
+    </picker>
   </view>
-  <button class="btn submit-btn" bindtap="submitRegister" disabled="{{!canSubmit}}">注册</button>
-  
-  <!-- 三级联动Picker弹出层 -->
-  <view class="picker-mask" wx:if="{{showPickerVisible}}" bindtap="hidePicker"></view>
-  <view class="picker-popup" wx:if="{{showPickerVisible}}">
-    <view class="picker-header">
-      <text class="picker-title">选择宠物种类</text>
-      <text class="picker-close" bindtap="hidePicker">✕</text>
-    </view>
-    
-    <!-- 展示已选择的信息 -->
-    <view class="picker-selected-info" wx:if="{{petList[currentPetIndex].category}}">
-      <text>已选择：{{petList[currentPetIndex].category}} - {{petList[currentPetIndex].type}}</text>
-    </view>
-    
-    <picker-view 
-      class="picker-view" 
-      value="{{pickerIndex}}" 
-      bindchange="onPickerChange" 
-      bindcolumnchange="onPickerColumnChange"
-    >
-      <picker-view-column>
-        <view wx:for="{{categoryList}}" wx:key="*this" class="picker-column-item">{{item}}</view>
-      </picker-view-column>
-      <picker-view-column>
-        <view wx:for="{{typeList}}" wx:key="*this" class="picker-column-item">{{item}}</view>
-      </picker-view-column>
-      <picker-view-column>
-        <view wx:for="{{breedList}}" wx:key="*this" class="picker-column-item">{{item}}</view>
-      </picker-view-column>
-    </picker-view>
-    
-    <view class="picker-confirm-btn" bindtap="confirmPicker">
-      <text>确定</text>
-    </view>
+
+  <view class="form-item">
+    <text class="label">宠物品种</text>
+    <picker mode="selector" range="{{breedList}}" bindchange="onBreedChange" value="{{breedIndex}}" disabled="{{!typeList.length}}">
+      <view class="picker-text">{{breedList[breedIndex] || '请先选择宠物小类'}}</view>
+    </picker>
   </view>
-  
-  <!-- 管控品种提示弹窗 -->
-  <view class="control-warning-modal" wx:if="{{controlBreedWarning}}">
-    <view class="modal-mask"></view>
-    <view class="modal-content">
-      <view class="modal-title">⚠️ 管控品种提示</view>
-      <view class="modal-body">
-        <text>您选择的「{{controlBreedName}}」属于管控类品种。</text>
-        <text class="warning-text">根据相关规定，饲养此类宠物可能需要办理相关许可证明。</text>
-      </view>
-      <view class="modal-footer">
-        <view class="modal-btn cancel" bindtap="cancelControlBreed">重新选择</view>
-        <view class="modal-btn confirm" bindtap="confirmControlBreed">确认饲养</view>
-      </view>
-    </view>
-  </view>
+
+  <button class="submit-btn" bindtap="onSubmit">完成注册</button>
 </view>

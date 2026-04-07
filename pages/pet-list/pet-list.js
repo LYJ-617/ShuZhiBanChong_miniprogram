@@ -24,8 +24,10 @@ Page({
 
   goToPetDetail(e) {
     const petId = e.currentTarget.dataset.id;
-    wx.navigateTo({
-      url: `/pages/pet-detail/pet-detail?id=${petId}`
+    // 暂时显示宠物详情
+    wx.showToast({
+      title: '查看宠物详情',
+      icon: 'none'
     });
   },
 

@@ -5,7 +5,7 @@
  */
 
 // 完整宠物种类-品种数据库
-var petSpeciesMap = {
+const petSpeciesMap = {
   "哺乳类": {
     "犬科（狗）": [
       "德国牧羊犬", "罗威纳犬", "西伯利亚哈士奇", "阿拉斯加雪橇犬", "秋田犬",
@@ -85,57 +85,33 @@ var petSpeciesMap = {
   }
 };
 
-/**
- * 工具函数：获取所有宠物大类列表
- */
-function getPetCategoryList() {
+// 工具函数：获取所有宠物大类列表
+const getPetCategoryList = () => {
   return Object.keys(petSpeciesMap);
-}
+};
 
-/**
- * 工具函数：根据宠物大类，获取对应的宠物小类列表
- */
-function getPetTypeList(category) {
+// 工具函数：根据宠物大类，获取对应的宠物小类列表
+const getPetTypeList = (category) => {
   if (!category || !petSpeciesMap[category]) return [];
   return Object.keys(petSpeciesMap[category]);
-}
+};
 
-/**
- * 工具函数：根据宠物大类+小类，获取对应的品种列表
- */
-function getPetBreedList(category, type) {
+// 工具函数：根据宠物大类+小类，获取对应的品种列表
+const getPetBreedList = (category, type) => {
   if (!category || !type || !petSpeciesMap[category] || !petSpeciesMap[category][type]) return [];
   return petSpeciesMap[category][type];
-}
+};
 
-/**
- * 工具函数：判断品种是否为管控类
- */
-function isControlBreed(breedName) {
-  return breedName && breedName.indexOf("（管控）") !== -1;
-}
+// 工具函数：判断品种是否为管控类
+const isControlBreed = (breedName) => {
+  return breedName && breedName.includes("（管控）");
+};
 
-/**
- * 工具函数：获取默认的宠物大类索引
- */
-function getDefaultCategoryIndex() {
-  return 0;
-}
-
-/**
- * 工具函数：获取默认的宠物小类索引
- */
-function getDefaultTypeIndex(category) {
-  var types = getPetTypeList(category);
-  return types.length > 0 ? 0 : -1;
-}
-
+// 导出
 module.exports = {
-  petSpeciesMap: petSpeciesMap,
-  getPetCategoryList: getPetCategoryList,
-  getPetTypeList: getPetTypeList,
-  getPetBreedList: getPetBreedList,
-  isControlBreed: isControlBreed,
-  getDefaultCategoryIndex: getDefaultCategoryIndex,
-  getDefaultTypeIndex: getDefaultTypeIndex
+  getPetCategoryList,
+  getPetTypeList,
+  getPetBreedList,
+  isControlBreed,
+  petSpeciesMap
 };

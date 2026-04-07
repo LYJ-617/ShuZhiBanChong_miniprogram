@@ -1,198 +1,224 @@
 .container {
-  padding: 20rpx;
-  background: #f5f5f5;
   min-height: 100vh;
+  background: linear-gradient(180deg, #e8f5e9 0%, #f5f5f5 100%);
+  padding-bottom: 120rpx;
 }
 
-.welcome-section {
-  padding: 20rpx 0;
+// 顶部背景
+.header-bg {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  padding: 60rpx 30rpx 40rpx;
+  border-radius: 0 0 40rpx 40rpx;
 }
 
-.welcome-text {
-  font-size: 36rpx;
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.greeting {
+  font-size: 40rpx;
   font-weight: bold;
-  color: #333;
+  color: #fff;
+  margin-bottom: 10rpx;
 }
 
-.reminder-section {
-  background: #fff;
-  border-radius: 12rpx;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
+.subtitle {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.section-header {
+// 通用区块标题
+.section-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20rpx;
+  padding: 20rpx 30rpx;
 }
 
-.section-title {
+.title-text {
   font-size: 32rpx;
   font-weight: bold;
   color: #333;
 }
 
+.more-btn {
+  font-size: 24rpx;
+  color: #999;
+}
+
+// 日程提醒
+.reminder-section {
+  background: #fff;
+  margin: 20rpx 30rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.reminder-scroll {
+  white-space: nowrap;
+  padding: 0 20rpx 20rpx;
+}
+
 .reminder-list {
   display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-}
-
-.reminder-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx;
-  background: #f8f8f8;
-  border-radius: 8rpx;
-}
-
-.reminder-text {
-  font-size: 28rpx;
-  color: #333;
-  flex: 1;
-}
-
-.reminder-right {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.reminder-time {
-  font-size: 24rpx;
-  color: #999;
-}
-
-.delete-btn {
-  font-size: 24rpx;
-  color: #ff4d4f;
-  padding: 8rpx 16rpx;
-  border-radius: 4rpx;
-}
-
-.add-btn {
-  font-size: 28rpx;
-  color: #3cc51f;
-  font-weight: 500;
-}
-
-.empty-reminder {
-  text-align: center;
-  padding: 40rpx 20rpx;
-  color: #999;
-  font-size: 26rpx;
-}
-
-.core-feature {
-  margin-bottom: 20rpx;
-}
-
-.feature-card {
-  display: flex;
-  align-items: center;
-  padding: 40rpx;
-  background: linear-gradient(135deg, #3cc51f, #4FD15F);
-  border-radius: 16rpx;
-  position: relative;
-  box-shadow: 0 8rpx 20rpx rgba(60, 197, 31, 0.3);
-}
-
-.feature-icon {
-  font-size: 60rpx;
-  margin-right: 24rpx;
-}
-
-.feature-info {
-  flex: 1;
-}
-
-.feature-title {
-  display: block;
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #fff;
-  margin-bottom: 8rpx;
-}
-
-.feature-desc {
-  display: block;
-  font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.feature-arrow {
-  font-size: 40rpx;
-  color: #fff;
-}
-
-.tip-badge {
-  position: absolute;
-  bottom: -12rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 12rpx 24rpx;
-  background: #FF6B6B;
-  color: #fff;
-  border-radius: 30rpx;
-  font-size: 22rpx;
-  white-space: nowrap;
-  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
-}
-
-.function-section {
-  background: #fff;
-  border-radius: 12rpx;
-  padding: 30rpx;
-}
-
-.function-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: 20rpx;
 }
 
-.function-item {
+.reminder-card {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  min-width: 280rpx;
+}
+
+.reminder-icon {
+  font-size: 40rpx;
+  margin-right: 16rpx;
+}
+
+.reminder-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 40rpx 20rpx;
-  background: #f8f8f8;
-  border-radius: 12rpx;
-  position: relative;
 }
 
-.function-icon {
-  font-size: 60rpx;
-  margin-bottom: 16rpx;
-}
-
-.function-icon.service-icon {
-  filter: drop-shadow(0 2rpx 4rpx rgba(255, 107, 107, 0.3));
-}
-
-.function-icon.community-icon {
-  filter: drop-shadow(0 2rpx 4rpx rgba(24, 144, 255, 0.3));
-}
-
-.function-icon.mine-icon {
-  filter: drop-shadow(0 2rpx 4rpx rgba(149, 225, 211, 0.3));
-}
-
-.function-icon.report-icon {
-  filter: drop-shadow(0 2rpx 4rpx rgba(255, 197, 61, 0.3));
-}
-
-.function-text {
-  font-size: 28rpx;
+.reminder-title {
+  font-size: 26rpx;
   color: #333;
-  margin-bottom: 4rpx;
   font-weight: 500;
 }
 
-.function-desc {
+.reminder-time {
   font-size: 22rpx;
   color: #999;
+  margin-top: 6rpx;
+}
+
+// 无宠物提示
+.no-pet-tip,
+.unrecorded-tip {
+  margin: 20rpx 30rpx;
+}
+
+.tip-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.tip-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.tip-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 30rpx;
+}
+
+.add-pet-btn,
+.record-btn {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  color: #fff;
+  font-size: 28rpx;
+  padding: 20rpx 60rpx;
+  border-radius: 40rpx;
+  border: none;
+  font-weight: 500;
+}
+
+// 功能入口
+.feature-section {
+  background: #fff;
+  margin: 20rpx 30rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 30rpx;
+  gap: 20rpx;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.feature-icon {
+  font-size: 50rpx;
+  margin-bottom: 10rpx;
+}
+
+.feature-name {
+  font-size: 24rpx;
+  color: #666;
+}
+
+// 宠物列表
+.pet-section {
+  background: #fff;
+  margin: 20rpx 30rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  padding-bottom: 20rpx;
+}
+
+.pet-scroll {
+  white-space: nowrap;
+  padding: 0 20rpx;
+}
+
+.pet-list {
+  display: flex;
+  gap: 20rpx;
+}
+
+.pet-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  min-width: 140rpx;
+}
+
+.pet-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.pet-name {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.pet-breed {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 4rpx;
 }

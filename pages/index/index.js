@@ -1,4 +1,4 @@
-import { getPetLogs, getPetList, getUserInfo } from '../../utils/api.js';
+const { getPetList, getPetLogs, getUserInfo } = require('../../utils/api.js');
 
 Page({
   data: {
@@ -8,18 +8,50 @@ Page({
       { id: '3', content: '驱虫时间', time: '2026-02-20' }
     ],
     hasUnrecorded: false,
-    username: ''
+    username: '',
+    petList: []
   },
 
   async onLoad() {
     const userInfo = await getUserInfo();
     if (userInfo) {
       this.setData({
-        username: userInfo.username
+        username: userInfo.username || '主人'
       });
     }
 
     const petList = await getPetList();
+    this.setData({ petList });
+    
+    if (petList.length > 0) {
+      const logs = await getPetLogs();
+      const today = new Date().toDateString();
+      const hasTodayLog = logs.some((log) => {
+        const logDate = new Date(log.createTime).toDateString();
+        return logDate === today;
+      });
+      this.setData({
+        hasUnrecorded: !hasTodayLog
+      });
+    }
+  },
+
+  onShow() {
+    // 每次显示刷新宠物数据
+    this.refreshData();
+  },
+
+  async refreshData() {
+    const userInfo = await getUserInfo();
+    if (userInfo) {
+      this.setData({
+        username: userInfo.username || '主人'
+      });
+    }
+    
+    const petList = await getPetList();
+    this.setData({ petList });
+    
     if (petList.length > 0) {
       const logs = await getPetLogs();
       const today = new Date().toDateString();
@@ -58,8 +90,28 @@ Page({
   },
 
   goToAiReport() {
-    wx.switchTab({
-      url: '/pages/service/service'
+    wx.navigateTo({
+      url: '/pages/ai-report/ai-report'
+    });
+  },
+
+  viewReminderDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.showToast({
+      title: '查看日程详情',
+      icon: 'none'
+    });
+  },
+
+  goToRegister() {
+    wx.navigateTo({
+      url: '/pages/register/register'
+    });
+  },
+
+  goToPetList() {
+    wx.navigateTo({
+      url: '/pages/pet-list/pet-list'
     });
   }
 });

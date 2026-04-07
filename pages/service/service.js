@@ -1,4 +1,4 @@
-import { getPetList, generateAiReport } from '../../utils/api.js';
+const { getPetList, generateAiReport } = require('../../utils/api.js');
 
 Page({
   data: {
@@ -15,6 +15,21 @@ Page({
       petList
     });
     if (petList.length > 0) {
+      this.setData({
+        selectedPetId: petList[0].id
+      });
+      this.generateRecommendations(petList[0].id);
+    }
+  },
+
+  onShow() {
+    this.refreshData();
+  },
+
+  async refreshData() {
+    const petList = await getPetList();
+    this.setData({ petList });
+    if (petList.length > 0 && !this.data.selectedPetId) {
       this.setData({
         selectedPetId: petList[0].id
       });
@@ -80,29 +95,27 @@ Page({
   },
 
   goToMall() {
-    wx.switchTab({
+    wx.navigateTo({
       url: '/pages/mall/mall'
     });
   },
 
   goToConsult() {
-    wx.showToast({
-      title: '线上问诊功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/consult-list/consult-list'
     });
   },
 
   goToReservation() {
-    wx.showToast({
-      title: '服务预约功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/appointment-list/appointment-list'
     });
   },
 
-  buyProduct() {
-    wx.showToast({
-      title: '加入购物车成功',
-      icon: 'success'
+  buyProduct(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: '/pages/product-detail/product-detail?id=' + id
     });
   }
 });

@@ -1,66 +1,92 @@
 <view class="container">
-  <view class="welcome-section">
-    <text class="welcome-text">欢迎回来，{{username || '养宠达人'}}</text>
-  </view>
-
-  <view class="reminder-section">
-    <view class="section-header">
-      <text class="section-title">日程提醒</text>
-      <text class="add-btn" bindtap="addReminder">+ 添加</text>
-    </view>
-    <view class="reminder-list">
-      <view wx:for="{{reminders}}" wx:key="id" class="reminder-item">
-        <text class="reminder-text">{{item.content}}</text>
-        <view class="reminder-right">
-          <text class="reminder-time">{{item.time}}</text>
-          <text class="delete-btn" catchtap="deleteReminder" data-id="{{item.id}}">删除</text>
-        </view>
-      </view>
-    </view>
-    <view wx:if="{{reminders.length === 0}}" class="empty-reminder">
-      <text>暂无提醒，点击上方"添加"设置日程</text>
+  <!-- 顶部背景 -->
+  <view class="header-bg">
+    <view class="user-info">
+      <text class="greeting">你好，{{username || '主人'}}</text>
+      <text class="subtitle">欢迎来到数智伴宠</text>
     </view>
   </view>
 
-  <view class="core-feature">
-    <view class="feature-card primary" bindtap="goToLog">
-      <view class="feature-icon">📝</view>
-      <view class="feature-info">
-        <text class="feature-title">养宠日志</text>
-        <text class="feature-desc">记录毛孩子每一天的成长</text>
+  <!-- 日程提醒区域 -->
+  <view class="reminder-section" wx:if="{{petList.length > 0}}">
+    <view class="section-title">
+      <text class="title-text">今日提醒</text>
+      <text class="more-btn">更多 ></text>
+    </view>
+    <scroll-view class="reminder-scroll" scroll-x="true">
+      <view class="reminder-list">
+        <block wx:for="{{reminders}}" wx:key="id">
+          <view class="reminder-card" bindtap="viewReminderDetail" data-id="{{item.id}}">
+            <view class="reminder-icon">📅</view>
+            <view class="reminder-content">
+              <text class="reminder-title">{{item.content}}</text>
+              <text class="reminder-time">{{item.time}}</text>
+            </view>
+          </view>
+        </block>
       </view>
-      <text class="feature-arrow">→</text>
-      <view class="tip-badge" wx:if="{{hasUnrecorded}}">
-        今天还没有记录毛孩子的状态哦~
+    </scroll-view>
+  </view>
+
+  <!-- 无宠物提示 -->
+  <view class="no-pet-tip" wx:if="{{petList.length === 0}}">
+    <view class="tip-card">
+      <text class="tip-icon">🐾</text>
+      <text class="tip-text">还没有添加宠物哦</text>
+      <button class="add-pet-btn" bindtap="goToRegister">添加宠物</button>
+    </view>
+  </view>
+
+  <!-- 未记录日志提示 -->
+  <view class="unrecorded-tip" wx:if="{{hasUnrecorded && petList.length > 0}}">
+    <view class="tip-card">
+      <text class="tip-icon">📝</text>
+      <text class="tip-text">今天还没有记录毛孩子的状态哦~</text>
+      <button class="record-btn" bindtap="goToLog">去记录</button>
+    </view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="feature-section">
+    <view class="section-title">
+      <text class="title-text">功能入口</text>
+    </view>
+    <view class="feature-grid">
+      <view class="feature-item" bindtap="goToLog">
+        <view class="feature-icon">📝</view>
+        <text class="feature-name">养宠日志</text>
+      </view>
+      <view class="feature-item" bindtap="goToCommunity">
+        <view class="feature-icon">🏠</view>
+        <text class="feature-name">社区</text>
+      </view>
+      <view class="feature-item" bindtap="goToService">
+        <view class="feature-icon">🛒</view>
+        <text class="feature-name">服务</text>
+      </view>
+      <view class="feature-item" bindtap="goToAiReport">
+        <view class="feature-icon">🤖</view>
+        <text class="feature-name">AI分析</text>
       </view>
     </view>
   </view>
 
-  <view class="function-section">
-    <view class="section-header">
-      <text class="section-title">更多服务</text>
+  <!-- 宠物列表 -->
+  <view class="pet-section" wx:if="{{petList.length > 0}}">
+    <view class="section-title">
+      <text class="title-text">我的宠物</text>
+      <text class="more-btn" bindtap="goToPetList">管理 ></text>
     </view>
-    <view class="function-grid">
-      <view class="function-item" bindtap="goToService">
-        <view class="function-icon service-icon">🛒</view>
-        <text class="function-text">服务</text>
-        <text class="function-desc">商城·问诊·预约</text>
+    <scroll-view class="pet-scroll" scroll-x="true">
+      <view class="pet-list">
+        <block wx:for="{{petList}}" wx:key="id">
+          <view class="pet-card">
+            <view class="pet-avatar">{{item.petName[0] || '宠'}}</view>
+            <text class="pet-name">{{item.petName}}</text>
+            <text class="pet-breed">{{item.breed || item.type}}</text>
+          </view>
+        </block>
       </view>
-      <view class="function-item" bindtap="goToCommunity">
-        <view class="function-icon community-icon">💬</view>
-        <text class="function-text">社区</text>
-        <text class="function-desc">分享·交流</text>
-      </view>
-      <view class="function-item" bindtap="goToMine">
-        <view class="function-icon mine-icon">👤</view>
-        <text class="function-text">我的</text>
-        <text class="function-desc">个人信息</text>
-      </view>
-      <view class="function-item" bindtap="goToService">
-        <view class="function-icon report-icon">📊</view>
-        <text class="function-text">AI分析</text>
-        <text class="function-desc">健康报告</text>
-      </view>
-    </view>
+    </scroll-view>
   </view>
 </view>
