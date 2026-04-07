@@ -3,33 +3,63 @@ Page({
     isAgreed: false,
   },
 
-  onLoad() {
-    this.checkLoginStatus();
+  toggleAgreement(e) {
+    const isAgreed = e.detail.value && e.detail.value.length > 0;
+    this.setData({
+      isAgreed: isAgreed
+    });
   },
 
-  checkLoginStatus() {
-    const userInfo = wx.getStorageSync('userInfo');
-    if (userInfo) {
-      // 已登录，检查是否有宠物
-      const petList = wx.getStorageSync('petList');
-      if (petList && petList.length > 0) {
-        // 有宠物，跳转到首页
-        wx.switchTab({
-          url: '/pages/index/index'
-        });
-      } else {
-        // 没有宠物，跳转到注册页
+  // 模拟登录（开发测试用）
+  async testLogin() {
+    if (!this.data.isAgreed) {
+      wx.showToast({
+        title: '请先同意用户协议',
+        icon: 'none'
+      });
+      return;
+    }
+
+    wx.showLoading({
+      title: '登录中...',
+      mask: true
+    });
+
+    try {
+      const phoneNumber = '138' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+
+      const userInfo = {
+        id: Date.now().toString(),
+        username: '用户' + phoneNumber.slice(-4),
+        phone: phoneNumber,
+        avatar: '',
+        createTime: new Date().toISOString(),
+        isRegister: false  // 未注册标记
+      };
+
+      wx.setStorageSync('userInfo', userInfo);
+      wx.setStorageSync('userToken', 'mock_token_' + Date.now());
+
+      wx.hideLoading();
+
+      wx.showToast({
+        title: '登录成功',
+        icon: 'success'
+      });
+
+      setTimeout(() => {
         wx.redirectTo({
           url: '/pages/register/register'
         });
-      }
+      }, 1500);
+    } catch (error) {
+      wx.hideLoading();
+      console.error('登录失败:', error);
+      wx.showToast({
+        title: '登录失败，请重试',
+        icon: 'none'
+      });
     }
-  },
-
-  toggleAgreement() {
-    this.setData({
-      isAgreed: !this.data.isAgreed
-    });
   },
 
   async handleGetPhoneNumber(e) {
@@ -44,10 +74,7 @@ Page({
     }
 
     if (e.detail.errMsg && e.detail.errMsg.includes('fail')) {
-      wx.showToast({
-        title: '请授权手机号完成登录',
-        icon: 'none'
-      });
+      await this.testLogin();
       return;
     }
 
@@ -57,11 +84,10 @@ Page({
     });
 
     try {
-      const loginResult = await this.wxLogin();
-      
-      // 模拟返回手机号
+      await this.wxLogin();
+
       const phoneNumber = '138' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-      
+
       if (phoneNumber) {
         const loginSuccess = await this.doLogin(phoneNumber);
 
@@ -73,7 +99,6 @@ Page({
             icon: 'success'
           });
 
-          // 跳转到宠物注册页
           setTimeout(() => {
             wx.redirectTo({
               url: '/pages/register/register'
@@ -116,7 +141,8 @@ Page({
           username: '用户' + phoneNumber.slice(-4),
           phone: phoneNumber,
           avatar: '',
-          createTime: new Date().toISOString()
+          createTime: new Date().toISOString(),
+          isRegister: false
         };
 
         wx.setStorageSync('userInfo', userInfo);

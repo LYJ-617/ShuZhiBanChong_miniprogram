@@ -3,59 +3,81 @@
 .login-container {
   width: 100vw;
   min-height: 100vh;
-  background-color: #ffffff;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 120rpx 40rpx 0;
+  padding: 100rpx 60rpx 0;
   box-sizing: border-box;
 }
 
-/* Logo样式 */
-.logo-wrapper {
-  width: 120rpx;
-  height: 120rpx;
+/* 头像区域 */
+.avatar-wrapper {
+  width: 180rpx;
+  height: 180rpx;
   margin-bottom: 40rpx;
-  .logo-img {
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+  border: 6rpx solid #ffffff;
+  background-color: #f0f0f0;
+  .avatar-img {
     width: 100%;
     height: 100%;
-    border-radius: 20rpx;
   }
 }
 
 /* 欢迎标题 */
 .welcome-title {
-  font-size: 36rpx;
-  font-weight: 500;
+  font-size: 40rpx;
+  font-weight: 600;
   color: #333333;
-  margin-bottom: 80rpx;
+  margin-bottom: 60rpx;
   text-align: center;
+  letter-spacing: 2rpx;
 }
 
 /* 协议勾选区域 */
 .agreement-wrapper {
   width: 100%;
   margin-bottom: 60rpx;
+  background-color: #f9f9f9;
+  border-radius: 16rpx;
+  padding: 30rpx 24rpx;
+  box-sizing: border-box;
   .agreement-label {
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
     width: 100%;
     /* 复选框样式调整 */
     checkbox {
-      transform: scale(0.8);
-      margin-right: 16rpx;
-      margin-top: 4rpx;
-      flex-shrink: 0;
+      transform: scale(0.85);
+      margin-right: 12rpx;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16rpx;
+    }
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 16rpx;
+      padding-left: 8rpx;
+    }
+    .notice-row {
+      padding-left: 8rpx;
     }
     .agreement-text {
       font-size: 26rpx;
       color: #666666;
-      line-height: 1.5;
+      line-height: 1.6;
     }
     .agreement-link {
       font-size: 26rpx;
-      color: #FFC107;
-      line-height: 1.5;
+      color: #07C160;
+      line-height: 1.6;
+      text-decoration: none;
     }
   }
 }
@@ -65,23 +87,24 @@
   width: 100%;
   height: 96rpx;
   line-height: 96rpx;
-  background-color: #07C160;
+  background: linear-gradient(135deg, #07C160 0%, #06AD56 100%);
   color: #ffffff;
-  font-size: 32rpx;
-  font-weight: 500;
+  font-size: 34rpx;
+  font-weight: 600;
   border-radius: 48rpx;
   border: none;
   text-align: center;
   padding: 0;
   margin: 0;
+  box-shadow: 0 6rpx 20rpx rgba(7, 193, 96, 0.3);
   /* 清除微信button默认边框 */
   &::after {
     border: none;
   }
   /* 未勾选协议的禁用状态 */
   &.btn-disabled {
-    background-color: #95E1B9;
-    color: #ffffff;
+    background: linear-gradient(135deg, #95E1B9 0%, #7BC9A5 100%);
+    box-shadow: none;
     opacity: 0.7;
   }
 }

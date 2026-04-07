@@ -1,4 +1,4 @@
-import { getPetList, generateAiReport } from '../../utils/api.js';
+const { getPetList, generateAiReport } = require('../../utils/api.js');
 
 Page({
   data: {

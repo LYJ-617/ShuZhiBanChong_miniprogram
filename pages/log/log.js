@@ -1,4 +1,4 @@
-import { getPetList, getPetLogs, addPetLog } from '../../utils/api.js';
+const { getPetList, getPetLogs, addPetLog } = require('../../utils/api.js');
 
 Page({
   data: {

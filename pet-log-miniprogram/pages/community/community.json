@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "社区",
-  "usingComponents": {
-    "community-publish": "../../components/community-publish/community-publish"
-  }
-}

@@ -1,8 +1,8 @@
 <!-- pages/login/login.wxml -->
 <view class="login-container">
-  <!-- 顶部Logo区域 -->
-  <view class="logo-wrapper">
-    <image class="logo-img" src="/images/logo.png" mode="aspectFit"></image>
+  <!-- 顶部头像区域 -->
+  <view class="avatar-wrapper">
+    <image class="avatar-img" src="/static/images/小程序头像(1).jpg" mode="aspectFill"></image>
   </view>
 
   <!-- 欢迎标题 -->
@@ -10,24 +10,30 @@
 
   <!-- 协议勾选区域 -->
   <view class="agreement-wrapper">
-    <checkbox-group bindchange="toggleAgree">
+    <checkbox-group bindchange="toggleAgreement">
       <label class="agreement-label">
-        <checkbox value="agree" checked="{{isAgree}}" color="#FFC107"></checkbox>
-        <text class="agreement-text">我已阅读并同意</text>
-        <text class="agreement-link" bindtap="goToPrivacy">《数智伴宠隐私政策》</text>
-        <text class="agreement-text">和</text>
-        <text class="agreement-link" bindtap="goToAgreement">《数智伴宠用户协议》</text>
-        <text class="agreement-text">，未注册的手机号将自动创建数智伴宠账号</text>
+        <view class="checkbox-row">
+          <checkbox value="agree" checked="{{isAgreed}}" color="#07C160"></checkbox>
+          <text class="agreement-text">我已阅读并同意</text>
+        </view>
+        <view class="link-row">
+          <text class="agreement-link" bindtap="goToPrivacy">《数智伴宠隐私政策》</text>
+          <text class="agreement-text">和</text>
+          <text class="agreement-link" bindtap="goToAgreement">《数智伴宠用户协议》</text>
+        </view>
+        <view class="notice-row">
+          <text class="agreement-text">未注册的手机号将自动创建数智伴宠账号</text>
+        </view>
       </label>
     </checkbox-group>
   </view>
 
-  <!-- 手机号快捷登录按钮（微信原生规范，必须用button+open-type） -->
+  <!-- 手机号快捷登录按钮 -->
   <button 
-    class="login-btn {{!isAgree ? 'btn-disabled' : ''}}" 
+    class="login-btn {{!isAgreed ? 'btn-disabled' : ''}}" 
     open-type="getPhoneNumber" 
-    bindgetphonenumber="getPhoneNumber"
-    disabled="{{!isAgree}}"
+    bindgetphonenumber="handleGetPhoneNumber"
+    disabled="{{!isAgreed}}"
   >
     手机号快捷登录
   </button>

@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "首页"
+  "navigationBarTitleText": "数智伴宠",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#F8F9FA",
+  "usingComponents": {}
 }

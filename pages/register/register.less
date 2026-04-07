@@ -1,41 +1,313 @@
+/* pages/register/register.less */
+
+// 页面容器
 .register-container {
-  padding: 30rpx;
-  background: linear-gradient(120deg, #FFF9E6, #E6F8F3);
   min-height: 100vh;
+  background: linear-gradient(180deg, #E8F5E9 0%, #F1F8E9 50%, #FFFDE7 100%);
+  padding: 30rpx 30rpx 200rpx;
+  box-sizing: border-box;
 }
 
-.form-item {
-  background: #FFFFFF;
-  border-radius: 16rpx;
-  padding: 20rpx;
+// 白色卡片样式
+.form-card {
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx;
   margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
 }
 
-.label {
+// 表单标签
+.form-label {
   font-size: 28rpx;
   color: #333333;
-  margin-bottom: 10rpx;
+  font-weight: 500;
+  margin-bottom: 16rpx;
   display: block;
 }
 
-.picker-text {
+// 输入框样式
+.input-field {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 20rpx;
+  font-size: 30rpx;
+  color: #333333;
+  background-color: #FAFAFA;
+  border-radius: 12rpx;
+  border: 1rpx solid #EEEEEE;
+  box-sizing: border-box;
+  &::placeholder {
+    color: #999999;
+  }
+  &:focus {
+    border-color: #07C160;
+  }
+}
+
+// 输入框错误提示
+.input-error {
+  font-size: 24rpx;
+  color: #FF4D4F;
+  margin-top: 10rpx;
+  display: block;
+}
+
+// 选择器样式（picker）
+.picker-field {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 20rpx;
+  font-size: 30rpx;
+  color: #333333;
+  background-color: #FAFAFA;
+  border-radius: 12rpx;
+  border: 1rpx solid #EEEEEE;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.picker-placeholder {
+  color: #999999;
+}
+
+.picker-arrow {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+// 禁用状态的picker
+.picker-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// 性别选择器
+.gender-options {
+  display: flex;
+  gap: 24rpx;
+}
+
+.gender-btn {
+  flex: 1;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  border-radius: 12rpx;
+  border: 2rpx solid #DDDDDD;
+  background-color: #ffffff;
+  color: #666666;
+  transition: all 0.2s ease;
+  
+  &.active {
+    background-color: #FFC107;
+    border-color: #FFC107;
+    color: #ffffff;
+  }
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+// 已添加宠物列表
+.pet-list-section {
+  margin-top: 30rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  color: #333333;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  
+  &::before {
+    content: '';
+    width: 6rpx;
+    height: 30rpx;
+    background-color: #07C160;
+    margin-right: 12rpx;
+    border-radius: 3rpx;
+  }
+}
+
+.pet-item {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.pet-info {
+  flex: 1;
+}
+
+.pet-name {
+  font-size: 30rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+.pet-breed {
+  font-size: 26rpx;
+  color: #999999;
+  margin-top: 6rpx;
+}
+
+.pet-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.action-btn {
+  font-size: 26rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+  
+  &.edit {
+    color: #07C160;
+    background-color: rgba(7, 193, 96, 0.1);
+  }
+  
+  &.delete {
+    color: #FF4D4F;
+    background-color: rgba(255, 77, 79, 0.1);
+  }
+}
+
+// 底部按钮区域
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+// 添加宠物按钮（次要按钮）
+.add-pet-btn {
+  width: 100%;
+  height: 88rpx;
+  font-size: 32rpx;
+  color: #FFC107;
+  background-color: #ffffff;
+  border: 2rpx solid #FFC107;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &::after {
+    border: none;
+  }
+  &:active {
+    background-color: #FFFBF0;
+  }
+}
+
+// 完成注册按钮（主要按钮）
+.submit-btn {
+  width: 100%;
+  height: 96rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #FFC107 0%, #FFB300 100%);
+  border-radius: 48rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 20rpx rgba(255, 193, 7, 0.4);
+  &::after {
+    border: none;
+  }
+  
+  &.disabled {
+    background: linear-gradient(135deg, #E0E0E0 0%, #BDBDBD 100%);
+    box-shadow: none;
+    opacity: 0.7;
+  }
+  
+  &:active:not(.disabled) {
+    transform: scale(0.98);
+  }
+}
+
+// 删除确认弹窗
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 600rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 34rpx;
+  color: #333333;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+
+.modal-desc {
   font-size: 28rpx;
   color: #666666;
-  padding: 10rpx 0;
-  border-bottom: 1px solid #F2F2F2;
+  margin-bottom: 40rpx;
 }
 
-.submit-btn {
-  background: #F9D59B;
-  color: #FFFFFF;
-  border-radius: 30rpx;
-  height: 88rpx;
-  font-size: 28rpx;
-  margin-top: 30rpx;
-  border: none;
+.modal-btns {
+  display: flex;
+  gap: 24rpx;
 }
 
-.submit-btn::after {
-  border: none;
+.modal-btn {
+  flex: 1;
+  height: 80rpx;
+  font-size: 30rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &::after {
+    border: none;
+  }
+  
+  &.cancel {
+    background-color: #F5F5F5;
+    color: #666666;
+  }
+  
+  &.confirm {
+    background-color: #FF4D4F;
+    color: #ffffff;
+  }
 }

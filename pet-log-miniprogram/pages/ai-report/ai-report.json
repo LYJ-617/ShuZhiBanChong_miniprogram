@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "AI分析报告",
-  "usingComponents": {
-    "ai-report": "../../components/ai-report/ai-report"
-  }
-}

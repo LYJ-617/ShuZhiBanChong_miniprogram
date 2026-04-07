@@ -1,24 +1,164 @@
+<!-- pages/register/register.wxml -->
 <view class="register-container">
-  <view class="form-item">
-    <text class="label">宠物大类</text>
-    <picker mode="selector" range="{{categoryList}}" bindchange="onCategoryChange" value="{{categoryIndex}}">
-      <view class="picker-text">{{categoryList[categoryIndex] || '请选择宠物大类'}}</view>
+  <!-- 用户名 -->
+  <view class="form-card">
+    <text class="form-label">用户名</text>
+    <input
+      class="input-field"
+      type="text"
+      placeholder="请输入您的用户名"
+      value="{{username}}"
+      maxlength="10"
+      bindinput="onUsernameInput"
+    />
+    <text class="input-error" wx:if="{{usernameError}}">{{usernameError}}</text>
+  </view>
+
+  <!-- 宠物名 -->
+  <view class="form-card">
+    <text class="form-label">宠物名</text>
+    <input
+      class="input-field"
+      type="text"
+      placeholder="请输入宠物名称"
+      value="{{currentPet.petName}}"
+      maxlength="8"
+      data-field="petName"
+      bindinput="onPetFieldInput"
+    />
+    <text class="input-error" wx:if="{{petNameError}}">{{petNameError}}</text>
+  </view>
+
+  <!-- 宠物大类 -->
+  <view class="form-card">
+    <text class="form-label">宠物大类</text>
+    <picker
+      mode="selector"
+      range="{{categoryList}}"
+      value="{{currentPet.categoryIndex}}"
+      bindchange="onCategoryChange"
+    >
+      <view class="picker-field {{!currentPet.category ? 'picker-placeholder' : ''}}">
+        <text>{{currentPet.category || '请选择宠物大类'}}</text>
+        <text class="picker-arrow">></text>
+      </view>
     </picker>
   </view>
 
-  <view class="form-item">
-    <text class="label">宠物小类</text>
-    <picker mode="selector" range="{{typeList}}" bindchange="onTypeChange" value="{{typeIndex}}" disabled="{{!categoryList.length}}">
-      <view class="picker-text">{{typeList[typeIndex] || '请先选择宠物大类'}}</view>
+  <!-- 宠物小类 -->
+  <view class="form-card">
+    <text class="form-label">宠物小类</text>
+    <picker
+      mode="selector"
+      range="{{currentTypeList}}"
+      value="{{currentPet.typeIndex}}"
+      bindchange="onTypeChange"
+      disabled="{{!currentPet.category}}"
+    >
+      <view class="picker-field {{!currentPet.category ? 'picker-disabled' : ''}} {{!currentPet.type && currentPet.category ? 'picker-placeholder' : ''}}">
+        <text>
+          {{currentPet.category ? (currentPet.type || '请选择宠物小类') : '请先选择宠物大类'}}
+        </text>
+        <text class="picker-arrow">></text>
+      </view>
     </picker>
   </view>
 
-  <view class="form-item">
-    <text class="label">宠物品种</text>
-    <picker mode="selector" range="{{breedList}}" bindchange="onBreedChange" value="{{breedIndex}}" disabled="{{!typeList.length}}">
-      <view class="picker-text">{{breedList[breedIndex] || '请先选择宠物小类'}}</view>
+  <!-- 宠物品种 -->
+  <view class="form-card">
+    <text class="form-label">宠物品种</text>
+    <picker
+      mode="selector"
+      range="{{currentBreedList}}"
+      value="{{currentPet.breedIndex}}"
+      bindchange="onBreedChange"
+      disabled="{{!currentPet.type}}"
+    >
+      <view class="picker-field {{!currentPet.type ? 'picker-disabled' : ''}} {{!currentPet.breed && currentPet.type ? 'picker-placeholder' : ''}}">
+        <text>
+          {{currentPet.type ? (currentPet.breed || '请选择宠物品种') : '请先选择宠物小类'}}
+        </text>
+        <text class="picker-arrow">></text>
+      </view>
     </picker>
   </view>
 
-  <button class="submit-btn" bindtap="onSubmit">完成注册</button>
+  <!-- 宠物性别 -->
+  <view class="form-card">
+    <text class="form-label">宠物性别</text>
+    <view class="gender-options">
+      <view
+        class="gender-btn {{currentPet.gender === 'male' ? 'active' : ''}}"
+        data-gender="male"
+        bindtap="onGenderSelect"
+      >
+        ♂ 公
+      </view>
+      <view
+        class="gender-btn {{currentPet.gender === 'female' ? 'active' : ''}}"
+        data-gender="female"
+        bindtap="onGenderSelect"
+      >
+        ♀ 母
+      </view>
+    </view>
+  </view>
+
+  <!-- 宠物生日 -->
+  <view class="form-card">
+    <text class="form-label">宠物生日</text>
+    <picker
+      mode="date"
+      value="{{currentPet.birthday}}"
+      start="1990-01-01"
+      end="{{today}}"
+      bindchange="onBirthdayChange"
+    >
+      <view class="picker-field {{!currentPet.birthday ? 'picker-placeholder' : ''}}">
+        <text>{{currentPet.birthday || '请选择宠物生日'}}</text>
+        <text class="picker-arrow">></text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 已添加宠物列表 -->
+  <view class="pet-list-section" wx:if="{{petList.length > 0}}">
+    <view class="section-title">已添加宠物 ({{petList.length}}只)</view>
+    <block wx:for="{{petList}}" wx:key="id">
+      <view class="pet-item">
+        <view class="pet-info">
+          <view class="pet-name">{{item.petName}}</view>
+          <view class="pet-breed">{{item.category}} · {{item.type}} · {{item.breed}}</view>
+        </view>
+        <view class="pet-actions">
+          <view class="action-btn edit" data-index="{{index}}" bindtap="onEditPet">编辑</view>
+          <view class="action-btn delete" data-index="{{index}}" bindtap="onDeletePet">删除</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部按钮区域 -->
+  <view class="bottom-actions">
+    <button class="add-pet-btn" bindtap="onAddPet">+ 添加宠物</button>
+    <button
+      class="submit-btn {{canSubmit ? '' : 'disabled'}}"
+      bindtap="onSubmit"
+      disabled="{{!canSubmit}}"
+    >
+      完成注册
+    </button>
+  </view>
+
+  <!-- 删除确认弹窗 -->
+  <view class="modal-mask" wx:if="{{showDeleteModal}}" bindtap="onCancelDelete">
+    <view class="modal-content" catchtap="preventBubble">
+      <view class="modal-title">确认删除</view>
+      <view class="modal-desc">确定要删除这只宠物吗？删除后无法恢复。</view>
+      <view class="modal-btns">
+        <button class="modal-btn cancel" bindtap="onCancelDelete">取消</button>
+        <button class="modal-btn confirm" bindtap="onConfirmDelete">确定</button>
+      </view>
+    </view>
+  </view>
 </view>
