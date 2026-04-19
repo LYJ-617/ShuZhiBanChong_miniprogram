@@ -1,0 +1,42 @@
+<view class="my-comments-page" style="padding-top: {{statusBarTop + 20}}rpx; padding-bottom: {{safeBottom + 20}}rpx;">
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{isEmpty}}">
+    <text class="empty-icon">💬</text>
+    <text class="empty-text">还没有发表过任何评论</text>
+    <text class="empty-desc">快去和宠友们互动吧</text>
+  </view>
+
+  <!-- 统计栏 -->
+  <view class="stats-bar" wx:if="{{!isEmpty}}">
+    <text class="stats-text">共 {{comments.length}} 条评论</text>
+  </view>
+
+  <!-- 评论列表 -->
+  <view class="comments-list" wx:else>
+    <view class="comment-item" wx:for="{{comments}}" wx:key="index">
+      <!-- 评论头部 -->
+      <view class="comment-header">
+        <image class="comment-avatar" src="{{userInfo && userInfo.avatarUrl || '/static/images/default-avatar.png'}}" mode="aspectFill"></image>
+        <view class="header-info">
+          <text class="comment-username">{{userInfo && (userInfo.nickname || userInfo.username) || '用户'}}</text>
+          <text class="comment-date">{{item.comment.createTime}}</text>
+        </view>
+      </view>
+      <!-- 评论内容 -->
+      <view class="comment-content">{{item.comment.content}}</view>
+      <!-- 原帖子卡片 -->
+      <view class="post-card" bindtap="goToPost" data-post-id="{{item.post && item.post.id}}" wx:if="{{item.post}}">
+        <image wx:if="{{item.post.images && item.post.images.length > 0}}" 
+               src="{{item.post.images[0]}}" 
+               mode="aspectFill" 
+               class="post-thumb"></image>
+        <view class="post-info">
+          <text class="post-title">{{item.post.content}}</text>
+          <text class="post-arrow">›</text>
+        </view>
+      </view>
+      <!-- 删除按钮 -->
+      <view class="comment-delete" catchtap="deleteComment" data-comment-id="{{item.comment.id}}">删除</view>
+    </view>
+  </view>
+</view>

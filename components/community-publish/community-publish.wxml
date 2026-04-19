@@ -3,13 +3,53 @@
     <text class="label">帖子内容</text>
     <textarea class="textarea" placeholder="请输入帖子内容" bindinput="onContentInput" value="{{content}}" catchtap="doNothing" />
   </view>
+  
+  <!-- 图片上传区域 -->
   <view class="form-item">
-    <text class="label">话题标签（可多选）</text>
-    <view class="tag-list">
-      <view class="tag {{tags.includes('日常记录') ? 'active' : ''}}" style="background-color: {{tags.includes('日常记录') ? '#07c160' : '#f0f0f0'}}; color: {{tags.includes('日常记录') ? '#fff' : '#333'}}; border-color: {{tags.includes('日常记录') ? '#07c160' : 'transparent'}};" catchtap="toggleTag" data-tag="日常记录">日常记录</view>
-      <view class="tag {{tags.includes('医疗知识') ? 'active' : ''}}" style="background-color: {{tags.includes('医疗知识') ? '#07c160' : '#f0f0f0'}}; color: {{tags.includes('医疗知识') ? '#fff' : '#333'}}; border-color: {{tags.includes('医疗知识') ? '#07c160' : 'transparent'}};" catchtap="toggleTag" data-tag="医疗知识">医疗知识</view>
-      <view class="tag {{tags.includes('好物分享') ? 'active' : ''}}" style="background-color: {{tags.includes('好物分享') ? '#07c160' : '#f0f0f0'}}; color: {{tags.includes('好物分享') ? '#fff' : '#333'}}; border-color: {{tags.includes('好物分享') ? '#07c160' : 'transparent'}};" catchtap="toggleTag" data-tag="好物分享">好物分享</view>
-      <view class="tag {{tags.includes('科普知识') ? 'active' : ''}}" style="background-color: {{tags.includes('科普知识') ? '#07c160' : '#f0f0f0'}}; color: {{tags.includes('科普知识') ? '#fff' : '#333'}}; border-color: {{tags.includes('科普知识') ? '#07c160' : 'transparent'}};" catchtap="toggleTag" data-tag="科普知识">科普知识</view>
+    <text class="label">添加图片（最多9张）</text>
+    <view class="image-upload-area">
+      <!-- 已上传图片网格 -->
+      <view class="image-grid" wx:if="{{images.length > 0}}">
+        <view 
+          class="image-item {{isDragging && dragIndex === index ? 'dragging' : ''}} {{dropIndex === index && dragIndex !== index ? 'drop-target' : ''}}" 
+          wx:for="{{images}}" 
+          wx:key="*this"
+          bindlongpress="onLongPress"
+          bindtouchmove="onTouchMove"
+          bindtouchend="onTouchEnd"
+          data-index="{{index}}"
+        >
+          <image class="preview-img" src="{{item}}" mode="aspectFill" catchtap="previewImage" data-index="{{index}}"></image>
+          <!-- 编辑按钮 -->
+          <view class="edit-btn" catchtap="editImage" data-index="{{index}}">编辑</view>
+          <!-- 删除按钮 -->
+          <view class="delete-btn" catchtap="deleteImage" data-index="{{index}}">×</view>
+          <!-- 拖拽提示 -->
+          <view class="drag-hint" wx:if="{{isDragging && dragIndex === index}}">拖动中</view>
+        </view>
+        <!-- 添加按钮 -->
+        <view class="add-image-btn" wx:if="{{images.length < 9}}" bindtap="chooseImage">
+          <text class="add-icon">+</text>
+        </view>
+      </view>
+      <!-- 空状态 -->
+      <view class="empty-upload" wx:else bindtap="chooseImage">
+        <text class="upload-icon">+</text>
+        <text class="upload-text">点击添加图片</text>
+      </view>
+    </view>
+    <!-- 拖拽提示文字 -->
+    <text class="drag-tip" wx:if="{{images.length > 1}}">长按图片可拖拽调整顺序</text>
+  </view>
+  
+  <!-- 话题标签模块 -->
+  <view class="tag-section">
+    <view class="tag-title">话题标签（可多选）</view>
+    <view class="tag-container">
+      <view class="tag-item {{selectedTags.indexOf('日常记录') > -1 ? 'active' : ''}}" bindtap="toggleTag" data-tag="日常记录">日常记录</view>
+      <view class="tag-item {{selectedTags.indexOf('医疗知识') > -1 ? 'active' : ''}}" bindtap="toggleTag" data-tag="医疗知识">医疗知识</view>
+      <view class="tag-item {{selectedTags.indexOf('好物分享') > -1 ? 'active' : ''}}" bindtap="toggleTag" data-tag="好物分享">好物分享</view>
+      <view class="tag-item {{selectedTags.indexOf('科普知识') > -1 ? 'active' : ''}}" bindtap="toggleTag" data-tag="科普知识">科普知识</view>
     </view>
   </view>
 </view>

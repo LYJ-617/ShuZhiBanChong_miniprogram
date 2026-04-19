@@ -1,0 +1,329 @@
+<view class="pet-add-page" style="padding-top: {{statusBarHeight}}rpx;">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar" style="height: {{navBarHeight}}rpx;">
+    <view class="nav-back" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <text class="nav-title">添加宠物</text>
+    <view class="nav-placeholder"></view>
+  </view>
+
+  <!-- 宠物照片轮播 -->
+  <view class="photo-section">
+    <swiper class="photo-swiper" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#ffffff" circular>
+      <swiper-item wx:for="{{formData.photos}}" wx:key="index">
+        <image class="photo-img" src="{{item}}" mode="aspectFill"/>
+      </swiper-item>
+      <swiper-item>
+        <view class="photo-add" bindtap="addPhoto">
+          <text class="add-icon">+</text>
+          <text class="add-text">添加照片</text>
+        </view>
+      </swiper-item>
+    </swiper>
+    <view class="photo-hint">点击添加更多照片（最多9张）</view>
+    
+    <!-- 照片编辑工具 -->
+    <view class="photo-tools" wx:if="{{formData.photos.length > 0}}">
+      <view class="photo-tool-btn" bindtap="chooseAvatar">
+        <text class="tool-icon">📷</text>
+        <text class="tool-text">设为主图</text>
+      </view>
+      <view class="photo-tool-btn" bindtap="clearPhotos">
+        <text class="tool-icon">🗑️</text>
+        <text class="tool-text">清空照片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 基本信息表单 -->
+  <view class="form-section">
+    <view class="form-title">
+      <text class="title-icon">📋</text>
+      <text>基本信息</text>
+    </view>
+
+    <!-- 宠物名称 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">宠物名称</text>
+        <text class="required">*</text>
+      </view>
+      <input class="form-input" placeholder="宠物名称" value="{{formData.petName}}" bindinput="onNameInput" maxlength="10"/>
+    </view>
+
+    <!-- 宠物类型 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">宠物类型</text>
+        <text class="required">*</text>
+      </view>
+      <view class="type-selector">
+        <view class="type-option {{formData.petType === 'dog' ? 'active' : ''}}" data-type="dog" bindtap="selectPetType">
+          <text class="type-icon">🐶</text>
+        </view>
+        <view class="type-option {{formData.petType === 'cat' ? 'active' : ''}}" data-type="cat" bindtap="selectPetType">
+          <text class="type-icon">🐱</text>
+        </view>
+        <view class="type-option {{formData.petType === 'other' ? 'active' : ''}}" data-type="other" bindtap="selectPetType">
+          <text class="type-icon">🐹</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 品种 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">品种</text>
+        <text class="required">*</text>
+      </view>
+      <picker class="breed-picker" mode="selector" range="{{breedList}}" range-key="name" bindchange="onBreedChange">
+        <view class="picker-value {{formData.breed ? '' : 'placeholder'}}">
+          {{formData.breed || '请选择品种'}}
+        </view>
+        <text class="arrow">›</text>
+      </picker>
+    </view>
+
+    <!-- 性别 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">性别</text>
+      </view>
+      <view class="gender-selector">
+        <view class="gender-option {{formData.gender === 'male' ? 'active' : ''}}" data-gender="male" bindtap="selectGender">
+          <text class="gender-icon">♂</text>
+          <text class="gender-text">公</text>
+        </view>
+        <view class="gender-option {{formData.gender === 'female' ? 'active' : ''}}" data-gender="female" bindtap="selectGender">
+          <text class="gender-icon">♀</text>
+          <text class="gender-text">母</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 年龄 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">年龄</text>
+      </view>
+      <view class="age-input-group">
+        <input class="form-input age-input" type="number" placeholder="0" value="{{formData.ageYears}}" bindinput="onAgeYearsInput" maxlength="2"/>
+        <text class="age-unit">岁</text>
+        <input class="form-input age-input" type="number" placeholder="0" value="{{formData.ageMonths}}" bindinput="onAgeMonthsInput" maxlength="2"/>
+        <text class="age-unit">月</text>
+      </view>
+    </view>
+
+    <!-- 体重 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">体重</text>
+      </view>
+      <view class="weight-input-group">
+        <input class="form-input weight-input" type="digit" placeholder="0.0" value="{{formData.weight}}" bindinput="onWeightInput" maxlength="5"/>
+        <text class="weight-unit">kg</text>
+      </view>
+    </view>
+
+    <!-- 绝育状态 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">是否绝育</text>
+      </view>
+      <view class="switch-group">
+        <view class="switch-option {{formData.isNeutered === true ? 'active' : ''}}" data-value="true" bindtap="selectNeutered">
+          <text>已绝育</text>
+        </view>
+        <view class="switch-option {{formData.isNeutered === false ? 'active' : ''}}" data-value="false" bindtap="selectNeutered">
+          <text>未绝育</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 健康记录模块 -->
+  <view class="form-section">
+    <view class="form-title">
+      <text class="title-icon">💊</text>
+      <text>健康记录</text>
+    </view>
+
+    <!-- 疫苗接种 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">疫苗接种</text>
+      </view>
+      <view class="vaccine-tags">
+        <view class="vaccine-tag {{formData.vaccines.includes('rabies') ? 'active' : ''}}" data-vaccine="rabies" bindtap="toggleVaccine">
+          <text class="tag-icon">💉</text>
+          <text class="tag-text">狂犬疫苗</text>
+        </view>
+        <view class="vaccine-tag {{formData.vaccines.includes('combo') ? 'active' : ''}}" data-vaccine="combo" bindtap="toggleVaccine">
+          <text class="tag-icon">💉</text>
+          <text class="tag-text">联苗</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 疫苗时间 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">最近疫苗</text>
+      </view>
+      <picker class="date-picker" mode="date" value="{{formData.lastVaccineDate}}" bindchange="onVaccineDateChange">
+        <view class="picker-value {{formData.lastVaccineDate ? '' : 'placeholder'}}">
+          {{formData.lastVaccineDate || '选择日期'}}
+        </view>
+        <text class="arrow">›</text>
+      </picker>
+    </view>
+
+    <!-- 驱虫 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">驱虫情况</text>
+      </view>
+      <view class="deworming-tags">
+        <view class="deworming-tag {{formData.deworming === 'regular' ? 'active' : ''}}" data-deworming="regular" bindtap="selectDeworming">
+          <text class="tag-icon">🔰</text>
+          <text class="tag-text">定期</text>
+        </view>
+        <view class="deworming-tag {{formData.deworming === 'occasionally' ? 'active' : ''}}" data-deworming="occasionally" bindtap="selectDeworming">
+          <text class="tag-icon">🔄</text>
+          <text class="tag-text">偶尔</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 健康状态 -->
+    <view class="form-item">
+      <view class="item-label">
+        <text class="label-text">健康状态</text>
+      </view>
+      <view class="health-tags">
+        <view class="health-tag {{formData.healthStatus === 'healthy' ? 'active' : ''}}" data-status="healthy" bindtap="selectHealthStatus">
+          <text>✅ 健康</text>
+        </view>
+        <view class="health-tag {{formData.healthStatus === 'chronic' ? 'active' : ''}}" data-status="chronic" bindtap="selectHealthStatus">
+          <text>💊 慢性病</text>
+        </view>
+        <view class="health-tag {{formData.healthStatus === 'recovering' ? 'active' : ''}}" data-status="recovering" bindtap="selectHealthStatus">
+          <text>🏥 恢复中</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 既往病史 -->
+    <view class="form-item intro-item">
+      <view class="item-label">
+        <text class="label-text">既往病史</text>
+      </view>
+      <textarea class="form-textarea" placeholder="记录过往疾病、手术等健康信息" value="{{formData.medicalHistory}}" bindinput="onMedicalHistoryInput" maxlength="200" auto-height/>
+    </view>
+  </view>
+
+  <!-- 日常提醒模块 -->
+  <view class="form-section">
+    <view class="form-title">
+      <text class="title-icon">⏰</text>
+      <text>日常提醒</text>
+      <text class="optional-hint">（选填）</text>
+    </view>
+
+    <!-- 喂食提醒 -->
+    <view class="reminder-item">
+      <view class="reminder-header">
+        <text class="reminder-icon">🍖</text>
+        <text class="reminder-name">喂食提醒</text>
+        <switch class="reminder-switch" checked="{{formData.feedingReminder.enabled}}" bindchange="toggleReminder" data-type="feedingReminder"/>
+      </view>
+      <view class="reminder-content" wx:if="{{formData.feedingReminder.enabled}}">
+        <view class="time-picker-row">
+          <view class="time-picker-item" wx:for="{{formData.feedingReminder.times}}" wx:key="index">
+            <picker mode="time" value="{{item}}" bindchange="onFeedingTimeChange" data-index="{{index}}">
+              <text class="time-text">{{item || '选择时间'}}</text>
+            </picker>
+            <text class="time-delete" wx:if="{{formData.feedingReminder.times.length > 1}}" catchtap="deleteFeedingTime" data-index="{{index}}">×</text>
+          </view>
+        </view>
+        <view class="add-time-btn" wx:if="{{formData.feedingReminder.times.length < 4}}" catchtap="addFeedingTime">
+          <text>+ 添加时间段</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 疫苗提醒 -->
+    <view class="reminder-item">
+      <view class="reminder-header">
+        <text class="reminder-icon">💉</text>
+        <text class="reminder-name">疫苗提醒</text>
+        <switch class="reminder-switch" checked="{{formData.vaccineReminder.enabled}}" bindchange="toggleReminder" data-type="vaccineReminder"/>
+      </view>
+      <view class="reminder-content" wx:if="{{formData.vaccineReminder.enabled}}">
+        <picker class="reminder-date-picker" mode="date" value="{{formData.vaccineReminder.nextDate}}" bindchange="onVaccineReminderDateChange">
+          <view class="picker-value {{formData.vaccineReminder.nextDate ? '' : 'placeholder'}}">
+            下次疫苗：{{formData.vaccineReminder.nextDate || '设置日期'}}
+          </view>
+          <text class="arrow">›</text>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 驱虫提醒 -->
+    <view class="reminder-item">
+      <view class="reminder-header">
+        <text class="reminder-icon">🔰</text>
+        <text class="reminder-name">驱虫提醒</text>
+        <switch class="reminder-switch" checked="{{formData.dewormingReminder.enabled}}" bindchange="toggleReminder" data-type="dewormingReminder"/>
+      </view>
+      <view class="reminder-content" wx:if="{{formData.dewormingReminder.enabled}}">
+        <picker class="reminder-date-picker" mode="date" value="{{formData.dewormingReminder.nextDate}}" bindchange="onDewormingReminderDateChange">
+          <view class="picker-value {{formData.dewormingReminder.nextDate ? '' : 'placeholder'}}">
+            下次驱虫：{{formData.dewormingReminder.nextDate || '设置日期'}}
+          </view>
+          <text class="arrow">›</text>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 洗澡提醒 -->
+    <view class="reminder-item">
+      <view class="reminder-header">
+        <text class="reminder-icon">🛁</text>
+        <text class="reminder-name">洗澡提醒</text>
+        <switch class="reminder-switch" checked="{{formData.bathReminder.enabled}}" bindchange="toggleReminder" data-type="bathReminder"/>
+      </view>
+      <view class="reminder-content" wx:if="{{formData.bathReminder.enabled}}">
+        <picker class="reminder-date-picker" mode="date" value="{{formData.bathReminder.nextDate}}" bindchange="onBathReminderDateChange">
+          <view class="picker-value {{formData.bathReminder.nextDate ? '' : 'placeholder'}}">
+            下次洗澡：{{formData.bathReminder.nextDate || '设置日期'}}
+          </view>
+          <text class="arrow">›</text>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 复诊提醒 -->
+    <view class="reminder-item">
+      <view class="reminder-header">
+        <text class="reminder-icon">🏥</text>
+        <text class="reminder-name">复诊提醒</text>
+        <switch class="reminder-switch" checked="{{formData.checkupReminder.enabled}}" bindchange="toggleReminder" data-type="checkupReminder"/>
+      </view>
+      <view class="reminder-content" wx:if="{{formData.checkupReminder.enabled}}">
+        <picker class="reminder-date-picker" mode="date" value="{{formData.checkupReminder.nextDate}}" bindchange="onCheckupReminderDateChange">
+          <view class="picker-value {{formData.checkupReminder.nextDate ? '' : 'placeholder'}}">
+            下次复诊：{{formData.checkupReminder.nextDate || '设置日期'}}
+          </view>
+          <text class="arrow">›</text>
+        </picker>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <view class="btn-save" bindtap="savePet">添加宠物</view>
+  </view>
+</view>

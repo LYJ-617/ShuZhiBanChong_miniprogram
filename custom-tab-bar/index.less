@@ -20,8 +20,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   height: 100rpx;
+  padding-top: 10rpx;
   box-sizing: border-box;
 }
 
@@ -38,10 +39,11 @@
   &.center-tab {
     width: 100rpx;
     height: 100rpx;
-    background: #52c41a;
+    background: linear-gradient(135deg, #FFD166, #E6B84D);
     border-radius: 50%;
-    margin-top: -30rpx;
-    box-shadow: 0 4rpx 16rpx rgba(82, 196, 26, 0.4);
+    margin-top: -40rpx;
+    margin-bottom: 20rpx;
+    box-shadow: 0 4rpx 16rpx rgba(255, 209, 102, 0.4);
   }
 }
 
@@ -58,7 +60,7 @@
   line-height: 1;
   
   &.tab-text-active {
-    color: #52c41a;
+    color: #FFD166;
     font-weight: 500;
   }
 }

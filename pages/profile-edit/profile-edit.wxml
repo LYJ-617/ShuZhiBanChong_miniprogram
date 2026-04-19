@@ -1,0 +1,152 @@
+<view class="profile-edit-page" style="padding-top: {{statusBarHeight}}rpx;">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar" style="height: {{navBarHeight}}rpx;">
+    <view class="nav-back" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <text class="nav-title">编辑资料</text>
+    <view class="nav-right"></view>
+  </view>
+
+  <!-- 用户卡片 -->
+  <view class="user-card">
+    <view class="avatar-section" bindtap="chooseAvatar">
+      <image wx:if="{{userInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="avatar-img" mode="aspectFill"></image>
+      <view wx:else class="avatar-placeholder">
+        <text class="paw-icon">🐾</text>
+      </view>
+      <view class="avatar-tip">点击更换头像</view>
+    </view>
+  </view>
+
+  <!-- 表单区域 -->
+  <view class="form-section">
+    <view class="form-title">基本信息</view>
+    
+    <!-- 用户名 -->
+    <view class="form-item">
+      <text class="form-label">昵称</text>
+      <input class="form-input" placeholder="请输入昵称" value="{{formData.nickname}}" bindinput="onNicknameInput" maxlength="20"/>
+      <text class="word-count">{{formData.nickname.length || 0}}/20</text>
+    </view>
+
+    <!-- 手机号 -->
+    <view class="form-item">
+      <text class="form-label">手机号</text>
+      <view class="phone-section">
+        <input class="form-input {{formData.phone ? '' : 'placeholder'}}" placeholder="请输入手机号" value="{{formData.phone}}" bindinput="onPhoneInput" type="number" maxlength="11"/>
+        <view class="verify-btn {{canSendVerify ? '' : 'disabled'}}" bindtap="sendVerifyCode">
+          {{verifyBtnText}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 验证码 -->
+    <view class="form-item" wx:if="{{showVerifyCode}}">
+      <text class="form-label">验证码</text>
+      <input class="form-input" placeholder="请输入验证码" value="{{formData.verifyCode}}" bindinput="onVerifyCodeInput" type="number" maxlength="6"/>
+    </view>
+
+    <!-- 性别 -->
+    <view class="form-item">
+      <text class="form-label">性别</text>
+      <view class="gender-section">
+        <view class="gender-option {{formData.gender === 'male' ? 'active' : ''}}" data-gender="male" bindtap="selectGender">
+          <text class="gender-icon">♂</text>
+          <text class="gender-text">男</text>
+        </view>
+        <view class="gender-option {{formData.gender === 'female' ? 'active' : ''}}" data-gender="female" bindtap="selectGender">
+          <text class="gender-icon">♀</text>
+          <text class="gender-text">女</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 宠物偏好 -->
+    <view class="form-item">
+      <text class="form-label">宠物偏好</text>
+      <view class="pet-preference">
+        <view class="pet-tag {{formData.petPreference.includes('dog') ? 'active' : ''}}" data-pet="dog" bindtap="togglePetPreference">🐶 狗狗</view>
+        <view class="pet-tag {{formData.petPreference.includes('cat') ? 'active' : ''}}" data-pet="cat" bindtap="togglePetPreference">🐱 猫咪</view>
+        <view class="pet-tag {{formData.petPreference.includes('other') ? 'active' : ''}}" data-pet="other" bindtap="togglePetPreference">🐹 其他</view>
+      </view>
+    </view>
+
+    <!-- 地区 -->
+    <view class="form-item" bindtap="selectRegion">
+      <text class="form-label">所在地区</text>
+      <text class="form-value {{formData.region ? '' : 'placeholder'}}">{{formData.region || '请选择地区'}}</text>
+      <text class="arrow">›</text>
+    </view>
+
+    <!-- 个人简介 -->
+    <view class="form-item intro-item">
+      <text class="form-label">个人简介</text>
+      <textarea class="form-textarea" placeholder="介绍一下自己吧~" value="{{formData.signature}}" bindinput="onSignatureInput" maxlength="100" auto-height/>
+      <text class="word-count">{{formData.signature.length || 0}}/100</text>
+    </view>
+  </view>
+
+  <!-- 养宠信息 -->
+  <view class="form-section">
+    <view class="form-title">养宠信息</view>
+    
+    <!-- 养宠时长 -->
+    <view class="form-item">
+      <text class="form-label">养宠时长</text>
+      <view class="pet-duration">
+        <view class="duration-option {{formData.petDuration === 'less1' ? 'active' : ''}}" data-duration="less1" bindtap="selectDuration">
+          <text class="duration-text">1年内</text>
+        </view>
+        <view class="duration-option {{formData.petDuration === '1to3' ? 'active' : ''}}" data-duration="1to3" bindtap="selectDuration">
+          <text class="duration-text">1-3年</text>
+        </view>
+        <view class="duration-option {{formData.petDuration === '3to5' ? 'active' : ''}}" data-duration="3to5" bindtap="selectDuration">
+          <text class="duration-text">3-5年</text>
+        </view>
+        <view class="duration-option {{formData.petDuration === 'more5' ? 'active' : ''}}" data-duration="more5" bindtap="selectDuration">
+          <text class="duration-text">5年以上</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 养宠数量 -->
+    <view class="form-item">
+      <text class="form-label">养宠数量</text>
+      <view class="pet-count">
+        <view class="count-btn minus {{formData.petCount <= 1 ? 'disabled' : ''}}" bindtap="decreasePetCount">−</view>
+        <text class="count-value">{{formData.petCount}}</text>
+        <view class="count-btn plus" bindtap="increasePetCount">+</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <view class="btn-save" bindtap="saveProfile">保存</view>
+    <view class="btn-cancel" bindtap="goBack">取消</view>
+  </view>
+
+  <!-- 地区选择器 -->
+  <view class="region-picker" wx:if="{{showRegionPicker}}">
+    <view class="picker-mask" bindtap="closeRegionPicker"></view>
+    <view class="picker-content">
+      <view class="picker-header">
+        <text class="picker-cancel" bindtap="closeRegionPicker">取消</text>
+        <text class="picker-title">选择地区</text>
+        <text class="picker-confirm" bindtap="confirmRegion">确定</text>
+      </view>
+      <picker-view class="picker-view" value="{{regionIndex}}" bindchange="onRegionChange">
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{provinces}}" wx:key="index">{{item}}</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{cities}}" wx:key="index">{{item}}</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{districts}}" wx:key="index">{{item}}</view>
+        </picker-view-column>
+      </picker-view>
+    </view>
+  </view>
+</view>

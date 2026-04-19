@@ -1,63 +1,178 @@
-.about-page {
-  min-height: 100vh;
-  background: #f5f5f5;
-  padding: 60rpx 30rpx 120rpx;
+// ============ 关于我们页面样式 - 统一设计规范 ============
+@import '../../styles/design-system.less';
 
-  .logo-section {
+.about-page {
+  .page-container();
+  padding: @spacing-xl @spacing-xxl;
+}
+
+// Logo区域
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 0 @spacing-xl;
+
+  .logo-wrapper {
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: @radius-lg;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin-bottom: 60rpx;
+    justify-content: center;
+    margin-bottom: @spacing-xl;
+    box-shadow: 0 8rpx 32rpx rgba(82, 196, 26, 0.2);
 
     .logo {
-      width: 160rpx;
-      height: 160rpx;
-      border-radius: 32rpx;
-      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      font-size: 80rpx;
+    }
+  }
+
+  .app-name {
+    font-size: @font-xxxl;
+    font-weight: 700;
+    color: @text-primary;
+    margin-bottom: 12rpx;
+  }
+
+  .version {
+    font-size: @font-md;
+    color: @text-tertiary;
+    padding: 8rpx @spacing-xl;
+    background: @bg-color;
+    border-radius: @radius-full;
+  }
+}
+
+// 关于卡片
+.about-card {
+  .card-base();
+  margin-bottom: @spacing-xl;
+
+  .card-header {
+    padding: @spacing-xl @spacing-xxl @spacing-md;
+    border-bottom: 1rpx solid @border-color;
+
+    .card-title {
+      font-size: @font-lg;
+      font-weight: 600;
+      color: @text-primary;
+    }
+  }
+
+  .card-content {
+    padding: @spacing-xl @spacing-xxl;
+
+    .intro-text {
+      font-size: @font-md;
+      color: @text-secondary;
+      line-height: 1.8;
+      display: block;
+      margin-bottom: @spacing-md;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// 功能介绍卡片
+.feature-card {
+  .card-base();
+  margin-bottom: @spacing-xl;
+
+  .card-header {
+    padding: @spacing-xl @spacing-xxl @spacing-md;
+    border-bottom: 1rpx solid @border-color;
+
+    .card-title {
+      font-size: @font-lg;
+      font-weight: 600;
+      color: @text-primary;
+    }
+  }
+
+  .feature-list {
+    padding: @spacing-xs 0;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    padding: @spacing-xl @spacing-xxl;
+    transition: background @transition-normal;
+    .tap-active();
+
+    .feature-icon {
+      width: 72rpx;
+      height: 72rpx;
+      border-radius: @radius-md;
+      .icon-gradient(#52c41a);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 80rpx;
-      margin-bottom: 20rpx;
-    }
-
-    .app-name {
       font-size: 36rpx;
-      font-weight: bold;
-      color: #333;
+      margin-right: 20rpx;
+      flex-shrink: 0;
     }
 
-    .version {
-      font-size: 24rpx;
-      color: #999;
-      margin-top: 8rpx;
-    }
-  }
-
-  .intro-section {
-    background: #fff;
-    border-radius: 16rpx;
-    padding: 30rpx;
-    margin-bottom: 40rpx;
-
-    .intro-title {
-      font-size: 28rpx;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 16rpx;
+    .feature-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
-    .intro-text {
-      font-size: 26rpx;
-      color: #666;
-      line-height: 1.8;
+    .feature-title {
+      font-size: @font-lg;
+      font-weight: 500;
+      color: @text-primary;
+      margin-bottom: 6rpx;
+    }
+
+    .feature-desc {
+      font-size: @font-sm;
+      color: @text-tertiary;
     }
   }
+}
 
-  .update-btn {
-    text-align: center;
-    padding: 24rpx;
-    font-size: 28rpx;
-    color: #07c160;
+// 操作区域
+.action-section {
+  padding: @spacing-md 0;
+}
+
+.update-btn {
+  height: 96rpx;
+  background: @card-bg;
+  border-radius: @radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: @shadow-sm;
+  transition: all @transition-normal;
+  .btn-active();
+
+  .update-text {
+    font-size: @font-xl;
+    font-weight: 600;
+    color: @primary-color;
   }
+}
+
+// 版权信息
+.copyright {
+  text-align: center;
+  padding: @spacing-xl 0 @spacing-md;
+
+  .copyright-text {
+    font-size: @font-xs;
+    color: @text-tertiary;
+  }
+}
+
+// 底部安全区域
+.safe-area-bottom {
+  .safe-area-bottom();
 }

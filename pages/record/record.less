@@ -1,0 +1,224 @@
+/* pages/record/record.less - 统一设计规范 */
+@import '../../styles/design-system.less';
+
+.container {
+  padding: @spacing-lg;
+  background: @base-bg;
+  min-height: 100vh;
+}
+
+/* ============ 头部区域 ============ */
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: @spacing-lg;
+}
+
+.search-box {
+  margin-bottom: @spacing-md;
+}
+
+.search-input {
+  height: 72rpx;
+  background: @card-bg;
+  border-radius: @radius-lg;
+  padding: 0 @spacing-lg;
+  font-size: @font-md;
+  box-shadow: @shadow-sm;
+}
+
+.publish-btn {
+  background: @primary-gradient;
+  color: #fff;
+  border-radius: @radius-lg;
+  padding: @spacing-md @spacing-lg;
+  font-size: @font-base;
+  box-shadow: 0 4rpx 12rpx rgba(255, 209, 102, 0.3);
+}
+
+.report-btn {
+  background: linear-gradient(135deg, fade(@accent-orange, 15%) 0%, fade(@accent-orange, 8%) 100%);
+  color: @accent-orange;
+  border-radius: @radius-lg;
+  padding: @spacing-md @spacing-lg;
+  font-size: @font-base;
+}
+
+.btn-hover {
+  opacity: 0.7;
+}
+
+/* ============ 宠物选择器 ============ */
+.pet-selector {
+  background-color: @card-bg;
+  border-radius: @radius-lg;
+  padding: @spacing-lg;
+  margin-bottom: @spacing-lg;
+  box-shadow: @shadow-sm;
+}
+
+/* ============ 标签列表 ============ */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: @spacing-md;
+}
+
+/* ============ 日志列表 ============ */
+.log-list {
+  gap: @spacing-lg;
+}
+
+.log-item {
+  background-color: @card-bg;
+  border-radius: @radius-lg;
+  padding: @spacing-lg;
+  margin-bottom: @spacing-lg;
+  box-shadow: @shadow-sm;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: @spacing-md;
+}
+
+.pet-name {
+  font-size: @font-lg;
+  font-weight: 600;
+  color: @text-primary;
+}
+
+.log-time {
+  font-size: @font-sm;
+  color: @text-tertiary;
+}
+
+.delete-log-btn {
+  font-size: @font-sm;
+  color: @danger-color;
+  padding: @spacing-xs @spacing-sm;
+}
+
+.privacy-flag {
+  width: fit-content;
+  margin-top: @spacing-sm;
+  font-size: @font-xs;
+  color: @text-tertiary;
+  background: @bg-color;
+  border-radius: @radius-full;
+  padding: 4rpx @spacing-md;
+}
+
+.log-content {
+  font-size: @font-base;
+  line-height: 1.6;
+  margin-bottom: @spacing-md;
+  color: @text-primary;
+}
+
+.log-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: @spacing-xs;
+  margin-bottom: @spacing-md;
+}
+
+.log-publish-to {
+  font-size: @font-sm;
+  color: @text-secondary;
+}
+
+.empty-tip {
+  text-align: center;
+  padding: @spacing-xxl * 2 0;
+  color: @text-tertiary;
+  font-size: @font-lg;
+}
+
+/* ============ 模态框样式 ============ */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: @spacing-xl;
+  box-sizing: border-box;
+}
+
+.modal-container {
+  width: 100%;
+  max-width: 600rpx;
+  max-height: 80vh;
+  background-color: @card-bg;
+  border-radius: @radius-xl;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: @spacing-xl @spacing-xxl;
+  border-bottom: 1rpx solid @border-color;
+  flex-shrink: 0;
+}
+
+.modal-title {
+  font-size: @font-xl;
+  font-weight: 600;
+  color: @text-primary;
+}
+
+.modal-close {
+  font-size: @font-xxxl;
+  color: @text-tertiary;
+  padding: @spacing-xs;
+  line-height: 1;
+}
+
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  min-height: 200rpx;
+  max-height: 50vh;
+}
+
+.modal-footer {
+  display: flex;
+  gap: @spacing-md;
+  padding: @spacing-lg @spacing-xxl;
+  border-top: 1rpx solid @border-color;
+  flex-shrink: 0;
+}
+
+.modal-btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: @radius-lg;
+  font-size: @font-lg;
+  border: none;
+  padding: 0;
+
+  &.cancel-btn {
+    background-color: @bg-color;
+    color: @text-secondary;
+  }
+
+  &.confirm-btn {
+    background: @primary-gradient;
+    color: #ffffff;
+    box-shadow: 0 4rpx 12rpx rgba(255, 209, 102, 0.3);
+  }
+}

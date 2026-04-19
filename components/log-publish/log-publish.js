@@ -10,7 +10,7 @@ Component({
     content: '',
     topicInput: '',
     tags: [],
-    tagOptions: ['日常', '科普', '健康', '趣事'],
+    tagOptions: ['日常记录', '医疗知识', '好物分享', '科普知识'],
     publishTo: [],
     location: '',
     healthInfo: {
@@ -73,20 +73,18 @@ Component({
       this.updateLogData();
     },
 
-    onTopicInput(e) {
-      const input = e.detail.value;
-      console.log('话题输入:', input);
-      // 解析输入的话题，支持 #话题 格式
-      let tags = [];
-      if (input) {
-        // 移除 # 号，按逗号或空格分割
-        const cleanInput = input.replace(/#/g, '');
-        tags = cleanInput.split(/[,，\s]+/).filter(tag => tag.trim());
+    toggleTag(e) {
+      const tag = e.currentTarget.dataset.tag;
+      const tags = this.data.tags;
+      if (tags.includes(tag)) {
+        this.setData({
+          tags: tags.filter(t => t !== tag)
+        });
+      } else {
+        this.setData({
+          tags: [...tags, tag]
+        });
       }
-      this.setData({
-        topicInput: input,
-        tags: tags
-      });
       this.updateLogData();
     },
 
@@ -113,120 +111,81 @@ Component({
     },
 
     selectLocation() {
-      console.log('=== 开始定位流程 ===');
-      wx.showLoading({
-        title: '正在获取位置...',
-        mask: true
-      });
-
-      // 先检查并请求权限
-      wx.getSetting({
+      console.log('=== 开始选择位置流程 ===');
+      
+      // 使用 wx.chooseLocation API 直接获取地址名称
+      // 这个 API 会打开地图让用户选择位置，返回的 name 和 address 就是可读的地址信息
+      wx.chooseLocation({
         success: (res) => {
-          console.log('权限设置:', res.authSetting);
-          wx.hideLoading();
-
-          if (res.authSetting['scope.userLocation']) {
-            // 已授权，直接定位
-            console.log('已有位置权限，开始定位');
-            this.doLocation();
-          } else if (res.authSetting['scope.userLocation'] === false) {
-            // 用户拒绝过，引导去设置
-            console.log('位置权限被拒绝，引导用户去设置');
+          console.log('选择位置成功:', res);
+          
+          if (res && res.name) {
+            // 优先使用地点名称，其次使用完整地址
+            const address = res.name || res.address || '';
+            
+            // 格式化地址：移除冗余信息，保留核心地址
+            let displayAddress = address;
+            if (displayAddress.length > 50) {
+              // 如果地址过长，截取前50个字符并添加省略号
+              displayAddress = displayAddress.substring(0, 50) + '...';
+            }
+            
+            this.setData({
+              location: displayAddress,
+              locationData: {
+                name: res.name,
+                address: res.address,
+                latitude: res.latitude,
+                longitude: res.longitude
+              }
+            });
+            this.updateLogData();
+            
+            wx.showToast({
+              title: '定位成功',
+              icon: 'success',
+              duration: 1500
+            });
+          } else {
+            // 用户未选择有效位置
+            wx.showToast({
+              title: '未选择位置',
+              icon: 'none',
+              duration: 1500
+            });
+          }
+        },
+        fail: (err) => {
+          console.error('选择位置失败:', err);
+          
+          // 处理不同错误情况
+          if (err.errMsg && err.errMsg.includes('cancel')) {
+            // 用户主动取消，不做提示
+            console.log('用户取消选择位置');
+          } else if (err.errMsg && err.errMsg.includes('auth deny')) {
+            // 权限被拒绝
             wx.showModal({
               title: '位置权限',
               content: '需要获取您的位置信息，请在设置中开启位置权限',
               confirmText: '去设置',
               success: (modalRes) => {
                 if (modalRes.confirm) {
-                  wx.openSetting({
-                    success: (settingRes) => {
-                      console.log('设置页面返回，权限状态:', settingRes.authSetting);
-                      if (settingRes.authSetting['scope.userLocation']) {
-                        this.doLocation();
-                      }
-                    }
-                  });
+                  wx.openSetting();
                 }
               }
             });
           } else {
-            // 未授权过，请求授权
-            console.log('未授权，请求位置权限');
-            wx.authorize({
-              scope: 'scope.userLocation',
-              success: () => {
-                console.log('授权成功，开始定位');
-                this.doLocation();
-              },
-              fail: (err) => {
-                console.error('授权失败:', err);
-                wx.showModal({
-                  title: '位置权限',
-                  content: '位置信息是选填项，您可以跳过定位直接发布日志',
-                  confirmText: '知道了',
-                  showCancel: false
-                });
-              }
+            // 其他错误
+            wx.showModal({
+              title: '提示',
+              content: '获取位置失败，请稍后重试\n\n位置是选填项，您可以跳过定位直接发布',
+              confirmText: '知道了',
+              showCancel: false
             });
           }
         },
-        fail: (err) => {
-          console.error('获取设置失败:', err);
-          wx.hideLoading();
-          wx.showToast({
-            title: '获取权限设置失败',
-            icon: 'none'
-          });
-        }
-      });
-    },
-
-    doLocation() {
-      wx.showLoading({
-        title: '正在定位...',
-        mask: true
-      });
-
-      wx.getLocation({
-        type: 'gcj02',
-        success: (res) => {
-          console.log('定位成功:', res);
-          wx.hideLoading();
-
-          const { latitude, longitude } = res;
-          wx.showToast({
-            title: '定位成功',
-            icon: 'success',
-            duration: 1500
-          });
-
-          this.setData({
-            location: `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`
-          });
-          this.updateLogData();
-        },
-        fail: (err) => {
-          console.error('定位失败', err);
-          console.error('错误码:', err.errCode);
-          console.error('错误信息:', err.errMsg);
-          wx.hideLoading();
-
-          // 根据错误码给出不同的提示
-          let errorMsg = '定位失败';
-          if (err.errCode === 2) {
-            errorMsg = '定位失败：位置服务未开启';
-          } else if (err.errCode === 1) {
-            errorMsg = '定位失败：权限被拒绝';
-          } else if (err.errCode === 3) {
-            errorMsg = '定位失败：超时';
-          }
-
-          wx.showModal({
-            title: '提示',
-            content: errorMsg + '\n\n位置是选填项，您可以跳过定位直接发布',
-            confirmText: '知道了',
-            showCancel: false
-          });
+        complete: () => {
+          console.log('chooseLocation 调用完成');
         }
       });
     },
@@ -251,10 +210,44 @@ Component({
         tags: this.data.tags,
         publishTo: ['petLog'],
         location: this.data.location,
+        locationData: this.data.locationData,
         createTime: '',
         healthInfo: this.data.tags.includes('健康') ? this.data.healthInfo : undefined
       };
       this.triggerEvent('logData', logData);
+    },
+    // 清除位置
+    clearLocation() {
+      this.setData({
+        location: '',
+        locationData: null
+      });
+      this.updateLogData();
+      wx.showToast({
+        title: '已清除位置',
+        icon: 'success',
+        duration: 1000
+      });
+    },
+    // 重置表单（供外部调用）
+    resetForm() {
+      this.setData({
+        selectedPetId: this.data.petList.length > 0 ? this.data.petList[0].id : '',
+        selectedPetName: this.data.petList.length > 0 ? this.data.petList[0].petName : '',
+        content: '',
+        tags: [],
+        topicInput: '',
+        publishTo: [],
+        location: '',
+        locationData: null,
+        images: [],
+        healthInfo: {
+          stool: '',
+          appetite: '',
+          spirit: ''
+        }
+      });
+      this.updateLogData();
     },
     doNothing() {
       // 阻止事件冒泡的空方法

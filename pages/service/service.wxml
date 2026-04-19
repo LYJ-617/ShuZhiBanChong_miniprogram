@@ -1,63 +1,48 @@
-<view class="container">
-  <view class="pet-selector">
-    <view class="tag-list">
-      <view wx:for="{{petList}}" wx:key="id" class="tag {{selectedPetId === item.id ? 'active' : ''}}" bindtap="selectPet" data-pet-id="{{item.id}}">{{item.petName}}</view>
-    </view>
+<view class="container" style="padding-top: {{statusBarTop + 20}}rpx; padding-bottom: {{safeBottom + 140}}rpx;">
+  <view class="top-tabs">
+    <view class="top-tab {{activeModule==='mall'?'active':''}}" data-module="mall" bindtap="switchModule">商城</view>
+    <view class="top-tab {{activeModule==='consult'?'active':''}}" data-module="consult" bindtap="switchModule">线上问诊</view>
+    <view class="top-tab {{activeModule==='reserve'?'active':''}}" data-module="reserve" bindtap="switchModule">服务预约</view>
   </view>
 
-  <view class="service-grid">
-    <view class="service-item" bindtap="goToMall">
-      <view class="service-icon mall-icon"></view>
-      <text class="service-text">商城</text>
-    </view>
-    <view class="service-item" bindtap="goToConsult">
-      <view class="service-icon consult-icon"></view>
-      <text class="service-text">线上问诊</text>
-    </view>
-    <view class="service-item" bindtap="goToReservation">
-      <view class="service-icon reservation-icon"></view>
-      <text class="service-text">服务预约</text>
-    </view>
+  <view class="search-row">
+    <input class="search-input" placeholder="搜索" bindinput="onSearchInput" value="{{keyword}}" />
   </view>
 
-  <view class="recommendation-section" wx:if="{{recommendProducts.length > 0}}">
-    <view class="section-title">为您推荐</view>
-    <view class="product-list">
-      <view wx:for="{{recommendProducts}}" wx:key="id" class="product-item">
-        <view class="product-info">
-          <view class="product-name">{{item.name}}</view>
-          <view class="product-reason">{{item.reason}}</view>
-        </view>
-        <view class="product-right">
-          <view class="product-price">¥{{item.price}}</view>
-          <button class="buy-btn" bindtap="buyProduct" data-id="{{item.id}}">购买</button>
-        </view>
+  <view wx:if="{{activeModule==='mall'}}">
+    <view class="filter-row">
+      <view wx:for="{{mallCats}}" wx:key="*this" class="chip {{mallCat===item?'active':''}}" bindtap="selectMallCat" data-cat="{{item}}">{{item}}</view>
+    </view>
+    <view class="grid two-col">
+      <view wx:for="{{mallList}}" wx:key="id" class="card" bindtap="goToMall">
+        <view class="card-title">{{item.name}}</view>
+        <view class="card-sub">{{item.desc}}</view>
+        <view class="card-meta">￥{{item.price}}</view>
       </view>
     </view>
   </view>
 
-  <view class="recommendation-section" wx:if="{{recommendDoctors.length > 0}}">
-    <view class="section-title">推荐专家</view>
-    <view class="doctor-list">
-      <view wx:for="{{recommendDoctors}}" wx:key="id" class="doctor-item">
-        <view class="doctor-info">
-          <view class="doctor-name">{{item.name}}</view>
-          <view class="doctor-specialty">擅长：{{item.specialty}}</view>
-        </view>
-        <button class="consult-btn" bindtap="goToConsult">问诊</button>
+  <view wx:elif="{{activeModule==='consult'}}">
+    <view class="filter-row">
+      <view wx:for="{{consultPetTypes}}" wx:key="*this" class="chip {{consultPetType===item?'active':''}}" bindtap="selectConsultPetType" data-type="{{item}}">{{item}}</view>
+    </view>
+    <view class="list">
+      <view wx:for="{{doctorList}}" wx:key="id" class="list-card" bindtap="goToConsult">
+        <view class="row"><text>{{item.name}} · {{item.title}}</text><text>￥{{item.price}}/次</text></view>
+        <view class="row sub"><text>擅长：{{item.goodAt}}</text><text>{{item.count}}问诊 | {{item.score}}分</text></view>
       </view>
     </view>
   </view>
 
-  <view class="recommendation-section" wx:if="{{recommendHospitals.length > 0}}">
-    <view class="section-title">推荐医院</view>
-    <view class="hospital-list">
-      <view wx:for="{{recommendHospitals}}" wx:key="id" class="hospital-item">
-        <view class="hospital-info">
-          <view class="hospital-name">{{item.name}}</view>
-          <view class="hospital-distance">{{item.distance}}</view>
-        </view>
-        <button class="reserve-btn" bindtap="goToReservation">预约</button>
+  <view wx:else>
+    <view class="filter-row">
+      <view wx:for="{{reserveCats}}" wx:key="*this" class="chip {{reserveCat===item?'active':''}}" bindtap="selectReserveCat" data-cat="{{item}}">{{item}}</view>
+    </view>
+    <view class="grid two-col">
+      <view wx:for="{{reserveList}}" wx:key="id" class="card" bindtap="startReserveFlow" data-id="{{item.id}}">
+        <view class="card-title">{{item.name}}</view>
+        <view class="card-sub">{{item.store}} · {{item.distance}}</view>
+        <view class="card-meta">￥{{item.price}} · {{item.count}}人预约</view>
       </view>
     </view>
   </view>

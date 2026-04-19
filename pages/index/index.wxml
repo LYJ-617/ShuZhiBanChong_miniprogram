@@ -1,104 +1,179 @@
 <!-- pages/index/index.wxml -->
-<view class="index-container">
-  <!-- 顶部渐变背景区 -->
-  <view class="top-gradient-bg">
-    <!-- 用户信息 -->
-    <view class="user-info-bar">
-      <text class="greeting">你好，{{username || '主人'}}</text>
-      <text class="subtitle">欢迎来到数智伴宠</text>
+<view class="index-container" style="padding-bottom: {{safeBottom + 120}}rpx;">
+  <!-- 顶部宠物切换区 -->
+  <view class="pet-switch-section" style="padding-top: {{statusBarTop + 20}}rpx;">
+    <view class="pet-info">
+      <text class="pet-name">{{selectedPetName || '请选择宠物'}}</text>
     </view>
+    <picker mode="selector" range="{{petList}}" range-key="petName" value="{{petIndex}}" bindchange="onPetChange" wx:if="{{petList.length > 0}}">
+      <view class="pet-picker">
+        <text class="picker-arrow">V</text>
+      </view>
+    </picker>
   </view>
 
   <!-- 1. 日程提醒区 -->
-  <view class="schedule-section">
+  <view class="schedule-section" style="height: 257rpx; display: block; box-sizing: border-box">
     <view class="section-header">
-      <text class="section-title">今日提醒</text>
-      <text class="more-btn" bindtap="goToScheduleAll">查看全部</text>
+      <text class="section-title">日程提醒</text>
+      
     </view>
-
     <!-- 提醒卡片横向滚动 -->
-    <scroll-view class="schedule-scroll" scroll-x="true" show-scrollbar="false">
-      <view class="schedule-list">
-        <view class="schedule-card" wx:for="{{scheduleList}}" wx:key="id" bindtap="openScheduleDetail" data-item="{{item}}">
-          <view class="schedule-icon" style="background-color: {{item.iconBg}};">
-            <text class="icon-text">{{index === 0 ? '💉' : index === 1 ? '🐛' : '🛁'}}</text>
-          </view>
+    <scroll-view class="schedule-scroll" scroll-x="true" show-scrollbar="false" enhanced="true">
+      <view class="schedule-list" wx:if="{{scheduleList.length > 0}}">
+        <view class="schedule-card {{item.isToday ? 'today' : ''}} {{item.isExpired ? 'expired' : ''}}"
+              wx:for="{{scheduleList}}" wx:key="id"
+              bindtap="onScheduleTap" data-id="{{item.id}}">
           <view class="schedule-content">
             <text class="schedule-title">{{item.title}}</text>
-            <text class="schedule-time">{{item.time}}</text>
-          </view>
-          <view class="schedule-status {{item.isDone ? 'done' : 'pending'}}">
-            {{item.isDone ? '已完成' : '待完成'}}
+            <text class="schedule-time">{{item.displayTime}}</text>
+            <text class="schedule-pet" wx:if="{{petList.length > 1}}">{{item.petName}}</text>
           </view>
         </view>
       </view>
-      <!-- 无提醒时的空状态 -->
-      <view class="schedule-empty" wx:if="{{scheduleList.length === 0}}">
-        <text class="empty-text">今日暂无待办提醒~</text>
-      </view>
     </scroll-view>
+    <!-- 无提醒时的空状态 -->
+    <view class="schedule-empty" wx:if="{{scheduleList.length === 0}}">
+      <text class="empty-text" style="position: relative; left: 76rpx; top: -39rpx">暂无日程提醒</text>
+      <view class="empty-add-btn" bindtap="openAddSchedule" style="position: relative; left: -80rpx; top: 19rpx">添加日程</view>
+    </view>
   </view>
 
-  <!-- 2. 功能图标入口区 -->
+  <!-- 2. 功能图标入口区 (2x2网格) -->
   <view class="function-section">
     <view class="function-grid">
-      <view class="function-item" bindtap="switchTab" data-url="/pages/log/log">
-        <view class="function-icon" style="background: linear-gradient(135deg, #52c41a, #73d13d);">
-          <text class="icon-text">📝</text>
+      <view class="function-item" hover-class="tap-hover" bindtap="switchTab" data-url="/pages/record/record">
+        <view class="function-icon">
+          <text class="icon-emoji">R</text>
         </view>
         <text class="function-name">记录</text>
       </view>
-      <view class="function-item" bindtap="switchTab" data-url="/pages/community/community">
-        <view class="function-icon" style="background: linear-gradient(135deg, #4FC3F7, #2196F3);">
-          <text class="icon-text">🏠</text>
+      <view class="function-item" hover-class="tap-hover" bindtap="switchTab" data-url="/pages/community/community">
+        <view class="function-icon">
+          <text class="icon-emoji">C</text>
         </view>
         <text class="function-name">社区</text>
       </view>
-      <view class="function-item" bindtap="switchTab" data-url="/pages/service/service">
-        <view class="function-icon" style="background: linear-gradient(135deg, #81C784, #4CAF50);">
-          <text class="icon-text">🛒</text>
+      <view class="function-item" hover-class="tap-hover" bindtap="switchTab" data-url="/pages/service/service">
+        <view class="function-icon">
+          <text class="icon-emoji">S</text>
         </view>
         <text class="function-name">服务</text>
       </view>
-      <view class="function-item" bindtap="switchTab" data-url="/pages/mine/mine">
-        <view class="function-icon" style="background: linear-gradient(135deg, #BA68C8, #9C27B0);">
-          <text class="icon-text">👤</text>
+      <view class="function-item" hover-class="tap-hover" bindtap="switchTab" data-url="/pages/mine/mine">
+        <view class="function-icon">
+          <text class="icon-emoji">M</text>
         </view>
         <text class="function-name">我的</text>
       </view>
     </view>
   </view>
 
-  <!-- 3. 日志状态提示区 -->
-  <view class="log-tip-section">
-    <!-- 无日志时显示提示 -->
-    <view class="no-log-tip" wx:if="{{!hasTodayLog && petList.length > 0}}">
-      <text class="tip-icon-emoji">🐾</text>
-      <text class="tip-text">今天还没有记录毛孩子的状态哦~</text>
-      <button class="tip-btn" bindtap="goToWriteLog">立即记录</button>
+  <!-- 3. 核心日志提示区 -->
+  <view class="log-section">
+    <!-- 无日志状态 -->
+    <view class="empty-log" wx:if="{{!hasTodayLog}}" bindtap="goToWriteLog" hover-class="tap-hover">
+      <text class="empty-text">今天还没有记录毛孩子的状态哦~</text>
+      <text class="go-record-btn">去记录</text>
     </view>
-
-    <!-- 无宠物时显示提示 -->
-    <view class="no-log-tip" wx:if="{{petList.length === 0}}">
-      <text class="tip-icon-emoji">🐶</text>
-      <text class="tip-text">还没有添加宠物哦</text>
-      <button class="tip-btn" bindtap="goToRegister">添加宠物</button>
-    </view>
-
-    <!-- 有日志时显示今日日志卡片 -->
-    <view class="today-log-card" wx:if="{{hasTodayLog && todayLog}}">
-      <view class="log-card-header">
-        <text class="log-card-title">今日养宠日志</text>
-        <text class="log-card-time">{{todayLog.createTime}}</text>
+    <!-- 有日志状态 -->
+    <view class="log-card" hover-class="tap-hover" wx:if="{{hasTodayLog}}" bindtap="goToLogDetail">
+      <view class="log-content">
+        <text class="log-text">{{todayLog.content}}</text>
       </view>
-      <view class="log-card-content">{{todayLog.content}}</view>
-      <view class="log-card-footer">
-        <text class="log-tag" wx:for="{{todayLog.tags}}" wx:key="index">#{{item}}</text>
-        <text class="view-detail" bindtap="goToLogDetail">查看详情</text>
-      </view>
+      <image wx:if="{{todayLog.images && todayLog.images.length > 0}}" src="{{todayLog.images[0]}}" mode="aspectFill" class="log-thumb"></image>
     </view>
   </view>
 
   <!-- 底部安全区占位 -->
   <view class="safe-bottom"></view>
+
+  <!-- 日程添加/编辑弹窗 -->
+  <view class="schedule-modal {{scheduleModalVisible ? 'show' : ''}}" wx:if="{{scheduleModalVisible}}">
+    <view class="modal-mask" bindtap="closeScheduleModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">添加日程</text>
+        <text class="modal-close" bindtap="closeScheduleModal">X</text>
+      </view>
+      <view class="modal-body">
+        <!-- 日程标题 -->
+        <view class="form-item">
+          <text class="form-label">*日程标题</text>
+          <input class="form-input" placeholder="请输入日程标题（如：猫咪疫苗接种）" maxlength="20"
+                 data-field="title" bindinput="onScheduleInput" value="{{scheduleForm.title}}"/>
+        </view>
+        <!-- 日程时间 -->
+        <view class="form-item">
+          <text class="form-label">*日程时间</text>
+          <view class="form-row">
+            <picker mode="date" value="{{scheduleForm.date}}" bindchange="onDateChange">
+              <view class="picker-btn">{{scheduleForm.date || '选择日期'}}</view>
+            </picker>
+            <picker mode="time" value="{{scheduleForm.time}}" bindchange="onTimeChange">
+              <view class="picker-btn">{{scheduleForm.time || '选择时间'}}</view>
+            </picker>
+          </view>
+        </view>
+        <!-- 关联宠物 -->
+        <view class="form-item">
+          <text class="form-label">*关联宠物</text>
+          <picker mode="selector" range="{{petList}}" range-key="petName" value="{{petIndex}}" bindchange="onPetChange">
+            <view class="picker-btn">{{selectedPetName || '选择宠物'}}</view>
+          </picker>
+        </view>
+        <!-- 重复周期 -->
+        <view class="form-item">
+          <text class="form-label">重复周期</text>
+          <picker mode="selector" range="{{repeatOptions}}" value="{{scheduleForm.repeatIndex}}" bindchange="onRepeatChange">
+            <view class="picker-btn">{{repeatOptions[scheduleForm.repeatIndex]}}</view>
+          </picker>
+        </view>
+        <!-- 提前提醒 -->
+        <view class="form-item">
+          <text class="form-label">提前提醒</text>
+          <picker mode="selector" range="{{reminderOptions}}" value="{{scheduleForm.reminderIndex}}" bindchange="onReminderChange">
+            <view class="picker-btn">{{reminderOptions[scheduleForm.reminderIndex]}}</view>
+          </picker>
+        </view>
+        <!-- 备注 -->
+        <view class="form-item">
+          <text class="form-label">备注</text>
+          <textarea class="form-textarea" placeholder="请输入备注信息" maxlength="100"
+                    data-field="note" bindinput="onScheduleInput" value="{{scheduleForm.note}}"></textarea>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="save-btn" bindtap="saveSchedule">保存</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 日程详情弹窗 -->
+  <view class="schedule-detail-modal {{scheduleDetailVisible ? 'show' : ''}}" wx:if="{{scheduleDetailVisible}}">
+    <view class="modal-mask" bindtap="closeScheduleDetail"></view>
+    <view class="detail-content">
+      <view class="detail-header">
+        <text class="detail-title">{{currentSchedule.title}}</text>
+        <text class="detail-close" bindtap="closeScheduleDetail">X</text>
+      </view>
+      <view class="detail-body">
+        <view class="detail-item">
+          <text class="detail-label">时间</text>
+          <text class="detail-value">{{currentSchedule.displayTime}}</text>
+        </view>
+        <view class="detail-item" wx:if="{{currentSchedule.note}}">
+          <text class="detail-label">备注</text>
+          <text class="detail-value">{{currentSchedule.note}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">宠物</text>
+          <text class="detail-value">{{currentSchedule.petName || selectedPetName}}</text>
+        </view>
+      </view>
+      <view class="detail-footer">
+        <view class="delete-btn" bindtap="deleteSchedule">删除日程</view>
+      </view>
+    </view>
+  </view>
 </view>

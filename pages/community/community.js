@@ -1,797 +1,491 @@
-const { getCommunityPosts, addCommunityPost } = require('../../utils/api.js');
+const TABS = ['全部', '精选', '日常记录', '好物分享'];
+const PAGE_SIZE = 10;
 
 Page({
   data: {
-    postList: [],
-    leftPosts: [],
-    rightPosts: [],
-    selectedTag: '',
+    statusBarTop: 20,
+    safeBottom: 20,
+    tabs: TABS,
+    selectedTag: '全部',
+    tabSliderStyle: 'left: 20px; width: 60px; opacity: 1;',
     searchKeyword: '',
+    userInfo: null,
     publishModalVisible: false,
     currentPostData: {},
-    userInfo: null,
-    likedPosts: [],
-    collectedPosts: [],
-    showDetailModal: false,
-    currentDetailPost: null,
-    detailCommentText: '',
+    allPosts: [],
+    renderPosts: [],
+    leftPosts: [],
+    rightPosts: [],
+    page: 1,
+    hasMore: true,
     loading: false,
-    // 添加防抖锁
-    isProcessingLike: {},
-    isProcessingCollect: {}
-  },
-
-  async onLoad() {
-    const userInfo = wx.getStorageSync('userInfo');
-    console.log('加载用户信息:', userInfo);
-    if (userInfo) {
-      this.setData({
-        userInfo: typeof userInfo === 'string' ? JSON.parse(userInfo) : userInfo
-      });
-    }
-    // 初始化模拟数据
-    this.initMockData();
-    // 加载用户的点赞和收藏状态
-    this.loadUserActions();
-    this.loadPosts();
+    commentVisible: false,
+    currentPost: null,
+    commentInput: '',
+    likedPostId: '',
+    likeAnimating: false,
+    // 评论编辑相关
+    isEditingComment: false,
+    editingCommentId: '',
+    originalCommentContent: ''
   },
 
   onShow() {
-    // 每次页面显示时重新加载用户操作状态和帖子数据，确保数据同步
-    this.loadUserActions();
-    this.loadPosts();
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 1 });
+    }
+    this.loadPosts(true);
   },
 
-  // 初始化模拟数据
-  initMockData() {
-    let mockPosts = wx.getStorageSync('communityPosts');
-    if (!mockPosts || mockPosts.length === 0) {
-      mockPosts = [
-        {
-          id: '1',
-          userId: 'user1',
-          username: '小宠日记',
-          avatar: 'https://via.placeholder.com/100',
-          title: '我家猫咪今天学会了新技能！',
-          content: '今天终于教会了猫咪握手，太开心了！分享一下训练的小技巧，大家有什么好的训练方法吗？',
-          tags: ['日常记录'],
-          images: ['https://via.placeholder.com/400x500/ff6b6b/ffffff?text=猫咪训练'],
-          likeCount: 128,
-          commentCount: 32,
-          collectCount: 56,
-          createTime: new Date(Date.now() - 3600000).toISOString(),
-          views: 256
-        },
-        {
-          id: '2',
-          userId: 'user2',
-          username: '宠物医生小王',
-          avatar: 'https://via.placeholder.com/100',
-          title: '春季宠物护理必备知识',
-          content: '春天到了，宠物容易出现的健康问题和注意事项，这篇文章帮你全面了解！',
-          tags: ['医疗知识'],
-          images: ['https://via.placeholder.com/400x600/4ecdc4/ffffff?text=宠物护理'],
-          likeCount: 256,
-          commentCount: 45,
-          collectCount: 89,
-          createTime: new Date(Date.now() - 7200000).toISOString(),
-          views: 512
-        },
-        {
-          id: '3',
-          userId: 'user3',
-          username: '好物推荐官',
-          avatar: 'https://via.placeholder.com/100',
-          title: '这款宠物零食真的超赞！',
-          content: '给毛孩子买了这款零食，超爱吃，而且配料表很干净，推荐给大家！',
-          tags: ['好物分享'],
-          images: ['https://via.placeholder.com/400x450/ffe66d/ffffff?text=宠物零食'],
-          likeCount: 89,
-          commentCount: 23,
-          collectCount: 34,
-          createTime: new Date(Date.now() - 10800000).toISOString(),
-          views: 178
-        },
-        {
-          id: '4',
-          userId: 'user4',
-          username: '科普达人',
-          avatar: 'https://via.placeholder.com/100',
-          title: '狗狗为什么爱摇尾巴？',
-          content: '狗狗摇尾巴不仅是开心的表现，还有很多其他的含义，一起来了解吧！',
-          tags: ['科普知识'],
-          images: ['https://via.placeholder.com/400x550/a8e6cf/ffffff?text=狗狗尾巴'],
-          likeCount: 312,
-          commentCount: 67,
-          collectCount: 123,
-          createTime: new Date(Date.now() - 14400000).toISOString(),
-          views: 624
-        },
-        {
-          id: '5',
-          userId: 'user5',
-          username: '萌宠日常',
-          avatar: 'https://via.placeholder.com/100',
-          title: '周末带毛孩子去公园啦',
-          content: '阳光明媚的周末，带着家里的狗狗去公园玩，好开心！',
-          tags: ['日常记录'],
-          images: ['https://via.placeholder.com/400x480/ffd93d/ffffff?text=公园游玩', 'https://via.placeholder.com/400x480/ffd93d/ffffff?text=玩耍瞬间'],
-          likeCount: 198,
-          commentCount: 41,
-          collectCount: 72,
-          createTime: new Date(Date.now() - 18000000).toISOString(),
-          views: 396
-        },
-        {
-          id: '6',
-          userId: 'user6',
-          username: '医疗小助手',
-          avatar: 'https://via.placeholder.com/100',
-          title: '宠物打疫苗的时间表',
-          content: '为宠物定期接种疫苗是保护它们健康的重要措施，这里整理了完整的接种时间表。',
-          tags: ['医疗知识'],
-          images: ['https://via.placeholder.com/400x520/6c5ce7/ffffff?text=疫苗时间表'],
-          likeCount: 245,
-          commentCount: 38,
-          collectCount: 98,
-          createTime: new Date(Date.now() - 21600000).toISOString(),
-          views: 490
+  onLoad() {
+    const sys = wx.getSystemInfoSync();
+    const statusBarTop = (sys.statusBarHeight || 20) * 2;
+    const safeBottom = ((sys.screenHeight - ((sys.safeArea && sys.safeArea.bottom) || sys.screenHeight)) || 0) * 2;
+    this.setData({ statusBarTop, safeBottom });
+    const raw = wx.getStorageSync('userInfo');
+    if (raw) this.setData({ userInfo: typeof raw === 'string' ? JSON.parse(raw) : raw });
+    
+    // 初始化标签滑块位置
+    this.initTabSlider();
+    
+    this.loadPosts(true);
+  },
+  
+  initTabSlider() {
+    // 延迟确保 DOM 已渲染
+    setTimeout(() => {
+      const query = wx.createSelectorQuery();
+      query.selectAll('.tab-item').boundingClientRect((rects) => {
+        if (rects && rects.length > 0) {
+          const rect = rects[0];
+          this.setData({
+            tabSliderStyle: `left: ${rect.left + 20}px; width: ${rect.width - 48}px; opacity: 1;`
+          });
         }
-      ];
-      wx.setStorageSync('communityPosts', mockPosts);
-    }
+      }).exec();
+    }, 100);
   },
 
-  loadUserActions() {
-    const likedPosts = (wx.getStorageSync('likedPosts') || []).map(id => String(id));
-    const collectedPosts = (wx.getStorageSync('collectedPosts') || []).map(id => String(id));
-    console.log('加载点赞状态:', likedPosts);
-    console.log('加载收藏状态:', collectedPosts);
-    this.setData({
-      likedPosts,
-      collectedPosts
-    });
+  onPullDownRefresh() {
+    this.loadPosts(true);
+    wx.stopPullDownRefresh();
+  },
+  onReachBottom() {
+    this.loadMore();
   },
 
-  async loadPosts() {
-    this.setData({
-      loading: true
-    });
-
-    let posts = await getCommunityPosts(this.data.selectedTag);
-    console.log('从API获取的帖子:', posts);
-
-    // 搜索过滤
-    if (this.data.searchKeyword) {
-      posts = posts.filter(post => {
-        const keyword = this.data.searchKeyword.toLowerCase();
-        return (post.title && post.title.toLowerCase().includes(keyword)) ||
-               (post.content && post.content.toLowerCase().includes(keyword)) ||
-               (post.tags && post.tags.some(tag => tag.toLowerCase().includes(keyword)));
-      });
-    }
-
-    // 按时间倒序排列
-    posts.sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
-
-    // 确保所有帖子的id都是字符串类型
-    const normalizedPosts = posts.map(post => ({
-      ...post,
-      id: String(post.id),
-      likeCount: post.likeCount || 0,
-      commentCount: post.commentCount || 0,
-      collectCount: post.collectCount || 0
-    }));
-
-    // 从存储中重新加载所有帖子，确保数据一致性
-    const allPosts = wx.getStorageSync('communityPosts') || [];
-    const mergedPosts = normalizedPosts.map(post => {
-      const storedPost = allPosts.find(p => String(p.id) === post.id);
-      return storedPost ? { ...storedPost, id: String(storedPost.id) } : post;
-    });
-
-    // 为每个帖子添加点赞和收藏状态
-    const likedPosts = (this.data.likedPosts || []).map(id => String(id));
-    const collectedPosts = (this.data.collectedPosts || []).map(id => String(id));
-
-    const postsWithStatus = mergedPosts.map(post => ({
-      ...post,
-      isLiked: likedPosts.includes(String(post.id)),
-      isCollected: collectedPosts.includes(String(post.id))
-    }));
-
-    // 分配到左右两列
-    const leftPosts = [];
-    const rightPosts = [];
-    postsWithStatus.forEach((post, index) => {
-      if (index % 2 === 0) {
-        leftPosts.push(post);
+  getStoragePosts() {
+    return wx.getStorageSync('communityPosts') || [];
+  },
+  setStoragePosts(posts) {
+    wx.setStorageSync('communityPosts', posts);
+  },
+  splitColumns(posts) {
+    const left = [];
+    const right = [];
+    let lh = 0;
+    let rh = 0;
+    posts.forEach((p, idx) => {
+      const h = 240 + Math.min(80, (p.content || '').length * 2) + (idx % 3) * 18;
+      if (lh <= rh) {
+        left.push({ ...p, imageHeight: h });
+        lh += h;
       } else {
-        rightPosts.push(post);
+        right.push({ ...p, imageHeight: h });
+        rh += h;
       }
     });
-
-    console.log('合并后的帖子数据:', postsWithStatus);
-
+    return { left, right };
+  },
+  loadPosts(reset = false) {
+    if (this.data.loading) return;
+    this.setData({ loading: true });
+    const all = this.getStoragePosts().filter(post => {
+      const publishTo = post.publishTo;
+      if (!publishTo) return true;
+      return Array.isArray(publishTo) && publishTo.includes('community');
+    });
+    const filtered = all.filter(post => {
+      const tagOK = this.data.selectedTag === '全部' || (post.tags || []).includes(this.data.selectedTag);
+      const kw = this.data.searchKeyword.trim();
+      const keywordOK = !kw || (post.content || '').includes(kw) || (post.username || '').includes(kw);
+      return tagOK && keywordOK;
+    });
+    const page = reset ? 1 : this.data.page;
+    const renderPosts = filtered.slice(0, page * PAGE_SIZE);
+    const split = this.splitColumns(renderPosts);
     this.setData({
-      postList: postsWithStatus,
-      leftPosts,
-      rightPosts,
+      allPosts: filtered,
+      renderPosts,
+      leftPosts: split.left,
+      rightPosts: split.right,
+      page,
+      hasMore: renderPosts.length < filtered.length,
       loading: false
     });
   },
-
-  // 搜索输入
   onSearchInput(e) {
-    this.setData({
-      searchKeyword: e.detail.value
-    });
-    // 防抖处理
-    clearTimeout(this.searchTimer);
-    this.searchTimer = setTimeout(() => {
-      this.loadPosts();
-    }, 500);
+    this.setData({ searchKeyword: e.detail.value || '', page: 1 });
+    this.loadPosts(true);
   },
-
-  // 显示通知
-  showNotifications() {
-    wx.showToast({
-      title: '暂无新通知',
-      icon: 'none'
-    });
-  },
-
-  // 选择标签
   selectTag(e) {
-    const tag = e.currentTarget.dataset.tag;
-    this.setData({
-      selectedTag: tag
-    });
-    this.loadPosts();
+    const tag = e.currentTarget.dataset.tag || '全部';
+    this.setData({ selectedTag: tag, page: 1 });
+    
+    // 计算滑块位置
+    const tabs = this.data.tabs;
+    const index = tabs.indexOf(tag);
+    const query = wx.createSelectorQuery();
+    query.selectAll('.tab-item').boundingClientRect((rects) => {
+      if (rects && rects[index]) {
+        const rect = rects[index];
+        const left = rect.left + (index > 0 ? 20 : 0); // 加上左侧padding
+        const width = rect.width;
+        this.setData({
+          tabSliderStyle: `left: ${left}px; width: ${width - 20}px; opacity: 1;`
+        });
+      }
+    }).exec();
+    
+    this.loadPosts(true);
   },
-
-  // 加载更多
   loadMore() {
-    console.log('加载更多');
-    // 这里可以实现分页加载逻辑
+    if (!this.data.hasMore || this.data.loading) return;
+    this.setData({ page: this.data.page + 1 });
+    this.loadPosts(false);
   },
-
   showPublishModal() {
-    if (!this.data.userInfo) {
-      wx.showToast({
-        title: '请先登录',
-        icon: 'none'
-      });
-      return;
-    }
-    this.setData({
-      publishModalVisible: true
-    });
+    this.setData({ publishModalVisible: true });
   },
-
   hidePublishModal() {
-    this.setData({
-      publishModalVisible: false,
-      currentPostData: {}
-    });
+    this.setData({ publishModalVisible: false, currentPostData: {} });
+    // 重置发布组件表单
+    const pages = getCurrentPages();
+    const currentPage = pages[pages.length - 1];
+    const publishComponent = currentPage.selectComponent('.publish-scroll');
+    if (publishComponent && publishComponent.resetForm) {
+      publishComponent.resetForm();
+    }
   },
-
   onPostDataChange(e) {
-    this.setData({
-      currentPostData: e.detail
-    });
+    this.setData({ currentPostData: e.detail || {} });
   },
-
-  async submitPost() {
-    if (!this.data.currentPostData.content || this.data.currentPostData.tags.length === 0) {
-      wx.showToast({
-        title: '请填写完整信息',
-        icon: 'none'
-      });
+  submitPost() {
+    const draft = this.data.currentPostData || {};
+    if (!draft.content || !draft.content.trim()) {
+      wx.showToast({ title: '请输入帖子内容', icon: 'none' });
       return;
     }
-
+    if (!Array.isArray(draft.tags) || draft.tags.length === 0) {
+      wx.showToast({ title: '请至少选择1个话题标签', icon: 'none' });
+      return;
+    }
     const post = {
-      ...this.data.currentPostData,
-      userId: this.data.userInfo?.id || 'user_' + Date.now(),
+      id: `post_${Date.now()}`,
+      userId: this.data.userInfo?.id || 'guest',
       username: this.data.userInfo?.username || '匿名用户',
-      avatar: this.data.userInfo?.avatar || 'https://via.placeholder.com/100',
-      title: this.data.currentPostData.content.substring(0, 30),
+      userAvatar: this.data.userInfo?.avatarUrl || this.data.userInfo?.avatar || '',
+      content: draft.content,
+      tags: draft.tags,
+      images: draft.images || [],
+      createTime: new Date().toISOString(),
       likeCount: 0,
       commentCount: 0,
       collectCount: 0,
-      views: 0,
-      createTime: new Date().toISOString(),
-      images: this.data.currentPostData.images || []
+      comments: []
     };
-
-    try {
-      await addCommunityPost(post);
-      wx.showToast({
-        title: '发布成功',
-        icon: 'success'
-      });
-      this.hidePublishModal();
-      this.loadPosts();
-    } catch (err) {
-      console.error('发布失败:', err);
-      wx.showToast({
-        title: '发布失败',
-        icon: 'none'
-      });
-    }
+    const all = this.getStoragePosts();
+    all.unshift(post);
+    this.setStoragePosts(all);
+    wx.showToast({ title: '发布成功', icon: 'success' });
+    this.hidePublishModal();
+    this.loadPosts(true);
   },
-
-  likePost(e) {
-    if (!this.data.userInfo) {
-      wx.showToast({
-        title: '请先登录',
-        icon: 'none'
-      });
-      return;
-    }
-
+  onPostTap(e) {
     const postId = String(e.currentTarget.dataset.postId);
-    console.log('点赞帖子ID:', postId);
-
-    // 检查是否正在处理中（防抖）
-    if (this.data.isProcessingLike[postId]) {
-      console.log('正在处理中，忽略重复点击');
+    const now = Date.now();
+    const map = this._tapMap || {};
+    const last = map[postId] || 0;
+    map[postId] = now;
+    this._tapMap = map;
+    if (now - last < 300) {
+      this.likePostById(postId, true);
       return;
     }
-
-    // 设置处理锁
-    const newProcessingState = {
-      ...this.data.isProcessingLike,
-      [postId]: true
-    };
-    this.setData({
-      isProcessingLike: newProcessingState
-    });
-
-    try {
-      // 从存储中重新获取最新的点赞状态，防止并发问题
-      const currentLikedPosts = (wx.getStorageSync('likedPosts') || []).map(id => String(id));
-      console.log('从存储读取的最新点赞列表:', currentLikedPosts);
-
-      const postList = [...this.data.postList];
-      const postIndex = postList.findIndex(p => String(p.id) === postId);
-      console.log('帖子索引:', postIndex);
-
-      if (postIndex === -1) {
-        console.log('未找到帖子');
-        return;
-      }
-
-      const isLiked = currentLikedPosts.includes(postId);
-      console.log('是否已点赞:', isLiked);
-
-      if (isLiked) {
-        // 取消点赞
-        postList[postIndex].likeCount = Math.max(0, postList[postIndex].likeCount - 1);
-        postList[postIndex].isLiked = false;
-        const newLikedPosts = currentLikedPosts.filter(id => id !== postId);
-        console.log('取消点赞，新的点赞列表:', newLikedPosts);
-
-        this.setData({
-          postList,
-          likedPosts: newLikedPosts
-        });
-        wx.setStorageSync('likedPosts', newLikedPosts);
-      } else {
-        // 添加点赞
-        postList[postIndex].likeCount += 1;
-        postList[postIndex].isLiked = true;
-        const newLikedPosts = [...currentLikedPosts, postId];
-        console.log('添加点赞，新的点赞列表:', newLikedPosts);
-
-        this.setData({
-          postList,
-          likedPosts: newLikedPosts
-        });
-        wx.setStorageSync('likedPosts', newLikedPosts);
-      }
-
-      // 同步到帖子存储
-      const allPosts = wx.getStorageSync('communityPosts') || [];
-      const allPostIndex = allPosts.findIndex(p => String(p.id) === postId);
-      if (allPostIndex !== -1) {
-        allPosts[allPostIndex] = {...postList[postIndex]};
-        wx.setStorageSync('communityPosts', allPosts);
-        console.log('同步帖子到存储成功，帖子ID:', postId, '点赞数:', postList[postIndex].likeCount);
-      } else {
-        console.log('未在存储中找到帖子，帖子ID:', postId);
-      }
-
-      // 更新左右列表
-      this.distributePosts(postList);
-
-      // 如果详情页打开，也更新详情数据
-      if (this.data.showDetailModal && this.data.currentDetailPost && String(this.data.currentDetailPost.id) === postId) {
-        const updatedDetailPost = {
-          ...postList[postIndex],
-          isLiked: postList[postIndex].isLiked,
-          isCollected: postList[postIndex].isCollected
-        };
-        this.setData({
-          currentDetailPost: updatedDetailPost
-        });
-      }
-    } finally {
-      // 释放处理锁
-      const releaseState = {
-        ...this.data.isProcessingLike,
-        [postId]: false
-      };
-      this.setData({
-        isProcessingLike: releaseState
-      });
-    }
+    setTimeout(() => {
+      const current = (this._tapMap || {})[postId];
+      if (current === now) this.openComments(postId);
+    }, 320);
   },
-
-  // 详情页评论输入
-  onDetailCommentInput(e) {
-    this.setData({
-      detailCommentText: e.detail.value
-    });
+  likePostById(postId, animate = false) {
+    const all = this.getStoragePosts();
+    const idx = all.findIndex(p => p.id === postId);
+    if (idx === -1) return;
+    all[idx].likeCount += 1;
+    this.setStoragePosts(all);
+    this.setData({ likedPostId: postId, likeAnimating: animate });
+    this.loadPosts(false);
+    if (animate) setTimeout(() => this.setData({ likedPostId: '', likeAnimating: false }), 800);
   },
-
-  // 提交详情页评论
-  async submitDetailComment() {
-    const postId = this.data.currentDetailPost?.id;
-    if (!postId) return;
-
-    if (!this.data.detailCommentText.trim()) {
-      wx.showToast({
-        title: '请输入评论内容',
-        icon: 'none'
-      });
-      return;
-    }
-
-    if (!this.data.userInfo) {
-      wx.showToast({
-        title: '请先登录',
-        icon: 'none'
-      });
-      return;
-    }
-
-    // 添加评论到帖子的评论列表
-    const newComment = {
-      id: Date.now().toString(),
-      userId: this.data.userInfo.id || 'user_' + Date.now(),
-      username: this.data.userInfo.username || '匿名用户',
-      avatar: this.data.userInfo.avatar || 'https://via.placeholder.com/100',
-      content: this.data.detailCommentText.trim(),
-      createTime: new Date().toISOString(),
-      likeCount: 0,
-      likedBy: []
-    };
-
-    const postList = [...this.data.postList];
-    const postIndex = postList.findIndex(p => String(p.id) === postId);
-
-    if (postIndex !== -1) {
-      if (!postList[postIndex].comments) {
-        postList[postIndex].comments = [];
-      }
-      postList[postIndex].comments.push(newComment);
-      postList[postIndex].commentCount += 1;
-
-      this.setData({
-        postList,
-        currentDetailPost: {...postList[postIndex]},
-        detailCommentText: ''
-      });
-
-      // 更新左右列表
-      this.distributePosts(postList);
-
-      // 保存到存储
-      const allPosts = wx.getStorageSync('communityPosts') || [];
-      const allPostIndex = allPosts.findIndex(p => String(p.id) === postId);
-      if (allPostIndex !== -1) {
-        allPosts[allPostIndex] = {...postList[postIndex]};
-        wx.setStorageSync('communityPosts', allPosts);
-      }
-
-      wx.showToast({
-        title: '评论成功',
-        icon: 'success'
-      });
-    }
-  },
-
-  // 分配帖子到左右列表
-  distributePosts(postList) {
-    const leftPosts = [];
-    const rightPosts = [];
-    postList.forEach((post, index) => {
-      if (index % 2 === 0) {
-        leftPosts.push(post);
-      } else {
-        rightPosts.push(post);
-      }
-    });
-    this.setData({
-      leftPosts,
-      rightPosts
-    });
-  },
-
-  // 分享帖子
-  sharePost() {
-    wx.showToast({
-      title: '分享功能开发中',
-      icon: 'none'
-    });
-  },
-
-  likeComment(e) {
-    if (!this.data.userInfo) {
-      wx.showToast({
-        title: '请先登录',
-        icon: 'none'
-      });
-      return;
-    }
-
-    const { postId, commentId } = e.currentTarget.dataset;
-    console.log('点赞评论，帖子ID:', postId, '评论ID:', commentId);
-    const postList = [...this.data.postList];
-    const postIndex = postList.findIndex(p => p.id === postId);
-
-    if (postIndex !== -1 && postList[postIndex].comments) {
-      const commentIndex = postList[postIndex].comments.findIndex(c => c.id === commentId);
-      if (commentIndex !== -1) {
-        const comment = {...postList[postIndex].comments[commentIndex]};
-        const userId = this.data.userInfo.id;
-
-        if (!comment.likedBy) {
-          comment.likedBy = [];
-        }
-
-        if (comment.likedBy.includes(userId)) {
-          comment.likeCount = Math.max(0, comment.likeCount - 1);
-          comment.likedBy = comment.likedBy.filter(id => id !== userId);
-          console.log('取消点赞评论');
-        } else {
-          comment.likeCount += 1;
-          comment.likedBy.push(userId);
-          console.log('点赞评论');
-        }
-
-        postList[postIndex].comments[commentIndex] = comment;
-        this.setData({
-          postList
-        });
-
-        // 如果当前正在查看详情弹窗，也更新详情数据
-        if (this.data.showDetailModal && this.data.currentDetailPost && this.data.currentDetailPost.id === postId) {
-          this.setData({
-            currentDetailPost: {...postList[postIndex]}
-          });
-        }
-
-        // 保存到存储
-        const allPosts = wx.getStorageSync('communityPosts') || [];
-        const allPostIndex = allPosts.findIndex(p => p.id === postId);
-        if (allPostIndex !== -1) {
-          allPosts[allPostIndex] = {...postList[postIndex]};
-          wx.setStorageSync('communityPosts', allPosts);
-        }
-      }
-    }
-  },
-
-  collectPost(e) {
-    if (!this.data.userInfo) {
-      wx.showToast({
-        title: '请先登录',
-        icon: 'none'
-      });
-      return;
-    }
-
+  previewImage(e) {
+    // 阻止事件冒泡，防止触发卡片点击
+    e.stopPropagation && e.stopPropagation();
+    
     const postId = String(e.currentTarget.dataset.postId);
-    console.log('收藏帖子ID:', postId);
-
-    // 检查是否正在处理中（防抖）
-    if (this.data.isProcessingCollect[postId]) {
-      console.log('正在处理中，忽略重复点击');
+    const image = String(e.currentTarget.dataset.image);
+    
+    // 从存储中获取帖子数据
+    const post = this.getStoragePosts().find(p => p.id === postId);
+    
+    // 验证数据完整性
+    if (!post) {
+      console.error('Preview failed: Post not found', postId);
+      wx.showToast({ title: '图片加载失败', icon: 'none' });
       return;
     }
-
-    // 设置处理锁
-    const newProcessingState = {
-      ...this.data.isProcessingCollect,
-      [postId]: true
-    };
-    this.setData({
-      isProcessingCollect: newProcessingState
-    });
-
-    try {
-      // 从存储中重新获取最新的收藏状态，防止并发问题
-      const currentCollectedPosts = (wx.getStorageSync('collectedPosts') || []).map(id => String(id));
-      console.log('从存储读取的最新收藏列表:', currentCollectedPosts);
-
-      const postList = [...this.data.postList];
-      const postIndex = postList.findIndex(p => String(p.id) === postId);
-      console.log('帖子索引:', postIndex);
-
-      if (postIndex === -1) {
-        console.log('未找到帖子');
-        return;
-      }
-
-      const isCollected = currentCollectedPosts.includes(postId);
-      console.log('是否已收藏:', isCollected);
-
-      if (isCollected) {
-        // 取消收藏
-        postList[postIndex].collectCount = Math.max(0, postList[postIndex].collectCount - 1);
-        postList[postIndex].isCollected = false;
-        const newCollectedPosts = currentCollectedPosts.filter(id => id !== postId);
-        console.log('取消收藏，新的收藏列表:', newCollectedPosts);
-
-        this.setData({
-          postList,
-          collectedPosts: newCollectedPosts
-        });
-        wx.setStorageSync('collectedPosts', newCollectedPosts);
-      } else {
-        // 添加收藏
-        postList[postIndex].collectCount += 1;
-        postList[postIndex].isCollected = true;
-        const newCollectedPosts = [...currentCollectedPosts, postId];
-        console.log('添加收藏，新的收藏列表:', newCollectedPosts);
-
-        this.setData({
-          postList,
-          collectedPosts: newCollectedPosts
-        });
-        wx.setStorageSync('collectedPosts', newCollectedPosts);
-      }
-
-      // 同步到帖子存储
-      const allPosts = wx.getStorageSync('communityPosts') || [];
-      const allPostIndex = allPosts.findIndex(p => String(p.id) === postId);
-      if (allPostIndex !== -1) {
-        allPosts[allPostIndex] = {...postList[postIndex]};
-        wx.setStorageSync('communityPosts', allPosts);
-        console.log('同步帖子到存储成功，帖子ID:', postId, '收藏数:', postList[postIndex].collectCount);
-      } else {
-        console.log('未在存储中找到帖子，帖子ID:', postId);
-      }
-
-      // 更新左右列表
-      this.distributePosts(postList);
-
-      // 如果详情页打开，也更新详情数据
-      if (this.data.showDetailModal && this.data.currentDetailPost && String(this.data.currentDetailPost.id) === postId) {
-        const updatedDetailPost = {
-          ...postList[postIndex],
-          isLiked: postList[postIndex].isLiked,
-          isCollected: postList[postIndex].isCollected
-        };
-        this.setData({
-          currentDetailPost: updatedDetailPost
-        });
-      }
-    } finally {
-      // 释放处理锁
-      const releaseState = {
-        ...this.data.isProcessingCollect,
-        [postId]: false
-      };
-      this.setData({
-        isProcessingCollect: releaseState
-      });
+    
+    if (!post.images || post.images.length === 0) {
+      console.error('Preview failed: No images in post', postId);
+      wx.showToast({ title: '暂无图片', icon: 'none' });
+      return;
     }
-  },
-
-  goToPostDetail(e) {
-    const postId = String(e.currentTarget.dataset.postId);
-    console.log('查看帖子详情，帖子ID:', postId);
-    const post = this.data.postList.find(p => String(p.id) === postId);
-    if (post) {
-      console.log('帖子数据:', post);
-      if (!post.comments) {
-        post.comments = [];
-      }
-      // 确保详情帖子的点赞和收藏状态正确
-      const likedPosts = (this.data.likedPosts || []).map(id => String(id));
-      const collectedPosts = (this.data.collectedPosts || []).map(id => String(id));
-      const detailPost = {
-        ...post,
-        isLiked: likedPosts.includes(String(post.id)),
-        isCollected: collectedPosts.includes(String(post.id))
-      };
-
-      this.setData({
-        showDetailModal: true,
-        currentDetailPost: detailPost
-      });
+    
+    // 验证当前图片是否在图片列表中
+    const currentIndex = post.images.indexOf(image);
+    const current = currentIndex > -1 ? image : post.images[0];
+    
+    // 过滤掉无效的图片URL
+    const validImages = post.images.filter(img => img && typeof img === 'string' && img.length > 0);
+    
+    if (validImages.length === 0) {
+      console.error('Preview failed: No valid images', postId);
+      wx.showToast({ title: '图片加载失败', icon: 'none' });
+      return;
     }
-  },
-
-  hideDetailModal() {
-    this.setData({
-      showDetailModal: false,
-      currentDetailPost: null
+    
+    // 调用微信图片预览API
+    wx.previewImage({
+      current: current,
+      urls: validImages,
+      success: () => {
+        console.log('Image preview opened successfully');
+      },
+      fail: (err) => {
+        console.error('Image preview failed:', err);
+        wx.showToast({ title: '图片预览失败', icon: 'none' });
+      }
     });
   },
-
-  formatTime(timeStr) {
-    const date = new Date(timeStr);
-    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+  
+  // 图片加载错误处理
+  onImageError(e) {
+    const { postId, errorIndex } = e.currentTarget.dataset;
+    console.error('Image load error:', { postId, errorIndex, err: e.detail });
+    
+    // 可以在这里添加重试逻辑或显示占位图
+    // 例如：更新对应帖子的图片状态
+    const allPosts = this.data.allPosts.map(post => {
+      if (post.id === postId && post.images) {
+        // 标记图片加载失败
+        const newImages = [...post.images];
+        if (newImages[errorIndex]) {
+          newImages[errorIndex] = '/static/images/image-error.png'; // 使用占位图
+        }
+        return { ...post, images: newImages };
+      }
+      return post;
+    });
+    
+    this.setData({ allPosts });
+    this.splitColumnsAndSet(allPosts);
   },
-
-  deletePost(e) {
-    console.log('删除帖子被调用');
-
-    if (!this.data.userInfo) {
-      wx.showToast({
-        title: '请先登录',
-        icon: 'none'
-      });
-      return;
-    }
-
-    const postId = e.currentTarget.dataset.postId;
-    console.log('要删除的帖子ID:', postId);
-
-    const postList = [...this.data.postList];
-    const postIndex = postList.findIndex(p => String(p.id) === postId);
-
-    if (postIndex === -1) {
-      console.log('帖子未找到');
-      return;
-    }
-
-    const post = postList[postIndex];
-    console.log('帖子作者ID:', post.userId, '当前用户ID:', this.data.userInfo.id);
-
-    if (String(post.userId) !== String(this.data.userInfo.id)) {
-      console.log('权限检查失败：不是帖子作者');
-      wx.showToast({
-        title: '只能删除自己的帖子',
-        icon: 'none'
-      });
-      return;
-    }
-
-    wx.showModal({
-      title: '确认删除',
-      content: '确定要删除这条帖子吗？',
-      success: (res) => {
-        if (res.confirm) {
-          console.log('用户确认删除');
-          const newPostList = postList.filter(p => String(p.id) !== postId);
-          this.setData({
-            postList: newPostList
-          });
-
-          // 更新左右列表
-          this.distributePosts(newPostList);
-
-          const allPosts = wx.getStorageSync('communityPosts') || [];
-          const newAllPosts = allPosts.filter(p => String(p.id) !== postId);
-          wx.setStorageSync('communityPosts', newAllPosts);
-
-          wx.showToast({
-            title: '删除成功',
-            icon: 'success'
-          });
-
-          if (this.data.showDetailModal && String(this.data.currentDetailPost.id) === postId) {
-            console.log('关闭详情弹窗');
-            this.hideDetailModal();
+  
+  // 辅助方法：分割列并设置数据
+  splitColumnsAndSet(posts) {
+    const { left, right } = this.splitColumns(posts);
+    this.setData({
+      leftPosts: left,
+      rightPosts: right
+    });
+  },
+  
+  openComments(postId) {
+    const post = this.getStoragePosts().find(p => p.id === postId) || null;
+    if (!post) return;
+    this.setData({ 
+      currentPost: post, 
+      commentVisible: true, 
+      commentInput: '',
+      isEditingComment: false,
+      editingCommentId: ''
+    });
+  },
+  closeComments() {
+    this.setData({ 
+      commentVisible: false, 
+      currentPost: null, 
+      commentInput: '',
+      isEditingComment: false,
+      editingCommentId: '',
+      originalCommentContent: ''
+    });
+  },
+  onCommentInput(e) {
+    this.setData({ commentInput: e.detail.value || '' });
+  },
+  // 长按评论弹出操作菜单
+  onCommentLongPress(e) {
+    const commentId = e.currentTarget.dataset.commentId;
+    const uid = this.data.userInfo?.id || '';
+    const comments = this.data.currentPost?.comments || [];
+    const comment = comments.find(c => c.id === commentId);
+    
+    // 仅本人评论支持编辑
+    if (comment && comment.userId === uid) {
+      wx.showActionSheet({
+        itemList: ['编辑', '删除'],
+        itemColor: '#f5222d',
+        success: (res) => {
+          if (res.tapIndex === 0) {
+            // 编辑
+            this.startEditComment(comment);
+          } else if (res.tapIndex === 1) {
+            // 删除
+            this.confirmDeleteComment(commentId);
           }
         }
+      });
+    }
+  },
+  // 开始编辑评论
+  startEditComment(comment) {
+    this.setData({
+      isEditingComment: true,
+      editingCommentId: comment.id,
+      originalCommentContent: comment.content,
+      commentInput: comment.content
+    });
+  },
+  // 确认删除评论
+  confirmDeleteComment(commentId) {
+    wx.showModal({
+      title: '确认删除',
+      content: '确定要删除这条评论吗？',
+      confirmColor: '#f5222d',
+      success: (res) => {
+        if (res.confirm) {
+          this.deleteCommentById(commentId);
+        }
       }
     });
+  },
+  // 根据ID删除评论
+  deleteCommentById(commentId) {
+    const post = this.data.currentPost;
+    if (!post) return;
+    const all = this.getStoragePosts();
+    const idx = all.findIndex(p => p.id === post.id);
+    if (idx === -1) return;
+    
+    all[idx].comments = (all[idx].comments || []).filter(c => c.id !== commentId);
+    all[idx].commentCount = all[idx].comments.length;
+    this.setStoragePosts(all);
+    this.setData({ currentPost: all[idx] });
+    this.loadPosts(false);
+    wx.showToast({ title: '已删除', icon: 'success' });
+  },
+  submitComment() {
+    const post = this.data.currentPost;
+    const content = this.data.commentInput.trim();
+    if (!post || !content) {
+      wx.showToast({ title: '请输入评论内容', icon: 'none' });
+      return;
+    }
+    
+    const all = this.getStoragePosts();
+    const idx = all.findIndex(p => p.id === post.id);
+    if (idx === -1) return;
+    
+    // 编辑模式
+    if (this.data.isEditingComment) {
+      const comments = all[idx].comments || [];
+      const cIdx = comments.findIndex(c => c.id === this.data.editingCommentId);
+      if (cIdx !== -1) {
+        comments[cIdx].content = content;
+        comments[cIdx].updateTime = new Date().toISOString();
+        all[idx].comments = comments;
+        this.setStoragePosts(all);
+        this.setData({ 
+          currentPost: all[idx], 
+          commentInput: '',
+          isEditingComment: false,
+          editingCommentId: ''
+        });
+        wx.showToast({ title: '评论已修改', icon: 'success' });
+      }
+    } else {
+      // 新增评论
+      const newComment = {
+        id: `c_${Date.now()}`,
+        userId: this.data.userInfo?.id || 'guest',
+        username: this.data.userInfo?.username || '匿名用户',
+        userAvatar: this.data.userInfo?.avatarUrl || this.data.userInfo?.avatar || '',
+        content,
+        likeCount: 0,
+        createTime: new Date().toISOString()
+      };
+      all[idx].comments = all[idx].comments || [];
+      all[idx].comments.unshift(newComment);
+      all[idx].commentCount = all[idx].comments.length;
+      this.setStoragePosts(all);
+      this.setData({ currentPost: all[idx], commentInput: '' });
+      wx.showToast({ title: '评论成功', icon: 'success' });
+    }
+    this.loadPosts(false);
+  },
+  replyComment(e) {
+    const username = String(e.currentTarget.dataset.username || '');
+    this.setData({ commentInput: `回复 ${username}：` });
+  },
+  likeComment(e) {
+    const postId = String(e.currentTarget.dataset.postId);
+    const commentId = String(e.currentTarget.dataset.commentId);
+    const all = this.getStoragePosts();
+    const idx = all.findIndex(p => p.id === postId);
+    if (idx === -1) return;
+    const comments = all[idx].comments || [];
+    const cIdx = comments.findIndex(c => c.id === commentId);
+    if (cIdx === -1) return;
+    comments[cIdx].likeCount += 1;
+    all[idx].comments = comments;
+    this.setStoragePosts(all);
+    this.setData({ currentPost: all[idx] });
+  },
+  deleteComment(e) {
+    const post = this.data.currentPost;
+    if (!post) return;
+    const commentId = String(e.currentTarget.dataset.commentId);
+    this.confirmDeleteComment(commentId);
+  },
+  noop() {},
+  // 格式化时间显示
+  formatTime(isoTime) {
+    if (!isoTime) return '';
+    const date = new Date(isoTime);
+    const now = new Date();
+    const diff = now - date;
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+    
+    if (diff < minute) return '刚刚';
+    if (diff < hour) return Math.floor(diff / minute) + '分钟前';
+    if (diff < day) return Math.floor(diff / hour) + '小时前';
+    if (diff < 7 * day) return Math.floor(diff / day) + '天前';
+    
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 });

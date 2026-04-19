@@ -1,24 +1,160 @@
-<view class="account-security-page">
-  <view class="section">
-    <view class="section-title">账号信息</view>
-    <view class="info-item">
-      <text class="label">绑定的手机号</text>
-      <view class="value-row">
-        <text class="value">{{phone}}</text>
-        <text class="change-btn" bindtap="changePhone">更换</text>
+<view class="account-security-page" style="padding-top: {{statusBarTop + 20}}rpx; padding-bottom: {{safeBottom + 20}}rpx;">
+  <!-- 账号信息卡片 -->
+  <view class="info-card">
+    <view class="card-header">
+      <text class="card-title">账号信息</text>
+    </view>
+    <view class="info-row">
+      <view class="row-left">
+        <view class="row-icon phone-icon">📱</view>
+        <view class="row-content">
+          <text class="row-label">绑定的手机号</text>
+          <text class="row-value">{{phone}}</text>
+        </view>
+      </view>
+      <view class="change-btn" bindtap="changePhone">更换</view>
+    </view>
+  </view>
+
+  <!-- 微信绑定卡片 -->
+  <view class="info-card">
+    <view class="card-header">
+      <text class="card-title">第三方账号</text>
+    </view>
+    
+    <!-- 微信绑定状态区域 -->
+    <view class="wechat-section">
+      <!-- 头像区域 -->
+      <view class="avatar-row">
+        <view class="wechat-avatar {{hasWechat ? 'bound' : ''}}">
+          <image wx:if="{{hasWechat && wechatInfo.avatarUrl}}" 
+                 src="{{wechatInfo.avatarUrl}}" 
+                 class="avatar-img" 
+                 mode="aspectFill"></image>
+          <text wx:else class="avatar-placeholder">💬</text>
+        </view>
+        <view class="avatar-info">
+          <text class="wechat-label">微信</text>
+          <view class="bind-status">
+            <text class="status-badge {{hasWechat ? 'bound' : 'unbound'}}">
+              {{hasWechat ? '已绑定' : '未绑定'}}
+            </text>
+            <text wx:if="{{hasWechat}}" class="bind-time">绑定于 {{wechatInfo.bindTime}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 绑定信息展示（已绑定时） -->
+      <view wx:if="{{hasWechat}}" class="wechat-detail">
+        <view class="detail-row" wx:if="{{wechatInfo.nickname}}">
+          <text class="detail-label">昵称</text>
+          <text class="detail-value">{{wechatInfo.nickname}}</text>
+        </view>
+      </view>
+
+      <!-- 操作按钮区域 -->
+      <view class="wechat-actions">
+        <block wx:if="{{!hasWechat}}">
+          <!-- 未绑定：显示绑定按钮 -->
+          <button class="bind-btn {{isBinding ? 'loading' : ''}}" 
+                  bindtap="bindWechat" 
+                  disabled="{{isBinding}}"
+                  hover-class="none">
+            <view wx:if="{{isBinding}}" class="loading-spinner"></view>
+            <text>{{isBinding ? '绑定中...' : '立即绑定'}}</text>
+          </button>
+          <text class="bind-hint">绑定后可快捷登录，同步头像和昵称</text>
+        </block>
+        <block wx:else>
+          <!-- 已绑定：显示解绑按钮 -->
+          <view class="bound-actions">
+            <view class="sync-btn" bindtap="syncWechatInfo" hover-class="tap-active">
+              <text class="sync-icon">🔄</text>
+              <text class="sync-text">同步信息</text>
+            </view>
+            <view class="unbind-btn" bindtap="unbindWechat" hover-class="tap-active">
+              <text class="unbind-text">解除绑定</text>
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <!-- 同步提示 -->
+      <view wx:if="{{showSyncTip}}" class="sync-tip">
+        <text class="tip-text">✓ 头像和昵称已自动同步</text>
       </view>
     </view>
   </view>
 
-  <view class="section">
-    <view class="section-title">账号管理</view>
-    <view class="danger-item" bindtap="accountCancellation">
-      <text class="danger-text">账号注销</text>
-      <text class="arrow">›</text>
+  <!-- 账号管理卡片 -->
+  <view class="info-card danger-card">
+    <view class="card-header">
+      <text class="card-title">账号管理</text>
+    </view>
+    <view class="danger-row" bindtap="accountCancellation">
+      <view class="row-left">
+        <view class="row-icon danger-icon">⚠️</view>
+        <view class="row-content">
+          <text class="row-label danger-text">账号注销</text>
+          <text class="row-desc">注销后所有数据将被永久清除</text>
+        </view>
+      </view>
+      <text class="row-arrow">›</text>
     </view>
   </view>
 
-  <view class="tip">
-    <text>账号注销后，所有数据将被永久清除，无法恢复</text>
+  <!-- 安全提示 -->
+  <view class="security-tip">
+    <view class="tip-icon">💡</view>
+    <text class="tip-text">为保障账号安全，建议绑定微信以便快捷登录，同时保护好您的账号信息</text>
+  </view>
+
+  <!-- 底部安全区域 -->
+  <view class="safe-area-bottom"></view>
+</view>
+
+<!-- 解绑确认弹窗 -->
+<view wx:if="{{showUnbindModal}}" class="modal-mask" bindtap="closeUnbindModal">
+  <view class="modal-content" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">解除微信绑定</text>
+    </view>
+    <view class="modal-body">
+      <text class="modal-text">确定要解除微信绑定吗？</text>
+      <text class="modal-desc">解除后您将无法使用微信快捷登录，需要使用手机号登录</text>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel" bindtap="closeUnbindModal">取消</view>
+      <view class="modal-btn confirm" bindtap="confirmUnbind">确认解绑</view>
+    </view>
+  </view>
+</view>
+
+<!-- 绑定成功提示 -->
+<view wx:if="{{showSuccessToast}}" class="success-toast">
+  <view class="toast-content">
+    <text class="toast-icon">✓</text>
+    <text class="toast-text">{{toastMessage}}</text>
+  </view>
+</view>
+
+<!-- 错误提示弹窗 -->
+<view wx:if="{{showErrorModal}}" class="modal-mask" bindtap="closeErrorModal">
+  <view class="modal-content error-modal" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">绑定失败</text>
+    </view>
+    <view class="modal-body">
+      <text class="modal-text">无法完成微信绑定</text>
+      <view class="error-list">
+        <text class="error-item">❌ {{errorInfo.code === 'USER_CANCEL' ? '您取消了授权操作' : '微信授权失败'}}</text>
+        <text class="error-item" wx:if="{{errorInfo.code === 'USER_CANCEL'}}">请重新点击「立即绑定」按钮完成授权</text>
+        <text class="error-item" wx:if="{{errorInfo.code === 'NETWORK_ERROR'}}">网络连接不稳定，请检查网络后重试</text>
+        <text class="error-item" wx:if="{{errorInfo.code === 'AUTH_READ_ERROR'}}">获取用户信息失败，请允许获取头像昵称后重试</text>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn confirm full-width" bindtap="closeErrorModal">知道了</view>
+    </view>
   </view>
 </view>

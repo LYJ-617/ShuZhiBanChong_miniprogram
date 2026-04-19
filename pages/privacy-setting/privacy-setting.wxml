@@ -1,0 +1,281 @@
+<view class="privacy-setting-page" style="padding-top: {{statusBarTop + 20}}rpx; padding-bottom: {{safeBottom + 20}}rpx;">
+  
+  <!-- 模块1: 账户信息可见性 -->
+  <view class="setting-card">
+    <view class="card-header">
+      <text class="card-title">账户信息可见性</text>
+      <text class="card-desc">控制其他用户可以看到您的哪些信息</text>
+    </view>
+    <view class="visibility-selector">
+      <view class="visibility-option {{visibility === 'public' ? 'active' : ''}}" data-value="public" bindtap="setVisibility">
+        <view class="option-icon">🌐</view>
+        <text class="option-label">公开</text>
+        <text class="option-desc">所有用户可见</text>
+      </view>
+      <view class="visibility-option {{visibility === 'friends' ? 'active' : ''}}" data-value="friends" bindtap="setVisibility">
+        <view class="option-icon">👥</view>
+        <text class="option-label">仅好友</text>
+        <text class="option-desc">互相关注可见</text>
+      </view>
+      <view class="visibility-option {{visibility === 'private' ? 'active' : ''}}" data-value="private" bindtap="setVisibility">
+        <view class="option-icon">🔒</view>
+        <text class="option-label">私密</text>
+        <text class="option-desc">仅自己可见</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 模块2: 活动记录管理 -->
+  <view class="setting-card">
+    <view class="card-header">
+      <text class="card-title">活动记录管理</text>
+      <text class="card-desc">选择性隐藏您的特定动态</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-row">
+        <view class="row-left">
+          <view class="row-icon post-icon">📝</view>
+          <view class="row-content">
+            <text class="row-label">隐藏我的帖子</text>
+            <text class="row-desc">他人主页不显示我的帖子</text>
+          </view>
+        </view>
+        <switch checked="{{activityHidden.post}}" data-key="post" bindchange="toggleActivity" color="#52c41a"/>
+      </view>
+      <view class="setting-row">
+        <view class="row-left">
+          <view class="row-icon like-icon">❤️</view>
+          <view class="row-content">
+            <text class="row-label">隐藏我的点赞</text>
+            <text class="row-desc">帖子详情页不显示点赞</text>
+          </view>
+        </view>
+        <switch checked="{{activityHidden.like}}" data-key="like" bindchange="toggleActivity" color="#52c41a"/>
+      </view>
+      <view class="setting-row">
+        <view class="row-left">
+          <view class="row-icon comment-icon">💬</view>
+          <view class="row-content">
+            <text class="row-label">隐藏我的评论</text>
+            <text class="row-desc">他人帖子详情隐藏评论</text>
+          </view>
+        </view>
+        <switch checked="{{activityHidden.comment}}" data-key="comment" bindchange="toggleActivity" color="#52c41a"/>
+      </view>
+      <view class="setting-row last-row">
+        <view class="row-left">
+          <view class="row-icon pet-icon">🐾</view>
+          <view class="row-content">
+            <text class="row-label">隐藏宠物信息</text>
+            <text class="row-desc">他人无法查看宠物详情</text>
+          </view>
+        </view>
+        <switch checked="{{activityHidden.pet}}" data-key="pet" bindchange="toggleActivity" color="#52c41a"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 模块3: 第三方应用授权 -->
+  <view class="setting-card">
+    <view class="card-header">
+      <text class="card-title">第三方应用授权</text>
+      <text class="card-desc">管理已授权的第三方应用访问权限</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-row" bindtap="showAuthDetail" data-app="wechat">
+        <view class="row-left">
+          <view class="row-icon wechat-icon">💬</view>
+          <view class="row-content">
+            <text class="row-label">微信</text>
+            <text class="row-desc">已授权</text>
+          </view>
+        </view>
+        <view class="row-right">
+          <text class="auth-status authorized">已授权</text>
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <view class="setting-row" bindtap="showAuthDetail" data-app="alipay">
+        <view class="row-left">
+          <view class="row-icon alipay-icon">💳</view>
+          <view class="row-content">
+            <text class="row-label">支付宝</text>
+            <text class="row-desc">未授权</text>
+          </view>
+        </view>
+        <view class="row-right">
+          <text class="auth-status unauthorized">未授权</text>
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <view class="setting-row last-row" bindtap="showAuthDetail" data-app="apple">
+        <view class="row-left">
+          <view class="row-icon apple-icon">🍎</view>
+          <view class="row-content">
+            <text class="row-label">Apple ID</text>
+            <text class="row-desc">未授权</text>
+          </view>
+        </view>
+        <view class="row-right">
+          <text class="auth-status unauthorized">未授权</text>
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+    </view>
+    <view class="card-footer">
+      <text class="footer-tip">如有其他问题，请联系客服</text>
+    </view>
+  </view>
+
+  <!-- 模块4: 数据管理与导出 -->
+  <view class="setting-card">
+    <view class="card-header">
+      <text class="card-title">数据管理与导出</text>
+      <text class="card-desc">管理您的个人数据，支持导出与删除</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-row" bindtap="exportData">
+        <view class="row-left">
+          <view class="row-icon export-icon">📥</view>
+          <view class="row-content">
+            <text class="row-label">导出我的数据</text>
+            <text class="row-desc">下载您的所有个人数据</text>
+          </view>
+        </view>
+        <view class="row-right">
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <view class="setting-row last-row danger-row" bindtap="showDeleteConfirm">
+        <view class="row-left">
+          <view class="row-icon delete-icon">🗑️</view>
+          <view class="row-content">
+            <text class="row-label danger-text">删除账户数据</text>
+            <text class="row-desc danger-desc">彻底删除所有个人数据</text>
+          </view>
+        </view>
+        <view class="row-right">
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 模块5: 显示设置 -->
+  <view class="setting-card">
+    <view class="card-header">
+      <text class="card-title">显示设置</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-row last-row">
+        <view class="row-left">
+          <view class="row-icon theme-icon">🌙</view>
+          <view class="row-content">
+            <text class="row-label">夜间模式</text>
+            <text class="row-desc">适配深色界面显示</text>
+          </view>
+        </view>
+        <switch checked="{{nightMode}}" bindchange="toggleNightMode" color="#52c41a"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部安全间距 -->
+  <view class="safe-area-bottom"></view>
+</view>
+
+<!-- 授权详情弹窗 -->
+<view wx:if="{{showAuthModal}}" class="modal-mask" bindtap="closeAuthModal">
+  <view class="modal-content" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">{{currentApp.name}} 授权详情</text>
+    </view>
+    <view class="modal-body">
+      <view class="auth-info-list">
+        <view class="auth-info-item">
+          <text class="auth-info-label">头像昵称</text>
+          <text class="auth-info-value">{{currentApp.hasProfile ? '✓ 已授权' : '✗ 未授权'}}</text>
+        </view>
+        <view class="auth-info-item">
+          <text class="auth-info-label">手机号码</text>
+          <text class="auth-info-value">{{currentApp.hasPhone ? '✓ 已授权' : '✗ 未授权'}}</text>
+        </view>
+        <view class="auth-info-item">
+          <text class="auth-info-label">位置信息</text>
+          <text class="auth-info-value">{{currentApp.hasLocation ? '✓ 已授权' : '✗ 未授权'}}</text>
+        </view>
+      </view>
+      <view class="auth-tip">
+        <text class="tip-text">授权有效期：永久</text>
+      </view>
+    </view>
+    <view class="modal-footer" wx:if="{{currentApp.authorized}}">
+      <view class="modal-btn cancel" bindtap="closeAuthModal">取消</view>
+      <view class="modal-btn danger" bindtap="revokeAuth">解除授权</view>
+    </view>
+    <view class="modal-footer" wx:else>
+      <view class="modal-btn confirm" bindtap="closeAuthModal">知道了</view>
+    </view>
+  </view>
+</view>
+
+<!-- 数据导出弹窗 -->
+<view wx:if="{{showExportModal}}" class="modal-mask" bindtap="closeExportModal">
+  <view class="modal-content" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">导出我的数据</text>
+    </view>
+    <view class="modal-body">
+      <view class="export-content">
+        <text class="export-desc">您可以导出以下数据：</text>
+        <view class="export-list">
+          <text class="export-item">📝 个人资料与头像</text>
+          <text class="export-item">🐾 宠物信息</text>
+          <text class="export-item">📊 健康记录</text>
+          <text class="export-item">💬 社区帖子与评论</text>
+        </view>
+        <text class="export-format">导出格式：JSON 文件</text>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel" bindtap="closeExportModal">取消</view>
+      <view class="modal-btn confirm" bindtap="confirmExport">确认导出</view>
+    </view>
+  </view>
+</view>
+
+<!-- 删除确认弹窗 -->
+<view wx:if="{{showDeleteModal}}" class="modal-mask" bindtap="closeDeleteModal">
+  <view class="modal-content danger-modal" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">删除账户数据</text>
+    </view>
+    <view class="modal-body">
+      <view class="delete-warning">
+        <text class="warning-icon">⚠️</text>
+        <text class="warning-text">此操作不可逆！</text>
+      </view>
+      <view class="delete-content">
+        <text class="delete-desc">删除后将永久清除：</text>
+        <view class="delete-list">
+          <text class="delete-item">个人资料与头像</text>
+          <text class="delete-item">全部宠物信息</text>
+          <text class="delete-item">健康记录与日志</text>
+          <text class="delete-item">社区帖子与评论</text>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel" bindtap="closeDeleteModal">取消</view>
+      <view class="modal-btn danger" bindtap="confirmDelete">确认删除</view>
+    </view>
+  </view>
+</view>
+
+<!-- Toast提示 -->
+<view wx:if="{{showToast}}" class="toast-mask">
+  <view class="toast-content {{toastType}}">
+    <text class="toast-icon">{{toastType === 'success' ? '✓' : '✗'}}</text>
+    <text class="toast-text">{{toastMessage}}</text>
+  </view>
+</view>

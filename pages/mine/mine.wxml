@@ -1,181 +1,168 @@
-<view class="mine-page">
-  <!-- 顶部个人信息卡片 -->
-  <view class="user-card" bindtap="goToProfile">
-    <view class="avatar-wrapper" bindtap="chooseAvatar">
-      <image wx:if="{{userInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="avatar-img" mode="aspectFill"></image>
-      <view wx:else class="avatar-placeholder">
-        <text>🐾</text>
+<view class="mine-page" style="padding-top: {{statusBarTop + 24}}rpx;">
+  <!-- 模块2：个人信息头部卡片 -->
+  <view class="user-card" style="margin: 24rpx 32rpx; background: linear-gradient(135deg, #FFD166, #E6B84D); border-radius: 24rpx; padding: 40rpx 32rpx;">
+    <view class="user-card-content">
+      <!-- 左侧头像 -->
+      <view class="avatar-wrapper" bindtap="chooseAvatar">
+        <image wx:if="{{userInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="avatar-img" mode="aspectFill"></image>
+        <view wx:else class="avatar-placeholder">
+          <text class="paw-icon">🐾</text>
+        </view>
+        <view class="avatar-border"></view>
       </view>
-      <view class="avatar-edit-icon">✎</view>
-    </view>
-    <view class="user-info">
-      <text class="username">{{userInfo && userInfo.username || '未登录'}}</text>
-      <text class="phone">{{userInfo && userInfo.maskedPhone || '绑定手机号'}}</text>
-    </view>
-    <view class="arrow-icon">›</view>
-  </view>
-
-  <!-- 核心业务功能列表 -->
-  <view class="menu-section">
-    <!-- 第一组：宠物核心管理 -->
-    <view class="menu-group">
-      <view class="menu-item" data-url="/pages/pet-list/pet-list" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">🐶</text>
-          <text class="menu-text">我的宠物</text>
+      <!-- 右侧信息 -->
+      <view class="user-detail">
+        <text class="username">{{userInfo && (userInfo.nickname || userInfo.username) || '用户'}}</text>
+        <view class="phone-row" bindtap="goToPhoneBind">
+          <text class="phone {{userInfo && userInfo.phone ? '' : 'unbound'}}">{{maskedPhone}}</text>
+          <text class="bind-tip" wx:if="{{!userInfo || !userInfo.phone}}">点击绑定</text>
         </view>
-        <view class="menu-right">
-          <text class="menu-hint">{{petCount > 0 ? '已绑定 ' + petCount + ' 只' : '去添加'}}</text>
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 第二组：内容与互动管理 -->
-    <view class="menu-group">
-      <view class="group-title">内容与互动</view>
-      <view class="menu-item" data-url="/pages/my-logs/my-logs" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">📔</text>
-          <text class="menu-text">我的日志</text>
-        </view>
-        <view class="menu-right">
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-url="/pages/my-favorite/my-favorite" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">⭐</text>
-          <text class="menu-text">我的收藏</text>
-        </view>
-        <view class="menu-right">
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-url="/pages/my-like/my-like" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">❤️</text>
-          <text class="menu-text">我的点赞</text>
-        </view>
-        <view class="menu-right">
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-url="/pages/my-comment/my-comment" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">💬</text>
-          <text class="menu-text">我的评论</text>
-        </view>
-        <view class="menu-right">
-          <view wx:if="{{hasUnreadComment}}" class="unread-dot"></view>
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 第三组：服务与订单管理 -->
-    <view class="menu-group">
-      <view class="group-title">服务与订单</view>
-      <view class="menu-item" data-url="/pages/order-list/order-list" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">🛍️</text>
-          <text class="menu-text">我的订单</text>
-        </view>
-        <view class="menu-right">
-          <view wx:if="{{hasUnreadOrder}}" class="unread-dot"></view>
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-url="/pages/consult-list/consult-list" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">👨‍⚕️</text>
-          <text class="menu-text">我的问诊</text>
-        </view>
-        <view class="menu-right">
-          <view wx:if="{{hasUnreadConsult}}" class="unread-dot"></view>
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-url="/pages/appointment-list/appointment-list" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">📅</text>
-          <text class="menu-text">我的预约</text>
-        </view>
-        <view class="menu-right">
-          <view wx:if="{{hasUnreadAppointment}}" class="unread-dot"></view>
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-url="/pages/coupon-list/coupon-list" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">🎫</text>
-          <text class="menu-text">我的卡券</text>
-        </view>
-        <view class="menu-right">
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 第四组：设置与合规管理 -->
-    <view class="menu-group">
-      <view class="group-title">设置</view>
-      <view class="menu-item" data-url="/pages/notification-setting/notification-setting" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">🔔</text>
-          <text class="menu-text">消息通知</text>
-        </view>
-        <view class="menu-right">
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-url="/pages/help-center/help-center" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">❓</text>
-          <text class="menu-text">帮助与客服</text>
-        </view>
-        <view class="menu-right">
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-url="/pages/about/about" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">ℹ️</text>
-          <text class="menu-text">关于我们</text>
-        </view>
-        <view class="menu-right">
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-url="/pages/account-security/account-security" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">🛡️</text>
-          <text class="menu-text">账号与安全</text>
-        </view>
-        <view class="menu-right">
-          <text class="arrow-icon">›</text>
-        </view>
-      </view>
-      <view class="menu-item" data-type="agreement" bindtap="handleMenuTap">
-        <view class="menu-left">
-          <text class="menu-icon">📄</text>
-          <text class="menu-text">合规协议</text>
-        </view>
-        <view class="menu-right">
-          <text class="arrow-icon">›</text>
+        <view class="edit-btn" catchtap="goToProfileEdit">
+          <text class="edit-icon">✎</text>
+          <text class="edit-text">编辑资料</text>
         </view>
       </view>
     </view>
   </view>
 
-  <!-- 底部退出登录 -->
-  <view class="logout-btn" bindtap="handleLogout" wx:if="{{userInfo}}">
-    <text>退出登录</text>
+  <!-- 模块3：宠物管理横向滚动区 -->
+  <view class="pet-scroll-section" style="margin-top: 24rpx; padding: 0 32rpx;">
+    <scroll-view class="pet-scroll" scroll-x="true" show-scrollbar="false" enhanced="true">
+      <!-- 宠物卡片 -->
+      <view class="pet-card" wx:for="{{petList}}" wx:key="id" data-pet-id="{{item.id}}" bindtap="onPetTap">
+        <image class="pet-avatar" src="{{item.avatar || '/static/images/default-avatar.png'}}" mode="aspectFill"></image>
+        <text class="pet-name">{{item.petName}}</text>
+      </view>
+      <!-- 添加宠物按钮 -->
+      <view class="pet-card add-pet-card" bindtap="addPet">
+        <view class="add-icon">+</view>
+        <text class="add-text">添加宠物</text>
+      </view>
+    </scroll-view>
   </view>
 
-  <!-- 未登录提示 -->
-  <view class="login-prompt" wx:if="{{!userInfo}}">
-    <text>登录后可查看更多功能</text>
-    <view class="login-btn" bindtap="goToLogin">立即登录</view>
+  <!-- 模块4：内容与互动核心模块 -->
+  <view class="content-section">
+    <view class="section-header">
+      <text class="section-title">内容与互动</text>
+    </view>
+    <!-- 三列网格布局 -->
+    <view class="content-grid">
+      <!-- 我的社区帖子 -->
+      <view class="content-card" bindtap="goToMyPosts" hover-class="tap-hover">
+        <view class="card-icon-wrap posts-icon">
+          <text class="card-icon">📝</text>
+        </view>
+        <text class="card-label">我的帖子</text>
+        <text class="card-count" wx:if="{{postCount > 0}}">{{postCount}}</text>
+      </view>
+      <!-- 我的点赞 -->
+      <view class="content-card" bindtap="goToMyLikes" hover-class="tap-hover">
+        <view class="card-icon-wrap likes-icon">
+          <text class="card-icon">❤️</text>
+        </view>
+        <text class="card-label">我的点赞</text>
+        <text class="card-count" wx:if="{{likeCount > 0}}">{{likeCount}}</text>
+      </view>
+      <!-- 我的评论 -->
+      <view class="content-card" bindtap="goToMyComments" hover-class="tap-hover">
+        <view class="card-icon-wrap comments-icon">
+          <text class="card-icon">💬</text>
+        </view>
+        <text class="card-label">我的评论</text>
+        <text class="card-count" wx:if="{{commentCount > 0}}">{{commentCount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 模块5：系统功能入口区 -->
+  <view class="setting-section">
+    <view class="section-header">
+      <text class="section-title">设置与服务</text>
+    </view>
+    <!-- 设置列表 -->
+    <view class="setting-list">
+      <!-- 账号与安全 -->
+      <view class="setting-row" bindtap="goToAccountSecurity" hover-class="tap-hover">
+        <view class="row-left">
+          <view class="row-icon security-icon">🔐</view>
+          <text class="row-label">账号与安全</text>
+        </view>
+        <view class="row-right">
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <!-- 隐私设置 -->
+      <view class="setting-row" bindtap="goToPrivacy" hover-class="tap-hover">
+        <view class="row-left">
+          <view class="row-icon privacy-icon">🔒</view>
+          <text class="row-label">隐私设置</text>
+        </view>
+        <view class="row-right">
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <!-- 通用设置 -->
+      <view class="setting-row" bindtap="goToGeneralSetting" hover-class="tap-hover">
+        <view class="row-left">
+          <view class="row-icon general-icon">⚙️</view>
+          <text class="row-label">通用设置</text>
+        </view>
+        <view class="row-right">
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <!-- 关于我们 -->
+      <view class="setting-row" bindtap="goToAbout" hover-class="tap-hover">
+        <view class="row-left">
+          <view class="row-icon about-icon">ℹ️</view>
+          <text class="row-label">关于我们</text>
+        </view>
+        <view class="row-right">
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <!-- 意见反馈 -->
+      <view class="setting-row" bindtap="goToFeedback" hover-class="tap-hover">
+        <view class="row-left">
+          <view class="row-icon feedback-icon">📝</view>
+          <text class="row-label">意见反馈</text>
+        </view>
+        <view class="row-right">
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <!-- 联系客服 -->
+      <view class="setting-row last-row" bindtap="contactService" hover-class="tap-hover">
+        <view class="row-left">
+          <view class="row-icon service-icon">📞</view>
+          <text class="row-label">联系客服</text>
+        </view>
+        <view class="row-right">
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录按钮 -->
+  <view class="logout-wrapper">
+    <view class="logout-btn" bindtap="handleLogout" hover-class="tap-hover">
+      <text class="logout-text">退出登录</text>
+    </view>
+  </view>
+
+  <!-- 底部安全间距（与顶部对称） -->
+  <view class="safe-area-bottom" style="height: 142rpx; display: block; box-sizing: border-box"></view>
+
+  <!-- 宠物操作弹窗 -->
+  <view class="pet-action-modal {{petActionVisible ? 'show' : ''}}" bindtap="closePetAction" wx:if="{{petActionVisible}}">
+    <view class="modal-content" catchtap="noop">
+      <view class="modal-title">{{currentPet ? currentPet.petName : ''}}</view>
+      <view class="modal-item" bindtap="switchPet">切换当前宠物</view>
+      <view class="modal-item" bindtap="editPet">编辑宠物信息</view>
+      <view class="modal-item delete" bindtap="deletePet">删除宠物</view>
+      <view class="modal-cancel" bindtap="closePetAction">取消</view>
+    </view>
   </view>
 </view>

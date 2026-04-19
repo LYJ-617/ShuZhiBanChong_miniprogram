@@ -1,0 +1,485 @@
+// pages/pet-add/pet-add.less
+// 设计规范色彩
+@primary-color: #FFD166;
+@primary-light: rgba(255, 209, 102, 0.15);
+@primary-gradient: linear-gradient(135deg, #FFD166, #E6B84D);
+@text-primary: #333333;
+@text-secondary: #666666;
+@text-tertiary: #999999;
+@bg-color: #FFFEF9;
+@card-bg: #ffffff;
+@border-color: #f0f0f0;
+@danger-color: #FF6B6B;
+
+// 圆角规范
+@radius-sm: 12rpx;
+@radius-md: 16rpx;
+@radius-lg: 24rpx;
+@radius-xl: 32rpx;
+
+.pet-add-page {
+  min-height: 100vh;
+  background: @bg-color;
+  padding-bottom: 120rpx;
+}
+
+// ============ 顶部导航栏 ============
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30rpx;
+  background: @primary-color;
+  
+  .nav-back {
+    width: 60rpx;
+    height: 60rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .back-icon {
+      font-size: 48rpx;
+      color: @text-primary;
+      font-weight: 300;
+    }
+  }
+  
+  .nav-title {
+    font-size: 32rpx;
+    font-weight: 500;
+    color: @text-primary;
+  }
+  
+  .nav-placeholder {
+    width: 60rpx;
+    height: 60rpx;
+  }
+}
+
+// ============ 照片轮播 ============
+.photo-section {
+  background: @card-bg;
+  padding: 30rpx;
+  margin: 20rpx;
+  border-radius: @radius-lg;
+  
+  .photo-swiper {
+    width: 100%;
+    height: 400rpx;
+    border-radius: @radius-md;
+    overflow: hidden;
+    
+    .photo-img {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .photo-add {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CC 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 2rpx dashed @primary-color;
+      border-radius: @radius-md;
+      
+      .add-icon {
+        font-size: 80rpx;
+        color: @primary-color;
+        margin-bottom: 16rpx;
+      }
+      
+      .add-text {
+        font-size: 26rpx;
+        color: @primary-color;
+      }
+    }
+  }
+  
+  .photo-hint {
+    text-align: center;
+    font-size: 24rpx;
+    color: @text-tertiary;
+    margin-top: 16rpx;
+  }
+  
+  .photo-tools {
+    display: flex;
+    justify-content: center;
+    gap: 40rpx;
+    margin-top: 20rpx;
+    padding-top: 20rpx;
+    border-top: 1rpx solid @border-color;
+    
+    .photo-tool-btn {
+      display: flex;
+      align-items: center;
+      gap: 8rpx;
+      padding: 12rpx 24rpx;
+      background: @bg-color;
+      border-radius: 30rpx;
+      
+      .tool-icon {
+        font-size: 28rpx;
+      }
+      
+      .tool-text {
+        font-size: 24rpx;
+        color: @text-secondary;
+      }
+    }
+  }
+}
+
+// ============ 表单区域 ============
+.form-section {
+  background: @card-bg;
+  margin: 20rpx;
+  border-radius: @radius-lg;
+  overflow: hidden;
+  
+  .form-title {
+    display: flex;
+    align-items: center;
+    padding: 24rpx 30rpx;
+    background: #fafafa;
+    border-bottom: 1rpx solid @border-color;
+    
+    .title-icon {
+      font-size: 32rpx;
+      margin-right: 12rpx;
+    }
+    
+    text {
+      font-size: 28rpx;
+      font-weight: 600;
+      color: @text-primary;
+    }
+    
+    .optional-hint {
+      margin-left: auto;
+      font-size: 22rpx;
+      font-weight: 400;
+      color: @text-tertiary;
+    }
+  }
+}
+
+// ============ 表单项 ============
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 30rpx;
+  border-bottom: 1rpx solid @border-color;
+  flex-wrap: wrap;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &.intro-item {
+    flex-direction: column;
+    align-items: flex-start;
+    
+    .item-label {
+      margin-bottom: 16rpx;
+    }
+    
+    .form-textarea {
+      width: 100%;
+      min-height: 120rpx;
+      padding: 20rpx;
+      background: @bg-color;
+      border-radius: @radius-sm;
+      font-size: 28rpx;
+      color: @text-primary;
+      line-height: 1.5;
+      box-sizing: border-box;
+    }
+  }
+  
+  .item-label {
+    width: 180rpx;
+    display: flex;
+    align-items: center;
+    
+    .label-text {
+      font-size: 28rpx;
+      color: @text-primary;
+    }
+    
+    .required {
+      color: @danger-color;
+      margin-left: 4rpx;
+    }
+  }
+  
+  .form-input {
+    flex: 1;
+    font-size: 28rpx;
+    color: @text-primary;
+    text-align: right;
+  }
+}
+
+// ============ 宠物类型选择 ============
+.type-selector {
+  flex: 1;
+  display: flex;
+  gap: 20rpx;
+  justify-content: flex-end;
+  
+  .type-option {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50%;
+    background: @bg-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    
+    .type-icon {
+      font-size: 48rpx;
+    }
+    
+    &.active {
+      background: @primary-color;
+      transform: scale(1.1);
+    }
+  }
+}
+
+// ============ 性别选择 ============
+.gender-selector {
+  flex: 1;
+  display: flex;
+  gap: 30rpx;
+  justify-content: flex-end;
+  
+  .gender-option {
+    width: 100rpx;
+    height: 72rpx;
+    border-radius: 36rpx;
+    background: @bg-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8rpx;
+    transition: all 0.2s ease;
+    
+    .gender-icon {
+      font-size: 32rpx;
+      color: @text-secondary;
+    }
+    
+    .gender-text {
+      font-size: 26rpx;
+      color: @text-secondary;
+    }
+    
+    &.active {
+      background: @primary-color;
+      
+      .gender-icon,
+      .gender-text {
+        color: @text-primary;
+      }
+    }
+  }
+}
+
+// ============ 年龄/体重输入 ============
+.age-input-group,
+.weight-input-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  
+  .age-input,
+  .weight-input {
+    width: 80rpx;
+    text-align: center;
+    background: @bg-color;
+    border-radius: @radius-sm;
+    padding: 12rpx;
+  }
+  
+  .age-unit,
+  .weight-unit {
+    font-size: 26rpx;
+    color: @text-secondary;
+    margin: 0 8rpx;
+  }
+}
+
+// ============ Picker ============
+.breed-picker,
+.date-picker,
+.reminder-date-picker {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  
+  .picker-value {
+    font-size: 28rpx;
+    color: @text-primary;
+    text-align: right;
+    
+    &.placeholder {
+      color: @text-tertiary;
+    }
+  }
+  
+  .arrow {
+    font-size: 32rpx;
+    color: @text-tertiary;
+    margin-left: 16rpx;
+  }
+}
+
+// ============ 绝育/标签选择 ============
+.switch-group,
+.vaccine-tags,
+.deworming-tags,
+.health-tags {
+  flex: 1;
+  display: flex;
+  gap: 16rpx;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  
+  .switch-option,
+  .vaccine-tag,
+  .deworming-tag,
+  .health-tag {
+    padding: 10rpx 20rpx;
+    border-radius: 30rpx;
+    background: @bg-color;
+    font-size: 24rpx;
+    color: @text-secondary;
+    transition: all 0.2s ease;
+    
+    &.active {
+      background: @primary-color;
+      color: @text-primary;
+    }
+  }
+  
+  .vaccine-tag,
+  .deworming-tag {
+    display: flex;
+    align-items: center;
+    gap: 6rpx;
+    
+    .tag-icon {
+      font-size: 24rpx;
+    }
+  }
+}
+
+// ============ 提醒模块 ============
+.reminder-item {
+  border-bottom: 1rpx solid @border-color;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .reminder-header {
+    display: flex;
+    align-items: center;
+    padding: 24rpx 30rpx;
+    
+    .reminder-icon {
+      font-size: 36rpx;
+      margin-right: 16rpx;
+    }
+    
+    .reminder-name {
+      flex: 1;
+      font-size: 28rpx;
+      color: @text-primary;
+    }
+    
+    .reminder-switch {
+      transform: scale(0.8);
+    }
+  }
+  
+  .reminder-content {
+    padding: 0 30rpx 24rpx 70rpx;
+    
+    .time-picker-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16rpx;
+      margin-bottom: 16rpx;
+      
+      .time-picker-item {
+        display: flex;
+        align-items: center;
+        background: @bg-color;
+        border-radius: 30rpx;
+        padding: 12rpx 24rpx;
+        
+        .time-text {
+          font-size: 26rpx;
+          color: @primary-color;
+        }
+        
+        .time-delete {
+          margin-left: 12rpx;
+          font-size: 32rpx;
+          color: @text-tertiary;
+          padding: 0 8rpx;
+        }
+      }
+    }
+    
+    .add-time-btn {
+      display: inline-block;
+      padding: 12rpx 24rpx;
+      background: @bg-color;
+      border-radius: 30rpx;
+      font-size: 24rpx;
+      color: @primary-color;
+    }
+  }
+}
+
+// ============ 操作按钮 ============
+.action-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  background: @card-bg;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  
+  .btn-save {
+    height: 88rpx;
+    background: @primary-gradient;
+    color: @text-primary;
+    font-size: 32rpx;
+    font-weight: 500;
+    border-radius: 44rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4rpx 12rpx rgba(255, 209, 102, 0.3);
+    transition: all 0.2s ease;
+    
+    &:active {
+      opacity: 0.8;
+      transform: scale(0.98);
+    }
+  }
+}

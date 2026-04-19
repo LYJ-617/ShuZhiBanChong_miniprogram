@@ -12,41 +12,84 @@
   </view>
   <view class="form-item">
     <text class="label">参与话题</text>
-    <view class="input-wrapper">
-      <input class="input-text" placeholder="请输入话题（如：#日常）" bindinput="onTopicInput" value="{{topicInput}}" catchtap="doNothing" />
+    <view class="tag-list">
+      <view class="tag {{tags.includes('日常记录') ? 'active' : ''}}" data-tag="日常记录" catchtap="toggleTag">日常记录</view>
+      <view class="tag {{tags.includes('医疗知识') ? 'active' : ''}}" data-tag="医疗知识" catchtap="toggleTag">医疗知识</view>
+      <view class="tag {{tags.includes('好物分享') ? 'active' : ''}}" data-tag="好物分享" catchtap="toggleTag">好物分享</view>
+    </view>
+  </view>
+  <!-- P0优先级：发布范围单选互斥 -->
+  <view class="form-item">
+    <text class="label">发布范围</text>
+    <view class="publish-range">
+      <view class="range-option {{publishTo === 'private' ? 'active' : ''}}" data-to="private" catchtap="togglePublishTo">
+        <text class="range-text">仅私人日志（用于AI健康分析）</text>
+      </view>
+      <view class="range-option {{publishTo === 'community' ? 'active' : ''}}" data-to="community" catchtap="togglePublishTo">
+        <text class="range-text">发布到社区（公开分享）</text>
+      </view>
     </view>
   </view>
   <view class="form-item">
-    <text class="label">我的位置（选填）</text>
-    <view class="input-wrapper" catchtap="selectLocation">
-      <text class="input-text {{!location ? 'placeholder' : ''}}">{{location || '点击获取当前位置'}}</text>
-      <text class="arrow">›</text>
+    <text class="label">图片上传（最多9张）</text>
+    <view class="image-grid">
+      <view class="img-add" catchtap="chooseImages" wx:if="{{images.length < 9}}">+</view>
+      <view class="img-item" wx:for="{{images}}" wx:key="*this">
+        <image class="img" src="{{item}}" mode="aspectFill" catchtap="previewImage" data-index="{{index}}" />
+        <view class="img-del" catchtap="removeImage" data-index="{{index}}">×</view>
+        <view class="img-sort">
+          <text catchtap="moveImageLeft" data-index="{{index}}">←</text>
+          <text catchtap="moveImageRight" data-index="{{index}}">→</text>
+        </view>
+      </view>
     </view>
   </view>
-  <view class="form-item" wx:if="{{tags.includes('健康')}}">
+  <!-- P0优先级：我的位置功能 -->
+  <view class="form-item location-item">
+    <view class="location-header">
+      <text class="label">我的位置</text>
+      <view class="location-btn" catchtap="selectLocation">
+        <text class="location-btn-text">{{location ? '重新选择' : '选择位置'}}</text>
+      </view>
+    </view>
+    <!-- 已选择位置时显示地址卡片 -->
+    <view class="location-display {{location ? 'has-location' : ''}}" wx:if="{{location}}">
+      <view class="location-icon-wrap">
+        <text class="location-icon">📍</text>
+      </view>
+      <view class="location-content">
+        <text class="location-name">{{locationData.name || '当前位置'}}</text>
+        <text class="location-address" wx:if="{{locationData.address}}">{{locationData.address}}</text>
+      </view>
+      <view class="location-clear" catchtap="clearLocation" wx:if="{{location}}">
+        <text class="clear-icon">×</text>
+      </view>
+    </view>
+  </view>
+  <view class="form-item" wx:if="{{tags.includes('医疗知识')}}">
     <text class="label">健康状态（选填）</text>
     <view class="health-item">
       <text class="sub-label">粪便情况：</text>
       <view class="tag-list">
-        <view class="tag {{healthInfo.stool === '正常' ? 'active' : ''}}" catchtap="selectHealthInfo" data-key="stool" data-value="正常">正常</view>
-        <view class="tag {{healthInfo.stool === '稀软' ? 'active' : ''}}" catchtap="selectHealthInfo" data-key="stool" data-value="稀软">稀软</view>
-        <view class="tag {{healthInfo.stool === '干结' ? 'active' : ''}}" catchtap="selectHealthInfo" data-key="stool" data-value="干结">干结</view>
+        <view class="tag {{healthInfo.stool === '正常' ? 'active' : ''}}" data-key="stool" data-value="正常" catchtap="selectHealthInfo">正常</view>
+        <view class="tag {{healthInfo.stool === '稀软' ? 'active' : ''}}" data-key="stool" data-value="稀软" catchtap="selectHealthInfo">稀软</view>
+        <view class="tag {{healthInfo.stool === '干结' ? 'active' : ''}}" data-key="stool" data-value="干结" catchtap="selectHealthInfo">干结</view>
       </view>
     </view>
     <view class="health-item">
       <text class="sub-label">食欲情况：</text>
       <view class="tag-list">
-        <view class="tag {{healthInfo.appetite === '正常' ? 'active' : ''}}" catchtap="selectHealthInfo" data-key="appetite" data-value="正常">正常</view>
-        <view class="tag {{healthInfo.appetite === '不佳' ? 'active' : ''}}" catchtap="selectHealthInfo" data-key="appetite" data-value="不佳">不佳</view>
-        <view class="tag {{healthInfo.appetite === '旺盛' ? 'active' : ''}}" catchtap="selectHealthInfo" data-key="appetite" data-value="旺盛">旺盛</view>
+        <view class="tag {{healthInfo.appetite === '正常' ? 'active' : ''}}" data-key="appetite" data-value="正常" catchtap="selectHealthInfo">正常</view>
+        <view class="tag {{healthInfo.appetite === '不佳' ? 'active' : ''}}" data-key="appetite" data-value="不佳" catchtap="selectHealthInfo">不佳</view>
+        <view class="tag {{healthInfo.appetite === '旺盛' ? 'active' : ''}}" data-key="appetite" data-value="旺盛" catchtap="selectHealthInfo">旺盛</view>
       </view>
     </view>
     <view class="health-item">
       <text class="sub-label">精神状态：</text>
       <view class="tag-list">
-        <view class="tag {{healthInfo.spirit === '正常' ? 'active' : ''}}" catchtap="selectHealthInfo" data-key="spirit" data-value="正常">正常</view>
-        <view class="tag {{healthInfo.spirit === '不佳' ? 'active' : ''}}" catchtap="selectHealthInfo" data-key="spirit" data-value="不佳">不佳</view>
-        <view class="tag {{healthInfo.spirit === '亢奋' ? 'active' : ''}}" catchtap="selectHealthInfo" data-key="spirit" data-value="亢奋">亢奋</view>
+        <view class="tag {{healthInfo.spirit === '正常' ? 'active' : ''}}" data-key="spirit" data-value="正常" catchtap="selectHealthInfo">正常</view>
+        <view class="tag {{healthInfo.spirit === '不佳' ? 'active' : ''}}" data-key="spirit" data-value="不佳" catchtap="selectHealthInfo">不佳</view>
+        <view class="tag {{healthInfo.spirit === '亢奋' ? 'active' : ''}}" data-key="spirit" data-value="亢奋" catchtap="selectHealthInfo">亢奋</view>
       </view>
     </view>
   </view>
@@ -61,6 +104,7 @@
       <scroll-view class="picker-scroll" scroll-y>
         <view wx:for="{{petList}}" wx:key="id" class="picker-item {{selectedPetId === item.id ? 'selected' : ''}}" catchtap="selectPetFromPicker" data-pet-id="{{item.id}}">
           <text class="picker-text">{{item.petName}}</text>
+          <text class="picker-breed" wx:if="{{item.breed || item.type}}">（{{item.breed || item.type}}）</text>
           <text wx:if="{{selectedPetId === item.id}}" class="picker-check">✓</text>
         </view>
         <view wx:if="{{petList.length === 0}}" class="picker-empty">

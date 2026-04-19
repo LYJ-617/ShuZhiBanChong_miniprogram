@@ -1,0 +1,543 @@
+// ============ 隐私设置页面样式 - 支持夜间模式 ============
+@import '../../styles/design-system.less';
+
+.privacy-setting-page {
+  .page-container();
+  padding: @spacing-xl @spacing-xxl;
+  background: @base-bg;
+  
+  // 夜间模式适配
+  &.night-mode {
+    background: #1a1a1a;
+    
+    .setting-card {
+      background: #2a2a2a;
+      box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+      
+      .card-header {
+        border-bottom-color: #3a3a3a;
+        
+        .card-title {
+          color: #e5e5e5;
+        }
+        .card-desc {
+          color: #888888;
+        }
+      }
+      
+      .setting-row {
+        border-bottom-color: #333333;
+        
+        .row-left {
+          .row-content {
+            .row-label {
+              color: #e5e5e5;
+            }
+            .row-desc {
+              color: #888888;
+            }
+          }
+        }
+      }
+    }
+    
+    .visibility-option {
+      background: #333333;
+      border-color: #444444;
+      
+    &.active {
+      background: rgba(255, 209, 102, 0.15);
+      border-color: @primary-color;
+      }
+      
+      .option-label {
+        color: #e5e5e5;
+      }
+      .option-desc {
+        color: #888888;
+      }
+    }
+    
+    .modal-content {
+      background: #2a2a2a;
+      
+      .modal-title {
+        color: #e5e5e5;
+      }
+      .modal-text {
+        color: #cccccc;
+      }
+      .modal-desc {
+        color: #888888;
+      }
+    }
+  }
+}
+
+// 设置卡片
+.setting-card {
+  .card-base();
+  margin-bottom: @spacing-xl;
+  
+  .card-header {
+    padding: @spacing-xl @spacing-xxl @spacing-md;
+    border-bottom: 1rpx solid @border-color;
+    
+    .card-title {
+      display: block;
+      font-size: @font-lg;
+      font-weight: 600;
+      color: @text-primary;
+      margin-bottom: 6rpx;
+    }
+    
+    .card-desc {
+      display: block;
+      font-size: @font-sm;
+      color: @text-tertiary;
+    }
+  }
+  
+  .card-footer {
+    padding: @spacing-lg @spacing-xxl;
+    border-top: 1rpx solid @border-color;
+    
+    .footer-tip {
+      font-size: @font-xs;
+      color: @text-tertiary;
+    }
+  }
+}
+
+// ============ 可见性选择器 ============
+.visibility-selector {
+  display: flex;
+  justify-content: space-between;
+  padding: @spacing-xl @spacing-xxl;
+  gap: @spacing-lg;
+}
+
+.visibility-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: @spacing-xl @spacing-md;
+  background: @bg-color;
+  border: 2rpx solid @border-color;
+  border-radius: @radius-lg;
+  transition: all @transition-normal;
+  .tap-active();
+
+  &.active {
+    background: rgba(255, 209, 102, 0.08);
+    border-color: @primary-color;
+    
+    .option-icon {
+      transform: scale(1.1);
+    }
+  }
+
+  .option-icon {
+    font-size: 48rpx;
+    margin-bottom: @spacing-md;
+    transition: transform @transition-normal;
+  }
+
+  .option-label {
+    font-size: @font-md;
+    font-weight: 600;
+    color: @text-primary;
+    margin-bottom: 6rpx;
+  }
+
+  .option-desc {
+    font-size: @font-xs;
+    color: @text-tertiary;
+    text-align: center;
+  }
+}
+
+// ============ 设置列表 ============
+.setting-list {
+  .setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: @spacing-xl @spacing-xxl;
+    border-bottom: 1rpx solid @border-color;
+    transition: background @transition-normal;
+    .tap-active();
+
+    &.last-row {
+      border-bottom: none;
+    }
+
+    &.danger-row {
+      background: rgba(245, 34, 45, 0.02);
+    }
+
+    .row-left {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .row-icon {
+      width: 72rpx;
+      height: 72rpx;
+      border-radius: @radius-md;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36rpx;
+      margin-right: 20rpx;
+
+      &.post-icon { .icon-gradient(#1890ff); }
+      &.like-icon { .icon-gradient(#ff6b6b); }
+      &.comment-icon { .icon-gradient(#a26bff); }
+      &.pet-icon { .icon-gradient(#52c41a); }
+      &.wechat-icon { .icon-gradient(#07c160); }
+      &.alipay-icon { .icon-gradient(#1677ff); }
+      &.apple-icon { .icon-gradient(#333333); }
+      &.export-icon { .icon-gradient(#52c41a); }
+      &.delete-icon { .icon-gradient(#f5222d); }
+      &.theme-icon { .icon-gradient(#722ed1); }
+    }
+
+    .row-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row-label {
+      font-size: @font-md;
+      font-weight: 500;
+      color: @text-primary;
+      margin-bottom: 6rpx;
+
+      &.danger-text {
+        color: @danger-color;
+      }
+    }
+
+    .row-desc {
+      font-size: @font-sm;
+      color: @text-tertiary;
+
+      &.danger-desc {
+        color: rgba(245, 34, 45, 0.6);
+      }
+    }
+
+    .row-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-status {
+      font-size: @font-sm;
+      padding: 4rpx 16rpx;
+      border-radius: @radius-full;
+      margin-right: @spacing-sm;
+
+      &.authorized {
+        background: rgba(255, 209, 102, 0.1);
+        color: @primary-color;
+      }
+
+      &.unauthorized {
+        background: rgba(153, 153, 153, 0.1);
+        color: @text-tertiary;
+      }
+    }
+
+    .row-arrow {
+      font-size: @font-xxl;
+      color: @text-tertiary;
+      font-weight: 300;
+    }
+  }
+}
+
+// 底部安全区域
+.safe-area-bottom {
+  .safe-area-bottom();
+}
+
+// ============ 模态框样式 ============
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  width: 600rpx;
+  background: #ffffff;
+  border-radius: @radius-lg;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+
+  .modal-header {
+    padding: @spacing-xl @spacing-xxl;
+    border-bottom: 1rpx solid @border-color;
+    text-align: center;
+
+    .modal-title {
+      font-size: @font-lg;
+      font-weight: 600;
+      color: @text-primary;
+    }
+  }
+
+  .modal-body {
+    padding: @spacing-xl @spacing-xxl;
+
+    .modal-text {
+      display: block;
+      font-size: @font-md;
+      color: @text-primary;
+      text-align: center;
+      margin-bottom: @spacing-md;
+    }
+
+    .modal-desc {
+      display: block;
+      font-size: @font-sm;
+      color: @text-tertiary;
+      text-align: center;
+      line-height: 1.5;
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    border-top: 1rpx solid @border-color;
+
+    .modal-btn {
+      flex: 1;
+      height: 96rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: @font-md;
+      font-weight: 500;
+      transition: background @transition-normal;
+
+      &.cancel {
+        color: @text-secondary;
+        border-right: 1rpx solid @border-color;
+        .tap-active();
+      }
+
+      &.confirm {
+        color: @primary-color;
+        .tap-active();
+      }
+
+      &.danger {
+        color: @danger-color;
+        .tap-active();
+      }
+    }
+  }
+
+  &.danger-modal {
+    .modal-body {
+      .delete-warning {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: @spacing-lg;
+        margin-bottom: @spacing-lg;
+        background: rgba(245, 34, 45, 0.05);
+        border-radius: @radius-md;
+
+        .warning-icon {
+          font-size: 64rpx;
+          margin-bottom: @spacing-md;
+        }
+
+        .warning-text {
+          font-size: @font-lg;
+          font-weight: 600;
+          color: @danger-color;
+        }
+      }
+    }
+  }
+}
+
+// ============ 授权详情 ============
+.auth-info-list {
+  .auth-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: @spacing-md 0;
+    border-bottom: 1rpx solid @border-color;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .auth-info-label {
+      font-size: @font-md;
+      color: @text-secondary;
+    }
+
+    .auth-info-value {
+      font-size: @font-md;
+      color: @text-primary;
+    }
+  }
+}
+
+.auth-tip {
+  margin-top: @spacing-lg;
+  padding: @spacing-md;
+  background: @bg-color;
+  border-radius: @radius-md;
+  text-align: center;
+
+  .tip-text {
+    font-size: @font-sm;
+    color: @text-tertiary;
+  }
+}
+
+// ============ 导出内容 ============
+.export-content {
+  .export-desc {
+    display: block;
+    font-size: @font-md;
+    color: @text-primary;
+    margin-bottom: @spacing-lg;
+  }
+
+  .export-list {
+    padding: @spacing-lg;
+    background: @bg-color;
+    border-radius: @radius-md;
+    margin-bottom: @spacing-lg;
+
+    .export-item {
+      display: block;
+      font-size: @font-sm;
+      color: @text-secondary;
+      line-height: 2;
+    }
+  }
+
+  .export-format {
+    display: block;
+    font-size: @font-sm;
+    color: @text-tertiary;
+    text-align: center;
+  }
+}
+
+// ============ 删除内容 ============
+.delete-content {
+  .delete-desc {
+    display: block;
+    font-size: @font-md;
+    color: @text-primary;
+    margin-bottom: @spacing-lg;
+  }
+
+  .delete-list {
+    padding: @spacing-lg;
+    background: rgba(245, 34, 45, 0.05);
+    border-radius: @radius-md;
+
+    .delete-item {
+      display: block;
+      font-size: @font-sm;
+      color: @danger-color;
+      line-height: 2;
+    }
+  }
+}
+
+// ============ Toast提示 ============
+.toast-mask {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+
+  .toast-content {
+    display: flex;
+    align-items: center;
+    padding: @spacing-lg @spacing-xl;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: @radius-full;
+    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
+
+    .toast-icon {
+      width: 48rpx;
+      height: 48rpx;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 24rpx;
+      font-weight: bold;
+      margin-right: @spacing-md;
+    }
+
+    .toast-text {
+      font-size: @font-md;
+      color: #ffffff;
+    }
+
+    &.success {
+      .toast-icon {
+        background: @primary-color;
+      }
+    }
+
+    &.error {
+      .toast-icon {
+        background: @danger-color;
+      }
+    }
+  }
+}
+
+// 动画
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// tap-active 复用
+.tap-active {
+  &:active {
+    opacity: 0.7;
+  }
+}

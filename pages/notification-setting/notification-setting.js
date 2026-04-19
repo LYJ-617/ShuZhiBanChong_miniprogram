@@ -1,23 +1,33 @@
 Page({
   data: {
+    statusBarTop: 20,
+    safeBottom: 20,
     notifications: {
       like: true,
       comment: true,
       consultReply: true,
       appointmentChange: true,
       scheduleReminder: true,
-      couponPush: true
+      couponPush: false
     }
   },
 
   onLoad() {
+    this.initSystemInfo();
     this.loadSettings();
   },
 
+  initSystemInfo() {
+    const sys = wx.getSystemInfoSync();
+    const statusBarTop = (sys.statusBarHeight || 20) * 2;
+    const safeBottom = ((sys.screenHeight - ((sys.safeArea && sys.safeArea.bottom) || sys.screenHeight)) || 0) * 2;
+    this.setData({ statusBarTop, safeBottom });
+  },
+
   loadSettings() {
-    const settings = wx.getStorageSync('notificationSettings');
-    if (settings) {
-      this.setData({ notifications: settings });
+    const notifications = wx.getStorageSync('notificationSettings');
+    if (notifications) {
+      this.setData({ notifications });
     }
   },
 
@@ -28,13 +38,11 @@ Page({
     notifications[key] = value;
     this.setData({ notifications });
     wx.setStorageSync('notificationSettings', notifications);
-
-    if (!value) {
-      wx.showModal({
-        title: '提示',
-        content: '关闭后您将不再接收该类通知',
-        showCancel: false
-      });
-    }
+    
+    wx.showToast({
+      title: value ? '已开启' : '已关闭',
+      icon: 'none',
+      duration: 1500
+    });
   }
 });

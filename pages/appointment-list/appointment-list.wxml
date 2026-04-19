@@ -27,6 +27,9 @@
         <text class="time-label">预约时间：</text>
         <text class="time-value">{{item.appointmentTime}}</text>
       </view>
+      <view class="actions" wx:if="{{item.status !== 'cancelled' && item.status !== 'completed'}}">
+        <view class="cancel-btn" catchtap="cancelAppointment" data-id="{{item.id}}">取消预约</view>
+      </view>
     </view>
   </view>
 

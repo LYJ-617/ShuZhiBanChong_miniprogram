@@ -1,50 +1,76 @@
-<view class="notification-setting-page">
-  <view class="setting-list">
-    <view class="setting-item">
-      <view class="setting-left">
-        <text class="setting-icon">👍</text>
-        <text class="setting-text">点赞通知</text>
-      </view>
-      <switch checked="{{notifications.like}}" data-key="like" bindchange="toggleNotification" color="#07c160"/>
+<view class="notification-setting-page" style="padding-top: {{statusBarTop + 20}}rpx; padding-bottom: {{safeBottom + 20}}rpx;">
+  <!-- 通知设置卡片 -->
+  <view class="setting-card">
+    <view class="card-header">
+      <text class="card-title">消息通知</text>
     </view>
-    <view class="setting-item">
-      <view class="setting-left">
-        <text class="setting-icon">💬</text>
-        <text class="setting-text">评论通知</text>
+    <view class="setting-list">
+      <view class="setting-row">
+        <view class="row-left">
+          <view class="row-icon like-icon">👍</view>
+          <view class="row-content">
+            <text class="row-label">点赞通知</text>
+            <text class="row-desc">有人点赞时通知您</text>
+          </view>
+        </view>
+        <switch checked="{{notifications.like}}" data-key="like" bindchange="toggleNotification" color="#52c41a"/>
       </view>
-      <switch checked="{{notifications.comment}}" data-key="comment" bindchange="toggleNotification" color="#07c160"/>
-    </view>
-    <view class="setting-item">
-      <view class="setting-left">
-        <text class="setting-icon">👨‍⚕️</text>
-        <text class="setting-text">问诊回复</text>
+      <view class="setting-row">
+        <view class="row-left">
+          <view class="row-icon comment-icon">💬</view>
+          <view class="row-content">
+            <text class="row-label">评论通知</text>
+            <text class="row-desc">有新评论时通知您</text>
+          </view>
+        </view>
+        <switch checked="{{notifications.comment}}" data-key="comment" bindchange="toggleNotification" color="#52c41a"/>
       </view>
-      <switch checked="{{notifications.consultReply}}" data-key="consultReply" bindchange="toggleNotification" color="#07c160"/>
-    </view>
-    <view class="setting-item">
-      <view class="setting-left">
-        <text class="setting-icon">📅</text>
-        <text class="setting-text">预约状态变更</text>
+      <view class="setting-row">
+        <view class="row-left">
+          <view class="row-icon consult-icon">👨‍⚕️</view>
+          <view class="row-content">
+            <text class="row-label">问诊回复</text>
+            <text class="row-desc">医生回复时通知您</text>
+          </view>
+        </view>
+        <switch checked="{{notifications.consultReply}}" data-key="consultReply" bindchange="toggleNotification" color="#52c41a"/>
       </view>
-      <switch checked="{{notifications.appointmentChange}}" data-key="appointmentChange" bindchange="toggleNotification" color="#07c160"/>
-    </view>
-    <view class="setting-item">
-      <view class="setting-left">
-        <text class="setting-icon">⏰</text>
-        <text class="setting-text">日程提醒</text>
+      <view class="setting-row">
+        <view class="row-left">
+          <view class="row-icon appointment-icon">📅</view>
+          <view class="row-content">
+            <text class="row-label">预约状态变更</text>
+            <text class="row-desc">预约确认/变更时通知</text>
+          </view>
+        </view>
+        <switch checked="{{notifications.appointmentChange}}" data-key="appointmentChange" bindchange="toggleNotification" color="#52c41a"/>
       </view>
-      <switch checked="{{notifications.scheduleReminder}}" data-key="scheduleReminder" bindchange="toggleNotification" color="#07c160"/>
-    </view>
-    <view class="setting-item">
-      <view class="setting-left">
-        <text class="setting-icon">🎫</text>
-        <text class="setting-text">优惠推送</text>
+      <view class="setting-row">
+        <view class="row-left">
+          <view class="row-icon schedule-icon">⏰</view>
+          <view class="row-content">
+            <text class="row-label">日程提醒</text>
+            <text class="row-desc">日程开始前提醒您</text>
+          </view>
+        </view>
+        <switch checked="{{notifications.scheduleReminder}}" data-key="scheduleReminder" bindchange="toggleNotification" color="#52c41a"/>
       </view>
-      <switch checked="{{notifications.couponPush}}" data-key="couponPush" bindchange="toggleNotification" color="#07c160"/>
+      <view class="setting-row last-row">
+        <view class="row-left">
+          <view class="row-icon coupon-icon">🎫</view>
+          <view class="row-content">
+            <text class="row-label">优惠推送</text>
+            <text class="row-desc">最新优惠活动推送</text>
+          </view>
+        </view>
+        <switch checked="{{notifications.couponPush}}" data-key="couponPush" bindchange="toggleNotification" color="#52c41a"/>
+      </view>
     </view>
   </view>
 
-  <view class="tip">
-    <text>关闭开关后将不再接收对应通知</text>
+  <!-- 提示 -->
+  <view class="tip-card">
+    <view class="tip-icon">💡</view>
+    <text class="tip-text">关闭开关后将不再接收对应通知，重要服务通知默认开启</text>
   </view>
 </view>

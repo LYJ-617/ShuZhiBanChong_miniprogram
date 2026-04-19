@@ -1,0 +1,12 @@
+<view class="container">
+  <view class="card" wx:if="{{detail}}">
+    <view class="title">{{detail.title}}</view>
+    <view class="line">时间：{{detail.time || detail.date || '未设置'}}</view>
+    <view class="line">状态：{{detail.isDone ? '已完成' : '待完成'}}</view>
+    <view class="line">备注：{{detail.remark || '暂无'}}</view>
+  </view>
+  <view class="empty" wx:else>未找到对应日程</view>
+  <button class="btn" bindtap="toggleDone" wx:if="{{detail}}">
+    {{detail.isDone ? '标记未完成' : '标记完成'}}
+  </button>
+</view>

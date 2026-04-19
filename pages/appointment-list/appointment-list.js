@@ -35,5 +35,31 @@ Page({
 
   goToAppointment() {
     wx.navigateTo({ url: '/pages/service/service' });
+  },
+
+  cancelAppointment(e) {
+    const id = e.currentTarget.dataset.id;
+    const list = wx.getStorageSync('appointmentList') || [];
+    const index = list.findIndex(item => item.id === id);
+    if (index === -1) return;
+    const target = list[index];
+    const appointmentTime = new Date(target.appointmentTime.replace(/-/g, '/')).getTime();
+    const diff = appointmentTime - Date.now();
+    if (diff < 24 * 3600 * 1000) {
+      wx.showToast({ title: '仅支持提前24小时取消', icon: 'none' });
+      return;
+    }
+    wx.showModal({
+      title: '确认取消',
+      content: '确定取消该预约吗？',
+      success: (res) => {
+        if (!res.confirm) return;
+        list[index].status = 'cancelled';
+        list[index].statusText = '已取消';
+        wx.setStorageSync('appointmentList', list);
+        this.loadAppointmentList();
+        wx.showToast({ title: '已取消预约', icon: 'success' });
+      }
+    });
   }
 });

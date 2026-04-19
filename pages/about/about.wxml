@@ -1,18 +1,77 @@
-<view class="about-page">
+<view class="about-page" style="padding-top: {{statusBarTop + 20}}rpx; padding-bottom: {{safeBottom + 20}}rpx;">
+  <!-- Logo区域 -->
   <view class="logo-section">
-    <view class="logo">
-      <text>🐾</text>
+    <view class="logo-wrapper">
+      <view class="logo">🐾</view>
     </view>
     <text class="app-name">数智伴宠</text>
     <text class="version">版本 {{version}}</text>
   </view>
 
-  <view class="intro-section">
-    <text class="intro-title">关于我们</text>
-    <text class="intro-text">数智伴宠是一款专注于宠物健康管理的智能小程序，为宠物主人提供全方位的养宠服务。</text>
+  <!-- 关于我们卡片 -->
+  <view class="about-card">
+    <view class="card-header">
+      <text class="card-title">关于我们</text>
+    </view>
+    <view class="card-content">
+      <text class="intro-text">数智伴宠是一款专注于宠物健康管理的智能小程序，为宠物主人提供全方位的养宠服务。</text>
+      <text class="intro-text">我们致力于通过科技手段，让每一位宠物主人都能更便捷地照顾自己的毛孩子。</text>
+    </view>
   </view>
 
-  <view class="update-btn" bindtap="checkUpdate">
-    <text>检查更新</text>
+  <!-- 功能介绍卡片 -->
+  <view class="feature-card">
+    <view class="card-header">
+      <text class="card-title">核心功能</text>
+    </view>
+    <view class="feature-list">
+      <view class="feature-item">
+        <view class="feature-icon">🏥</view>
+        <view class="feature-info">
+          <text class="feature-title">宠物健康档案</text>
+          <text class="feature-desc">记录宠物成长轨迹，关注健康状况</text>
+        </view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">📅</view>
+        <view class="feature-info">
+          <text class="feature-title">智能日程提醒</text>
+          <text class="feature-desc">疫苗、体检、驱虫等重要事项提醒</text>
+        </view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">🏥</view>
+        <view class="feature-info">
+          <text class="feature-title">在线问诊服务</text>
+          <text class="feature-desc">专业宠物医生在线解答健康问题</text>
+        </view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">🛒</view>
+        <view class="feature-info">
+          <text class="feature-title">宠物商品商城</text>
+          <text class="feature-desc">精选优质宠物商品，购物更放心</text>
+        </view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">👥</view>
+        <view class="feature-info">
+          <text class="feature-title">宠物社区交流</text>
+          <text class="feature-desc">分享养宠心得，结识志同道合的宠友</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 检查更新按钮 -->
+  <view class="action-section">
+    <view class="update-btn" bindtap="checkUpdate">
+      <text class="update-text">检查更新</text>
+    </view>
+  </view>
+
+  <!-- 版权信息 -->
+  <view class="copyright">
+    <text class="copyright-text">© 2024 数智伴宠 All Rights Reserved</text>
   </view>
 </view>

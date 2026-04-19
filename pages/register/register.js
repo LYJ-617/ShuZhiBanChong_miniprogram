@@ -38,6 +38,15 @@ Page({
     this.initData();
   },
 
+  onShow() {
+    // 检查登录态：如果已注册，直接跳转到首页
+    const userInfo = wx.getStorageSync('userInfo');
+    const petList = wx.getStorageSync('petList') || [];
+    if (userInfo && Array.isArray(petList) && petList.length > 0) {
+      wx.switchTab({ url: '/pages/index/index' });
+    }
+  },
+
   initData() {
     // 获取今天的日期
     const today = this.formatDate(new Date());
@@ -161,12 +170,7 @@ Page({
     const category = this.data.currentPet.category;
     const type = currentTypeList[index];
     
-    console.log('【onTypeChange】', { index, currentTypeList, category, type });
-    console.log('【petSpeciesMap】', petData.petSpeciesMap);
-    console.log('【petSpeciesMap[category]】', petData.petSpeciesMap ? petData.petSpeciesMap[category] : 'undefined');
-    
     if (!type || !category) {
-      console.log('【onTypeChange】参数不完整，type:', type, 'category:', category);
       return;
     }
     
@@ -175,10 +179,8 @@ Page({
     try {
       breedList = petData.getPetBreedList(category, type);
     } catch (err) {
-      console.error('【onTypeChange】获取品种列表失败:', err);
       breedList = [];
     }
-    console.log('【onTypeChange】breedList:', breedList);
     
     this.setData({
       'currentPet.type': type,
@@ -194,7 +196,6 @@ Page({
   // 宠物品种选择变化
   onBreedChange(e) {
     const index = Number(e.detail.value);
-    console.log('【onBreedChange】index:', index, 'currentBreedList:', this.data.currentBreedList);
     
     if (!this.data.currentBreedList || this.data.currentBreedList.length === 0) {
       wx.showToast({ title: '品种列表为空', icon: 'none' });
@@ -444,30 +445,30 @@ Page({
       petList.push(newPet);
     }
     
-    // 保存到Storage（添加isRegister标记）
-    const userInfo = {
+    // 保存完整用户数据（含宠物）
+    const completeUserInfo = {
       username,
       id: this.generateId(),
       createTime: this.formatDate(new Date()),
-      isRegister: true  // 注册完成标记
+      isRegister: true,
+      petList
     };
-    
-    wx.setStorageSync('userInfo', userInfo);
+
+    wx.setStorageSync('userInfo', completeUserInfo);
     wx.setStorageSync('petList', petList);
-    
+
     // 保存到App全局数据
     const app = getApp();
-    app.globalData.userInfo = userInfo;
+    app.globalData.userInfo = completeUserInfo;
     app.globalData.petList = petList;
-    
-    // 提示并跳转
+
     wx.showToast({
       title: '注册成功',
       icon: 'success',
-      duration: 1500,
-      mask: true
+      duration: 1500
     });
-    
+
+    // Toast结束后切换Tab，避免返回到登录/注册页
     setTimeout(() => {
       wx.switchTab({
         url: '/pages/index/index'

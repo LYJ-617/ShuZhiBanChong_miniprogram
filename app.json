@@ -1,13 +1,28 @@
 {
   "pages": [
-    "pages/login/login",
-    "pages/register/register",
     "pages/index/index",
     "pages/community/community",
-    "pages/log/log",
+    "pages/record/record",
     "pages/service/service",
     "pages/mine/mine",
-    "pages/ai-report/ai-report"
+    "pages/login/login",
+    "pages/register/register",
+    "pages/ai-report/ai-report",
+    "pages/schedule-detail/schedule-detail",
+    "pages/log/log",
+    "pages/my-posts/my-posts",
+    "pages/my-likes/my-likes",
+    "pages/my-comments/my-comments",
+    "pages/profile-edit/profile-edit",
+    "pages/pet-add/pet-add",
+    "pages/pet-edit/pet-edit",
+    "pages/account-security/account-security",
+    "pages/notification-setting/notification-setting",
+    "pages/setting/setting",
+    "pages/about/about",
+    "pages/feedback/feedback",
+    "pages/help-center/help-center",
+    "pages/privacy-setting/privacy-setting"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -18,7 +33,7 @@
   "tabBar": {
     "custom": true,
     "color": "#666666",
-    "selectedColor": "#52c41a",
+    "selectedColor": "#FFD166",
     "backgroundColor": "#ffffff",
     "borderStyle": "white",
     "list": [
@@ -35,7 +50,7 @@
         "selectedIconPath": "static/images/community-active.png"
       },
       {
-        "pagePath": "pages/log/log",
+        "pagePath": "pages/record/record",
         "text": "记录",
         "iconPath": "static/images/log.png",
         "selectedIconPath": "static/images/log-active.png"
@@ -54,6 +69,14 @@
       }
     ]
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于发布养宠日志时获取当前位置信息"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"
 }

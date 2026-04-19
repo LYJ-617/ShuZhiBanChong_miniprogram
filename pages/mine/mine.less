@@ -1,233 +1,474 @@
-// 微信「我」板块样式复刻
-@primary-color: #07c160; // 养宠绿色主题色
-@text-primary: #333333;
-@text-secondary: #999999;
-@bg-color: #f5f5f5;
-@card-bg: #ffffff;
-@border-color: #e5e5e5;
-@danger-color: #ff4d4f;
-@highlight-color: #07c160;
+// ============ 「我的」页面样式 - 统一设计规范 ============
+// 间距使用 8px 倍数原则
+@import '../../styles/design-system.less';
+
+// 页面顶部安全间距（与底部退出按钮到安全区域对称）
+@page-top-spacing: 24rpx;
+@page-side-spacing: 32rpx;
+@module-spacing: 24rpx;
+@card-padding: 40rpx;
 
 .mine-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f8f9f5 0%, #e8f5e9 100%);
+  background: @base-bg;
+  box-sizing: border-box;
   padding-bottom: 120rpx;
 }
 
-// 顶部个人信息卡片
+// ============ 模块2：个人信息头部卡片 ============
 .user-card {
-  display: flex;
-  align-items: center;
-  padding: 30rpx;
-  margin: 20rpx 30rpx;
-  background: @card-bg;
-  border-radius: 16rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  margin: @page-top-spacing @page-side-spacing;
+  background: linear-gradient(135deg, #FFD166, #E6B84D);
+  border-radius: @radius-lg;
+  padding: @card-padding;
+  box-shadow: @shadow-md;
+
+  .user-card-content {
+    display: flex;
+    align-items: center;
+  }
 
   .avatar-wrapper {
     position: relative;
     width: 120rpx;
     height: 120rpx;
-    border-radius: 12rpx;
-    overflow: hidden;
     flex-shrink: 0;
 
     .avatar-img {
-      width: 100%;
-      height: 100%;
+      width: 120rpx;
+      height: 120rpx;
+      border-radius: 50%;
     }
 
     .avatar-placeholder {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      width: 120rpx;
+      height: 120rpx;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 60rpx;
     }
 
-    .avatar-edit-icon {
+    .avatar-border {
       position: absolute;
-      bottom: 0;
+      top: 0;
       left: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.5);
-      color: #fff;
-      font-size: 20rpx;
-      text-align: center;
-      padding: 4rpx 0;
+      bottom: 0;
+      border: 3rpx solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      pointer-events: none;
     }
   }
 
-  .user-info {
+  .user-detail {
     flex: 1;
-    margin-left: 20rpx;
+    margin-left: @spacing-xl;
     display: flex;
     flex-direction: column;
     justify-content: center;
 
     .username {
-      font-size: 32rpx;
-      font-weight: bold;
+      font-size: @font-xxxl;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .phone-row {
+      display: flex;
+      align-items: center;
+      margin-top: @spacing-sm;
+      
+      .phone {
+        font-size: @font-sm;
+        color: rgba(255, 255, 255, 0.8);
+        
+        &.unbound {
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
+      
+      .bind-tip {
+        font-size: @font-xs;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.3);
+        padding: 4rpx @spacing-md;
+        border-radius: @radius-full;
+        margin-left: @spacing-md;
+      }
+    }
+
+    .edit-btn {
+      width: 180rpx;
+      height: 56rpx;
+      margin-top: @spacing-md;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: @radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: @font-sm;
+      color: #ffffff;
+      transition: all @transition-normal;
+      
+      &:active {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(0.98);
+      }
+      
+      .edit-icon {
+        font-size: @font-base;
+        margin-right: @spacing-sm;
+      }
+      
+      .edit-text {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// ============ 模块3：宠物管理横向滚动区 ============
+.pet-scroll-section {
+  margin-top: @module-spacing;
+
+  .pet-scroll {
+    white-space: nowrap;
+    padding: 0 @page-side-spacing;
+  }
+
+  .pet-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120rpx;
+    margin-right: @spacing-xl;
+    vertical-align: top;
+
+    .pet-avatar {
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 50%;
+      background: @card-bg;
+      box-shadow: @shadow-sm;
+    }
+
+    .pet-name {
+      font-size: @font-sm;
       color: @text-primary;
-      max-width: 280rpx;
+      margin-top: @spacing-sm;
+      max-width: 100rpx;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-
-    .phone {
-      font-size: 26rpx;
-      color: @text-secondary;
-      margin-top: 8rpx;
-    }
   }
 
-  .arrow-icon {
-    font-size: 40rpx;
-    color: @text-secondary;
-    font-weight: 300;
-  }
-}
-
-// 菜单区域
-.menu-section {
-  padding: 0 30rpx;
-
-  .menu-group {
-    background: @card-bg;
-    border-radius: 16rpx;
-    margin-bottom: 20rpx;
-    overflow: hidden;
-    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
-
-    .group-title {
-      padding: 20rpx 30rpx 10rpx;
-      font-size: 24rpx;
-      color: @text-secondary;
-      font-weight: 500;
-    }
-
-    .menu-item {
+  .add-pet-card {
+    .add-icon {
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 50%;
+      background: @card-bg;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 24rpx 30rpx;
-      height: 88rpx;
-      box-sizing: border-box;
-      position: relative;
-      background: #fff;
-      transition: background 0.2s ease;
+      justify-content: center;
+      font-size: @font-xl;
+      color: @primary-color;
+      box-shadow: @shadow-sm;
+    }
 
-      &:active {
-        background: #f5f5f5;
-        transform: scale(0.98);
-        transition: all 0.2s ease;
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        left: 74rpx;
-        bottom: 0;
-        right: 0;
-        height: 1rpx;
-        background: @border-color;
-      }
-
-      &:last-child::after {
-        display: none;
-      }
-
-      .menu-left {
-        display: flex;
-        align-items: center;
-
-        .menu-icon {
-          font-size: 36rpx;
-          margin-right: 20rpx;
-          width: 48rpx;
-          text-align: center;
-        }
-
-        .menu-text {
-          font-size: 28rpx;
-          color: @text-primary;
-        }
-      }
-
-      .menu-right {
-        display: flex;
-        align-items: center;
-
-        .menu-hint {
-          font-size: 26rpx;
-          color: @text-secondary;
-          margin-right: 10rpx;
-        }
-
-        .arrow-icon {
-          font-size: 32rpx;
-          color: @text-secondary;
-          font-weight: 300;
-        }
-
-        .unread-dot {
-          width: 16rpx;
-          height: 16rpx;
-          background: @danger-color;
-          border-radius: 50%;
-          margin-right: 10rpx;
-        }
-      }
+    .add-text {
+      font-size: @font-sm;
+      color: @primary-color;
+      margin-top: @spacing-sm;
     }
   }
 }
 
-// 底部退出登录
-.logout-btn {
-  margin: 30rpx;
-  padding: 28rpx 0;
-  text-align: center;
-  font-size: 28rpx;
-  color: @danger-color;
+// ============ 模块4：内容与互动核心模块 ============
+.content-section {
+  margin: @module-spacing @page-side-spacing 0;
   background: @card-bg;
-  border-radius: 16rpx;
-  transition: all 0.2s ease;
+  border-radius: @radius-lg;
+  overflow: hidden;
+  box-shadow: @shadow-sm;
 
-  &:active {
-    background: #f5f5f5;
+  .section-header {
+    padding: @spacing-xl @spacing-xl @spacing-md;
+    border-bottom: 1rpx solid @border-color;
+    
+    .section-title {
+      font-size: @font-lg;
+      font-weight: 600;
+      color: @text-primary;
+    }
+  }
+
+  .content-grid {
+    display: flex;
+    padding: @spacing-lg @spacing-sm;
+  }
+
+  .content-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: @spacing-lg @spacing-xs;
+    margin: 0 @spacing-xs;
+    background: @bg-color;
+    border-radius: @radius-md;
+    transition: all @transition-slow;
+    position: relative;
+    .tap-active();
+
+    .card-icon-wrap {
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: @spacing-md;
+      
+      &.posts-icon {
+        background: linear-gradient(135deg, rgba(255, 209, 102, 0.2) 0%, rgba(255, 209, 102, 0.1) 100%);
+      }
+      
+      &.likes-icon {
+        background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(255, 107, 107, 0.1) 100%);
+      }
+      
+      &.comments-icon {
+        background: linear-gradient(135deg, rgba(116, 185, 255, 0.2) 0%, rgba(116, 185, 255, 0.1) 100%);
+      }
+
+      .card-icon {
+        font-size: 40rpx;
+      }
+    }
+
+    .card-label {
+      font-size: @font-sm;
+      font-weight: 500;
+      color: @text-primary;
+      margin-bottom: @spacing-xs;
+    }
+
+    .card-count {
+      font-size: @font-xs;
+      color: @text-tertiary;
+      padding: 4rpx @spacing-sm;
+      background: @card-bg;
+      border-radius: @radius-full;
+    }
   }
 }
 
-// 未登录提示
-.login-prompt {
-  margin: 30rpx;
-  padding: 40rpx;
+// ============ 模块5：系统功能入口区 ============
+.setting-section {
+  margin: @module-spacing @page-side-spacing 0;
   background: @card-bg;
-  border-radius: 16rpx;
-  text-align: center;
+  border-radius: @radius-lg;
+  overflow: hidden;
+  box-shadow: @shadow-sm;
 
-  text {
-    display: block;
-    font-size: 28rpx;
+  .section-header {
+    padding: @spacing-xl @spacing-xl @spacing-md;
+    border-bottom: 1rpx solid @border-color;
+    
+    .section-title {
+      font-size: @font-lg;
+      font-weight: 600;
+      color: @text-primary;
+    }
+  }
+
+  .setting-list {
+    padding: @spacing-xs 0;
+  }
+
+  .setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: @spacing-xl @spacing-xl;
+    transition: background @transition-normal;
+    .tap-active();
+
+    &.last-row {
+      border-bottom: none;
+    }
+
+    .row-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .row-icon {
+      width: 64rpx;
+      height: 64rpx;
+      border-radius: @radius-md;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: @font-xl;
+      margin-right: @spacing-lg;
+
+      &.security-icon {
+        background: linear-gradient(135deg, rgba(255, 209, 102, 0.2) 0%, rgba(255, 209, 102, 0.1) 100%);
+      }
+
+      &.privacy-icon {
+        background: linear-gradient(135deg, rgba(116, 185, 255, 0.2) 0%, rgba(116, 185, 255, 0.1) 100%);
+      }
+
+      &.general-icon {
+        background: linear-gradient(135deg, rgba(255, 159, 67, 0.2) 0%, rgba(255, 159, 67, 0.1) 100%);
+      }
+
+      &.about-icon {
+        background: linear-gradient(135deg, rgba(158, 158, 158, 0.2) 0%, rgba(158, 158, 158, 0.1) 100%);
+      }
+
+      &.feedback-icon {
+        background: linear-gradient(135deg, rgba(250, 173, 20, 0.2) 0%, rgba(250, 173, 20, 0.1) 100%);
+      }
+
+      &.service-icon {
+        background: linear-gradient(135deg, rgba(255, 209, 102, 0.2) 0%, rgba(255, 209, 102, 0.1) 100%);
+      }
+    }
+
+    .row-label {
+      font-size: @font-md;
+      font-weight: 500;
+      color: @text-primary;
+    }
+
+    .row-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .row-arrow {
+      font-size: @font-xxl;
+      color: @text-tertiary;
+      font-weight: 300;
+    }
+  }
+}
+
+// ============ 退出登录按钮 ============
+// 底部安全间距 = 顶部状态栏到底部卡片顶部的距离（视觉对称）
+.logout-wrapper {
+  margin: @module-spacing @page-side-spacing 0;
+  
+  .logout-btn {
+    height: 88rpx;
+    background: @card-bg;
+    border-radius: @radius-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: @shadow-sm;
+    transition: all @transition-normal;
+    .btn-active();
+
+    .logout-text {
+      font-size: @font-md;
+      font-weight: 500;
+      color: @danger-color;
+    }
+  }
+}
+
+// ============ 底部安全区域 ============
+// 与顶部状态栏间距对称
+.safe-area-bottom {
+  height: calc(40rpx + env(safe-area-inset-bottom));
+  width: 100%;
+}
+
+// ============ 点击态 ============
+.tap-hover {
+  background: @bg-color;
+}
+
+// ============ 宠物操作弹窗 ============
+.pet-action-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all @transition-slow;
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal-content {
+    width: 100%;
+    background: @card-bg;
+    border-radius: @radius-xl @radius-xl 0 0;
+    padding: @spacing-xl;
+    padding-bottom: calc(@spacing-xl + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+    transition: transform @transition-slow;
+  }
+
+  &.show .modal-content {
+    transform: translateY(0);
+  }
+
+  .modal-title {
+    font-size: @font-xl;
+    font-weight: 600;
+    color: @text-primary;
+    text-align: center;
+    padding-bottom: @spacing-xl;
+    border-bottom: 1rpx solid @border-color;
+    margin-bottom: @spacing-md;
+  }
+
+  .modal-item {
+    height: 100rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: @font-lg;
+    color: @text-primary;
+    border-radius: @radius-md;
+    .tap-active();
+
+    &.delete {
+      color: @danger-color;
+    }
+  }
+
+  .modal-cancel {
+    height: 100rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: @font-lg;
     color: @text-secondary;
-    margin-bottom: 30rpx;
-  }
-
-  .login-btn {
-    display: inline-block;
-    padding: 20rpx 60rpx;
-    background: @primary-color;
-    color: #fff;
-    border-radius: 44rpx;
-    font-size: 28rpx;
-    transition: all 0.2s ease;
-
-    &:active {
-      opacity: 0.8;
-      transform: scale(0.98);
-    }
+    border-radius: @radius-md;
+    margin-top: @spacing-md;
+    background: @bg-color;
+    .tap-active();
   }
 }

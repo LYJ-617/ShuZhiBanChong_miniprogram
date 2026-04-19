@@ -1,42 +1,54 @@
 App({
   globalData: {
     userInfo: null,
-    petList: []
+    petList: [],
+    ui: {
+      statusBarTop: 20,
+      safeBottom: 0
+    }
   },
 
   onLaunch() {
-    console.log('App onLaunch');
-    
-    // 从本地存储读取用户信息
+    const sys = wx.getSystemInfoSync();
+    const statusBarTop = (sys.statusBarHeight || 20) * 2;
+    const safeBottom = ((sys.screenHeight - ((sys.safeArea && sys.safeArea.bottom) || sys.screenHeight)) || 0) * 2;
+    this.globalData.ui = {
+      statusBarTop,
+      safeBottom
+    };
+    this.checkLoginStatus();
+  },
+
+  // 检查登录态并跳转
+  checkLoginStatus() {
     const userInfo = wx.getStorageSync('userInfo');
-    const petList = wx.getStorageSync('petList') || [];
-    
-    console.log('onLaunch - userInfo:', userInfo);
-    console.log('onLaunch - petList:', petList);
-    
-    // 核心判断逻辑（优先级从高到低）
-    if (userInfo && userInfo.isRegister) {
-      // 情况1：已经注册完成 → 直接进首页
-      console.log('已注册，直接进首页');
-      this.globalData.userInfo = userInfo;
-      this.globalData.petList = petList;
+    const storagePetList = wx.getStorageSync('petList');
+    const petList = Array.isArray(storagePetList)
+      ? storagePetList
+      : (Array.isArray(userInfo?.petList) ? userInfo.petList : []);
+
+    this.globalData.userInfo = userInfo || null;
+    this.globalData.petList = petList;
+
+    // 优先级1：本地storage有userInfo且含至少1只宠物数据 -> 首页
+    if (userInfo && Array.isArray(petList) && petList.length > 0) {
       wx.switchTab({
         url: '/pages/index/index'
       });
-    } else if (userInfo && !userInfo.isRegister) {
-      // 情况2：有用户信息但没完成注册 → 进注册页
-      console.log('有用户但未注册，进注册页');
-      this.globalData.userInfo = userInfo;
-      this.globalData.petList = petList;
-      wx.redirectTo({
+      return;
+    }
+
+    // 优先级2：本地有userInfo但无宠物数据 -> 宠物注册页
+    if (userInfo) {
+      wx.reLaunch({
         url: '/pages/register/register'
       });
-    } else {
-      // 情况3：完全没登录 → 进登录页
-      console.log('未登录，进登录页');
-      wx.redirectTo({
-        url: '/pages/login/login'
-      });
+      return;
     }
+
+    // 优先级3：无userInfo -> 登录页
+    wx.reLaunch({
+      url: '/pages/login/login'
+    });
   }
 });

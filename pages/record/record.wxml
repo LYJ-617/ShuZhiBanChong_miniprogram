@@ -1,0 +1,47 @@
+<view class="container" style="padding-top: {{statusBarTop + 20}}rpx; padding-bottom: {{safeBottom + 120}}rpx;">
+  <view class="header">
+    <button class="publish-btn" hover-class="btn-hover" bindtap="showPublishModal">发布日志</button>
+    <button class="report-btn" hover-class="btn-hover" bindtap="goToAiReport">查看AI分析报告</button>
+  </view>
+  <view class="search-box">
+    <input class="search-input" placeholder="搜索关键词或标签" bindinput="onSearchInput" value="{{searchKeyword}}" />
+  </view>
+  <view class="pet-selector">
+    <view class="tag-list">
+      <view class="tag {{selectedPetId === '' ? 'active' : ''}}" bindtap="selectPet" data-pet-id="">全部宠物</view>
+      <view wx:for="{{petList}}" wx:key="id" class="tag {{selectedPetId === item.id ? 'active' : ''}}" bindtap="selectPet" data-pet-id="{{item.id}}">{{item.petName}}</view>
+    </view>
+  </view>
+  <loading-state show="{{loading}}" text="加载中..." />
+  <view class="log-list">
+    <view wx:for="{{logList}}" wx:key="id" class="log-item">
+      <view class="log-header">
+        <text class="pet-name">{{getPetName(item.petId)}}</text>
+        <text class="log-time">{{formatTime(item.createTime)}}</text>
+        <text class="delete-log-btn" catchtap="showLogActions" data-id="{{item.id}}" wx:if="{{userInfo && item.userId === userInfo.id}}">更多</text>
+      </view>
+      <view class="log-content">{{item.content}}</view>
+      <view class="log-tags">
+        <view class="tag" wx:for="{{item.tags}}" wx:key="*this">#{{item}}</view>
+      </view>
+      <view class="privacy-flag" wx:if="{{item.publishTo && item.publishTo.includes('private')}}">隐私</view>
+    </view>
+  </view>
+  <empty-state wx:if="{{!loading && logList.length === 0}}" text="暂无日志哦～" btnText="去记录" bind:action="showPublishModal" />
+</view>
+
+<view wx:if="{{publishModalVisible}}" class="modal-mask" bindtap="hidePublishModal">
+  <view class="modal-container" catchtap="">
+    <view class="modal-header">
+      <text class="modal-title">发布养宠日志</text>
+      <text class="modal-close" bindtap="hidePublishModal">✕</text>
+    </view>
+    <scroll-view class="modal-content" scroll-y>
+      <log-publish bind:logData="onLogDataChange" />
+    </scroll-view>
+    <view class="modal-footer">
+      <button class="modal-btn cancel-btn" bindtap="hidePublishModal">取消</button>
+      <button class="modal-btn confirm-btn" bindtap="submitLog">发布</button>
+    </view>
+  </view>
+</view>

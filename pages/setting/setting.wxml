@@ -1,51 +1,431 @@
-<view class="container">
-  <view class="setting-list">
-    <view class="setting-group">
-      <view class="setting-item" bindtap="goToProfile">
-        <text class="setting-label">个人资料</text>
-        <text class="setting-desc">头像、用户名、手机号、地址</text>
-        <text class="arrow">›</text>
-      </view>
-      <view class="setting-item" bindtap="goToAccount">
-        <text class="setting-label">账号与安全</text>
-        <text class="setting-desc">密码、手机号</text>
-        <text class="arrow">›</text>
-      </view>
-      <view class="setting-item" bindtap="goToPrivacy">
-        <text class="setting-label">隐私</text>
-        <text class="setting-desc">个人信息、权限</text>
-        <text class="arrow">›</text>
-      </view>
+<view class="setting-page {{nightMode ? 'night-mode' : ''}}" style="padding-top: {{statusBarTop + 20}}rpx; padding-bottom: {{safeBottom + 20}}rpx;">
+  
+  <!-- 搜索栏 -->
+  <view class="search-bar" style="top: {{statusBarTop + 10}}rpx;">
+    <view class="search-input-wrap">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" 
+             placeholder="搜索设置项..." 
+             placeholder-class="search-placeholder"
+             value="{{searchKeyword}}"
+             bindinput="onSearchInput"
+             bindfocus="onSearchFocus"
+             bindblur="onSearchBlur"/>
+      <text class="search-clear" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
     </view>
+  </view>
 
-    <view class="setting-group">
-      <view class="setting-item" bindtap="goToNotification">
-        <text class="setting-label">新消息通知</text>
-        <text class="arrow">›</text>
-      </view>
-      <view class="setting-item" bindtap="goToGeneral">
-        <text class="setting-label">通用</text>
-        <text class="arrow">›</text>
-      </view>
-    </view>
+  <!-- 搜索结果提示 -->
+  <view class="search-tips" wx:if="{{showSearchTips && searchResults.length > 0}}">
+    <text class="tips-text">找到 {{searchResults.length}} 个相关设置</text>
+  </view>
 
-    <view class="setting-group">
-      <view class="setting-item" bindtap="clearCache">
-        <text class="setting-label">清除缓存</text>
-        <text class="cache-size">{{cacheSize}}</text>
-        <text class="arrow">›</text>
+  <!-- 模块1: 外观与显示 -->
+  <view class="setting-card {{searchKeyword && !isRelatedToSearch('appearance') ? 'search-hidden' : ''}}" data-category="appearance">
+    <view class="card-header">
+      <text class="card-title">外观与显示</text>
+    </view>
+    
+    <!-- 主题切换 -->
+    <view class="setting-row" data-key="theme" data-keywords="主题,深色,浅色,模式,外观">
+      <view class="row-left">
+        <view class="row-icon theme-icon">🎨</view>
+        <view class="row-content">
+          <text class="row-label">主题模式</text>
+          <text class="row-desc">选择界面显示风格</text>
+        </view>
       </view>
-      <view class="setting-item" bindtap="goToAbout">
-        <text class="setting-label">关于</text>
-        <text class="setting-desc">当前版本 1.0.0</text>
-        <text class="arrow">›</text>
+      <view class="theme-selector">
+        <view class="theme-option {{themeMode === 'light' ? 'active' : ''}}" data-mode="light" bindtap="setTheme">
+          <text class="theme-icon-small">☀️</text>
+          <text class="theme-label">浅色</text>
+        </view>
+        <view class="theme-option {{themeMode === 'dark' ? 'active' : ''}}" data-mode="dark" bindtap="setTheme">
+          <text class="theme-icon-small">🌙</text>
+          <text class="theme-label">深色</text>
+        </view>
+        <view class="theme-option {{themeMode === 'auto' ? 'active' : ''}}" data-mode="auto" bindtap="setTheme">
+          <text class="theme-icon-small">⚙️</text>
+          <text class="theme-label">跟随系统</text>
+        </view>
       </view>
     </view>
+    
+    <!-- 语言选择 -->
+    <view class="setting-row" bindtap="showLanguagePicker" data-key="language" data-keywords="语言,中文,英文,简体">
+      <view class="row-left">
+        <view class="row-icon language-icon">🌐</view>
+        <view class="row-content">
+          <text class="row-label">语言</text>
+          <text class="row-desc">选择应用显示语言</text>
+        </view>
+      </view>
+      <view class="row-right">
+        <text class="current-value">{{currentLanguage}}</text>
+        <text class="row-arrow">›</text>
+      </view>
+    </view>
+    
+    <!-- 字体大小 -->
+    <view class="setting-row slider-row" data-key="font" data-keywords="字体,大小,字号">
+      <view class="row-left">
+        <view class="row-icon font-icon">🔤</view>
+        <view class="row-content">
+          <text class="row-label">字体大小</text>
+          <view class="font-preview" style="font-size: {{fontSize}}rpx;">预览文字</view>
+        </view>
+      </view>
+    </view>
+    <view class="slider-container">
+      <text class="slider-label">A</text>
+      <slider class="font-slider" 
+              min="0" 
+              max="4" 
+              step="1" 
+              value="{{fontSizeIndex}}" 
+              bindchange="changeFontSize"
+              activeColor="#52c41a"
+              backgroundColor="#e8e8e8"/>
+      <text class="slider-label large">A</text>
+    </view>
+  </view>
 
-    <view class="setting-group">
-      <view class="setting-item logout-item" bindtap="logout">
-        <text class="setting-label logout-text">退出登录</text>
+  <!-- 模块2: 通知与提醒 -->
+  <view class="setting-card {{searchKeyword && !isRelatedToSearch('notification') ? 'search-hidden' : ''}}" data-category="notification">
+    <view class="card-header">
+      <text class="card-title">通知与提醒</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-row" data-key="push" data-keywords="推送,通知,消息,提醒">
+        <view class="row-left">
+          <view class="row-icon push-icon">📢</view>
+          <view class="row-content">
+            <text class="row-label">推送通知</text>
+            <text class="row-desc">接收系统推送消息</text>
+          </view>
+        </view>
+        <switch checked="{{pushEnabled}}" bindchange="togglePush" color="#52c41a"/>
+      </view>
+      <view class="setting-row" data-key="sound" data-keywords="声音,提示音,音效">
+        <view class="row-left">
+          <view class="row-icon sound-icon">🔊</view>
+          <view class="row-content">
+            <text class="row-label">声音</text>
+            <text class="row-desc">消息提示音</text>
+          </view>
+        </view>
+        <switch checked="{{soundEnabled}}" bindchange="toggleSound" color="#52c41a"/>
+      </view>
+      <view class="setting-row" data-key="vibrate" data-keywords="震动,振动">
+        <view class="row-left">
+          <view class="row-icon vibrate-icon">📳</view>
+          <view class="row-content">
+            <text class="row-label">震动</text>
+            <text class="row-desc">消息震动提醒</text>
+          </view>
+        </view>
+        <switch checked="{{vibrateEnabled}}" bindchange="toggleVibrate" color="#52c41a"/>
+      </view>
+      <view class="setting-row last-row" bindtap="goToNotificationDetail" data-key="detail" data-keywords="通知,详情,设置">
+        <view class="row-left">
+          <view class="row-icon detail-icon">🔔</view>
+          <view class="row-content">
+            <text class="row-label">通知详情设置</text>
+            <text class="row-desc">配置各类通知类型</text>
+          </view>
+        </view>
+        <text class="row-arrow">›</text>
       </view>
     </view>
+  </view>
+
+  <!-- 模块3: 账号与安全 -->
+  <view class="setting-card {{searchKeyword && !isRelatedToSearch('account') ? 'search-hidden' : ''}}" data-category="account">
+    <view class="card-header">
+      <text class="card-title">账号与安全</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-row" bindtap="goToAccountSecurity" data-key="security" data-keywords="账号,安全,密码,手机,微信">
+        <view class="row-left">
+          <view class="row-icon security-icon">🔐</view>
+          <view class="row-content">
+            <text class="row-label">账号安全</text>
+            <text class="row-desc">手机绑定、微信绑定、密码</text>
+          </view>
+        </view>
+        <text class="row-arrow">›</text>
+      </view>
+      <view class="setting-row last-row" bindtap="goToPrivacySetting" data-key="privacy" data-keywords="隐私,数据,可见性">
+        <view class="row-left">
+          <view class="row-icon privacy-icon">🔒</view>
+          <view class="row-content">
+            <text class="row-label">隐私设置</text>
+            <text class="row-desc">可见性、活动记录、数据管理</text>
+          </view>
+        </view>
+        <text class="row-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 模块4: 存储与数据 -->
+  <view class="setting-card {{searchKeyword && !isRelatedToSearch('storage') ? 'search-hidden' : ''}}" data-category="storage">
+    <view class="card-header">
+      <text class="card-title">存储与数据</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-row" bindtap="showStoragePicker" data-key="storage" data-keywords="存储,位置,本地,云端">
+        <view class="row-left">
+          <view class="row-icon storage-icon">💾</view>
+          <view class="row-content">
+            <text class="row-label">存储位置</text>
+            <text class="row-desc">选择数据存储方式</text>
+          </view>
+        </view>
+        <view class="row-right">
+          <text class="current-value">{{storageLocation}}</text>
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <view class="setting-row" bindtap="clearCache" data-key="cache" data-keywords="缓存,清理,清除,清除缓存">
+        <view class="row-left">
+          <view class="row-icon cache-icon">🗑️</view>
+          <view class="row-content">
+            <text class="row-label">清除缓存</text>
+            <text class="row-desc">当前缓存 {{cacheSize}}</text>
+          </view>
+        </view>
+        <view class="row-right">
+          <text class="clear-hint" bindtap="clearCache">一键清理</text>
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <view class="setting-row last-row" bindtap="exportData" data-key="export" data-keywords="导出,备份,数据">
+        <view class="row-left">
+          <view class="row-icon export-icon">📥</view>
+          <view class="row-content">
+            <text class="row-label">导出数据</text>
+            <text class="row-desc">导出您的个人数据</text>
+          </view>
+        </view>
+        <text class="row-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 模块5: 备份与恢复 -->
+  <view class="setting-card {{searchKeyword && !isRelatedToSearch('backup') ? 'search-hidden' : ''}}" data-category="backup">
+    <view class="card-header">
+      <text class="card-title">备份与恢复</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-row" bindtap="backupSettings" data-key="backup" data-keywords="备份,设置备份,恢复">
+        <view class="row-left">
+          <view class="row-icon backup-icon">☁️</view>
+          <view class="row-content">
+            <text class="row-label">备份设置</text>
+            <text class="row-desc">将当前设置备份到云端</text>
+          </view>
+        </view>
+        <text class="row-arrow">›</text>
+      </view>
+      <view class="setting-row" bindtap="restoreSettings" data-key="restore" data-keywords="恢复,恢复设置,云端恢复">
+        <view class="row-left">
+          <view class="row-icon restore-icon">🔄</view>
+          <view class="row-content">
+            <text class="row-label">恢复设置</text>
+            <text class="row-desc">从云端恢复您的设置</text>
+          </view>
+        </view>
+        <text class="row-arrow">›</text>
+      </view>
+      <view class="setting-row last-row" data-key="confirm" data-keywords="确认,弹窗,确认弹窗">
+        <view class="row-left">
+          <view class="row-icon confirm-icon">⚠️</view>
+          <view class="row-content">
+            <text class="row-label">操作确认</text>
+            <text class="row-desc">敏感操作时弹出确认框</text>
+          </view>
+        </view>
+        <switch checked="{{confirmEnabled}}" bindchange="toggleConfirm" color="#52c41a"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 模块6: 关于 -->
+  <view class="setting-card {{searchKeyword && !isRelatedToSearch('about') ? 'search-hidden' : ''}}" data-category="about">
+    <view class="card-header">
+      <text class="card-title">关于</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-row" bindtap="goToAbout" data-key="about" data-keywords="关于,信息,介绍">
+        <view class="row-left">
+          <view class="row-icon about-icon">ℹ️</view>
+          <view class="row-content">
+            <text class="row-label">关于我们</text>
+            <text class="row-desc">了解数智伴宠</text>
+          </view>
+        </view>
+        <text class="row-arrow">›</text>
+      </view>
+      <view class="setting-row last-row" bindtap="checkUpdate" data-key="update" data-keywords="更新,版本,检查更新">
+        <view class="row-left">
+          <view class="row-icon update-icon">🔄</view>
+          <view class="row-content">
+            <text class="row-label">检查更新</text>
+            <text class="row-desc">当前版本 {{version}}</text>
+          </view>
+        </view>
+        <view class="update-badge" wx:if="{{hasNewVersion}}">
+          <text>有新版本</text>
+        </view>
+        <text class="row-arrow" wx:else>›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section">
+    <view class="logout-btn" bindtap="logout">
+      <text class="logout-text">退出登录</text>
+    </view>
+  </view>
+
+  <!-- 底部安全间距 -->
+  <view class="safe-area-bottom"></view>
+</view>
+
+<!-- 语言选择器弹窗 -->
+<view wx:if="{{showLanguageModal}}" class="modal-mask" bindtap="closeLanguageModal">
+  <view class="modal-content" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">选择语言</text>
+    </view>
+    <view class="modal-body">
+      <view class="language-list">
+        <view class="language-item {{currentLang === 'zh_CN' ? 'active' : ''}}" data-lang="zh_CN" bindtap="selectLanguage">
+          <text class="lang-flag">🇨🇳</text>
+          <text class="lang-name">简体中文</text>
+          <text class="lang-check" wx:if="{{currentLang === 'zh_CN'}}">✓</text>
+        </view>
+        <view class="language-item {{currentLang === 'zh_TW' ? 'active' : ''}}" data-lang="zh_TW" bindtap="selectLanguage">
+          <text class="lang-flag">🇭🇰</text>
+          <text class="lang-name">繁體中文</text>
+          <text class="lang-check" wx:if="{{currentLang === 'zh_TW'}}">✓</text>
+        </view>
+        <view class="language-item {{currentLang === 'en_US' ? 'active' : ''}}" data-lang="en_US" bindtap="selectLanguage">
+          <text class="lang-flag">🇺🇸</text>
+          <text class="lang-name">English</text>
+          <text class="lang-check" wx:if="{{currentLang === 'en_US'}}">✓</text>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel" bindtap="closeLanguageModal">取消</view>
+    </view>
+  </view>
+</view>
+
+<!-- 存储位置选择弹窗 -->
+<view wx:if="{{showStorageModal}}" class="modal-mask" bindtap="closeStorageModal">
+  <view class="modal-content" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">选择存储位置</text>
+    </view>
+    <view class="modal-body">
+      <view class="storage-list">
+        <view class="storage-item {{storageType === 'local' ? 'active' : ''}}" data-type="local" bindtap="selectStorage">
+          <text class="storage-icon">📱</text>
+          <view class="storage-info">
+            <text class="storage-name">本地存储</text>
+            <text class="storage-desc">数据保存在手机本地</text>
+          </view>
+          <text class="storage-check" wx:if="{{storageType === 'local'}}">✓</text>
+        </view>
+        <view class="storage-item {{storageType === 'cloud' ? 'active' : ''}}" data-type="cloud" bindtap="selectStorage">
+          <text class="storage-icon">☁️</text>
+          <view class="storage-info">
+            <text class="storage-name">云端同步</text>
+            <text class="storage-desc">数据自动同步到云端</text>
+          </view>
+          <text class="storage-check" wx:if="{{storageType === 'cloud'}}">✓</text>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel" bindtap="closeStorageModal">取消</view>
+    </view>
+  </view>
+</view>
+
+<!-- 备份确认弹窗 -->
+<view wx:if="{{showBackupModal}}" class="modal-mask" bindtap="closeBackupModal">
+  <view class="modal-content" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">备份设置</text>
+    </view>
+    <view class="modal-body">
+      <view class="backup-info">
+        <view class="backup-icon-wrap">
+          <text class="backup-icon">☁️</text>
+        </view>
+        <text class="backup-title">即将备份以下设置</text>
+        <view class="backup-list">
+          <view class="backup-item"><text class="backup-dot">•</text> 主题与外观设置</view>
+          <view class="backup-item"><text class="backup-dot">•</text> 语言与字体设置</view>
+          <view class="backup-item"><text class="backup-dot">•</text> 通知偏好设置</view>
+          <view class="backup-item"><text class="backup-dot">•</text> 存储与显示设置</view>
+          <view class="backup-item"><text class="backup-dot">•</text> 其他个性化设置</view>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel" bindtap="closeBackupModal">取消</view>
+      <view class="modal-btn confirm" bindtap="confirmBackup">确认备份</view>
+    </view>
+  </view>
+</view>
+
+<!-- 恢复确认弹窗 -->
+<view wx:if="{{showRestoreModal}}" class="modal-mask" bindtap="closeRestoreModal">
+  <view class="modal-content" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">恢复设置</text>
+    </view>
+    <view class="modal-body">
+      <view class="restore-info">
+        <view class="restore-icon-wrap">
+          <text class="restore-icon">🔄</text>
+        </view>
+        <text class="restore-title">即将恢复云端备份的设置</text>
+        <text class="restore-warning">⚠️ 当前设置将被覆盖</text>
+        <view class="restore-list">
+          <view class="restore-item"><text class="restore-dot">•</text> 主题与外观设置</view>
+          <view class="restore-item"><text class="restore-dot">•</text> 语言与字体设置</view>
+          <view class="restore-item"><text class="restore-dot">•</text> 通知偏好设置</view>
+          <view class="restore-item"><text class="restore-dot">•</text> 存储与显示设置</view>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel" bindtap="closeRestoreModal">取消</view>
+      <view class="modal-btn confirm" bindtap="confirmRestore">确认恢复</view>
+    </view>
+  </view>
+</view>
+
+<!-- Toast提示 -->
+<view wx:if="{{showToast}}" class="toast-mask">
+  <view class="toast-content">
+    <text class="toast-icon">{{toastSuccess ? '✓' : '✗'}}</text>
+    <text class="toast-text">{{toastMessage}}</text>
+  </view>
+</view>
+
+<!-- Loading遮罩 -->
+<view wx:if="{{showLoading}}" class="loading-mask">
+  <view class="loading-content">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">{{loadingText}}</text>
   </view>
 </view>

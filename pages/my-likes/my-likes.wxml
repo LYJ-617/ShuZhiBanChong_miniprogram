@@ -1,0 +1,68 @@
+<view class="my-likes-page" style="padding-top: {{statusBarTop + 20}}rpx; padding-bottom: {{safeBottom + 20}}rpx;">
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{isEmpty}}">
+    <text class="empty-icon">❤️</text>
+    <text class="empty-text">还没有点赞过任何帖子</text>
+    <text class="empty-desc">去发现更多有趣的萌宠内容吧</text>
+    <view class="empty-btn" bindtap="goToCommunity">去逛逛</view>
+  </view>
+
+  <!-- 统计栏 -->
+  <view class="stats-bar" wx:if="{{!isEmpty}}">
+    <text class="stats-text">共 {{posts.length}} 篇点赞</text>
+  </view>
+
+  <!-- 帖子列表 - 瀑布流 -->
+  <view class="posts-container" wx:else>
+    <!-- 左侧列 -->
+    <view class="column left">
+      <view class="post-card" wx:for="{{leftPosts}}" wx:key="id" data-post-id="{{item.id}}">
+        <image wx:if="{{item.images && item.images.length > 0}}" 
+               src="{{item.images[0]}}" 
+               mode="widthFix" 
+               class="post-image"
+               bindtap="previewImage" 
+               data-post-id="{{item.id}}" 
+               data-image="{{item.images[0]}}"></image>
+        <view class="post-content">
+          <text class="post-text">{{item.content}}</text>
+          <view class="post-tags" wx:if="{{item.tags && item.tags.length > 0}}">
+            <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">#{{tag}}</text>
+          </view>
+          <view class="post-footer">
+            <view class="post-stats">
+              <text>❤️ {{item.likeCount || 0}}</text>
+              <text>💬 {{item.commentCount || 0}}</text>
+            </view>
+            <view class="post-unlike" catchtap="unlikePost" data-post-id="{{item.id}}">取消点赞</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 右侧列 -->
+    <view class="column right">
+      <view class="post-card" wx:for="{{rightPosts}}" wx:key="id" data-post-id="{{item.id}}">
+        <image wx:if="{{item.images && item.images.length > 0}}" 
+               src="{{item.images[0]}}" 
+               mode="widthFix" 
+               class="post-image"
+               bindtap="previewImage" 
+               data-post-id="{{item.id}}" 
+               data-image="{{item.images[0]}}"></image>
+        <view class="post-content">
+          <text class="post-text">{{item.content}}</text>
+          <view class="post-tags" wx:if="{{item.tags && item.tags.length > 0}}">
+            <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">#{{tag}}</text>
+          </view>
+          <view class="post-footer">
+            <view class="post-stats">
+              <text>❤️ {{item.likeCount || 0}}</text>
+              <text>💬 {{item.commentCount || 0}}</text>
+            </view>
+            <view class="post-unlike" catchtap="unlikePost" data-post-id="{{item.id}}">取消点赞</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "养宠日志",
+  "usingComponents": {
+    "log-publish": "../../components/log-publish/log-publish",
+    "empty-state": "../../components/empty-state/empty-state",
+    "loading-state": "../../components/loading-state/loading-state"
+  }
+}

@@ -1,0 +1,155 @@
+/* ============================================
+   小程序统一设计规范 - 暖奶油黄主题
+   ============================================ */
+
+// ============ 颜色规范 ============
+// 主色调：低饱和暖奶油黄
+@primary-color: #FFD166;           // 主色调 - 暖奶油黄
+@primary-dark: #E6B84D;            // 主色深色
+@primary-light: rgba(255, 209, 102, 0.15);  // 主色浅色
+@primary-gradient: linear-gradient(135deg, #FFD166 0%, #E6B84D 100%); // 主色渐变
+
+// 基础色调：极浅暖白色
+@base-bg: #FFFEF9;              // 极浅暖白色背景
+
+// 文字系统
+@text-primary: #333333;            // 主要文字 - 深灰
+@text-secondary: #666666;         // 次要文字 - 中灰
+@text-tertiary: #999999;          // 辅助文字 - 浅灰
+
+// 功能色
+@bg-color: #f7f8fa;              // 页面背景
+@card-bg: #ffffff;                // 卡片背景
+@border-color: #f0f0f0;           // 边框颜色
+
+@danger-color: #f5222d;           // 危险/删除操作
+@success-color: #52c41a;          // 成功状态
+@warning-color: #faad14;          // 警告状态
+
+// 点缀色彩
+@accent-orange: #FF9F43;         // 暖橙色
+@accent-blue: #74b9ff;            // 浅天蓝色
+
+// ============ 圆角规范 ============
+// 统一采用24-32rpx大圆角设计
+@radius-sm: 12rpx;                // 小圆角
+@radius-md: 16rpx;                // 中圆角
+@radius-lg: 24rpx;                // 大圆角 - 主按钮/卡片
+@radius-xl: 32rpx;                // 超大圆角 - 弹窗/底部面板
+@radius-full: 999rpx;              // 全圆角 - 标签/胶囊
+
+// ============ 阴影规范 ============
+// 仅使用极淡柔化投影
+@shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+@shadow-md: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+@shadow-lg: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+
+// ============ 字体规范 ============
+@font-xs: 20rpx;                 // 超小字体
+@font-sm: 22rpx;                 // 小字体
+@font-base: 24rpx;               // 基础字体
+@font-md: 26rpx;                 // 中字体
+@font-lg: 28rpx;                 // 大字体
+@font-xl: 30rpx;                 // 特大字体
+@font-xxl: 32rpx;                // 超大字体
+@font-xxxl: 36rpx;               // 标题字体
+
+// ============ 间距规范 ============
+@spacing-xs: 8rpx;
+@spacing-sm: 12rpx;
+@spacing-md: 16rpx;
+@spacing-lg: 20rpx;
+@spacing-xl: 24rpx;
+@spacing-xxl: 30rpx;
+
+// ============ 动画规范 ============
+@transition-fast: 0.15s ease;
+@transition-normal: 0.2s ease;
+@transition-slow: 0.3s ease;
+
+// ============ 混合器 (Mixins) ============
+
+// 卡片基础样式 - 大圆角设计
+.card-base() {
+  background: @card-bg;
+  border-radius: @radius-lg;
+  overflow: hidden;
+  box-shadow: @shadow-sm;
+}
+
+// 点击态
+.tap-active() {
+  &:active {
+    opacity: 0.7;
+    transition: opacity @transition-fast;
+  }
+}
+
+// 按钮点击效果
+.btn-active() {
+  &:active {
+    transform: scale(0.98);
+    transition: transform @transition-fast;
+  }
+}
+
+// 渐变图标背景
+.icon-gradient(@color) {
+  background: linear-gradient(135deg, fade(@color, 15%) 0%, fade(@color, 8%) 100%);
+}
+
+// 页面容器
+.page-container() {
+  min-height: 100vh;
+  background: @base-bg;
+  box-sizing: border-box;
+}
+
+// 安全区域底部
+.safe-area-bottom(@height: 120rpx) {
+  height: calc(@height + env(safe-area-inset-bottom));
+}
+
+// 主按钮样式
+.primary-btn() {
+  background: @primary-gradient;
+  color: #ffffff;
+  border-radius: @radius-lg;
+  box-shadow: 0 4rpx 12rpx rgba(255, 209, 102, 0.3);
+  
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 2rpx 8rpx rgba(255, 209, 102, 0.2);
+  }
+}
+
+// 次级按钮样式
+.secondary-btn() {
+  background: @card-bg;
+  color: @text-secondary;
+  border: 1rpx solid @border-color;
+  border-radius: @radius-lg;
+  
+  &:active {
+    background: @bg-color;
+  }
+}
+
+// 标签选中态
+.tag-selected() {
+  background: @primary-gradient;
+  color: #ffffff;
+}
+
+// 输入框样式
+.input-base() {
+  background: @bg-color;
+  border-radius: @radius-md;
+  border: 1rpx solid transparent;
+  transition: border-color @transition-normal;
+  
+  &:focus {
+    border-color: @primary-color;
+    background: @card-bg;
+  }
+}

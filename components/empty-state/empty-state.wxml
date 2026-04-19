@@ -1,0 +1,5 @@
+<view class="empty-wrap">
+  <text class="empty-icon">🐾</text>
+  <text class="empty-text">{{text || '暂无内容哦～'}}</text>
+  <button wx:if="{{btnText}}" class="empty-btn" bindtap="onActionTap">{{btnText}}</button>
+</view>

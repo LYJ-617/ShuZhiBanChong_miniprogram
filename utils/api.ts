@@ -25,10 +25,40 @@ export const getUserInfo = (): Promise<UserInfo | null> => {
 
 export const getPetList = (): Promise<PetInfo[]> => {
   return new Promise((resolve) => {
-    const petList = wx.getStorageSync('petList');
-    if (petList) {
-      resolve(JSON.parse(petList));
-    } else {
+    try {
+      // P0优先级：优先从App全局数据读取宠物列表
+      let petList: PetInfo[] = [];
+      try {
+        const app = getApp();
+        if (app.globalData && app.globalData.userInfo && app.globalData.userInfo.petList) {
+          petList = app.globalData.userInfo.petList;
+        }
+      } catch (e) {
+        console.log('从App全局数据读取宠物列表失败', e);
+      }
+
+      // 兜底：从storage读取
+      if (petList.length === 0) {
+        const petListStorage = wx.getStorageSync('petList');
+        if (petListStorage) {
+          petList = JSON.parse(petListStorage);
+        }
+      }
+
+      // 额外兜底：从userInfo中读取
+      if (petList.length === 0) {
+        const userInfoStorage = wx.getStorageSync('userInfo');
+        if (userInfoStorage) {
+          const userInfo = typeof userInfoStorage === 'string' ? JSON.parse(userInfoStorage) : userInfoStorage;
+          if (userInfo && userInfo.petList) {
+            petList = userInfo.petList;
+          }
+        }
+      }
+
+      resolve(Array.isArray(petList) ? petList : []);
+    } catch (e) {
+      console.log('获取宠物列表失败', e);
       resolve([]);
     }
   });
@@ -38,38 +68,66 @@ export const addPetLog = (log: PetLog): Promise<boolean> => {
   return new Promise((resolve) => {
     log.id = Date.now().toString();
     log.createTime = new Date().toISOString();
-    mockPetLogs.push(log);
-    wx.setStorageSync('petLogs', JSON.stringify(mockPetLogs));
+    // 从storage读取已有日志，追加新日志后再保存
+    const existingLogs = wx.getStorageSync('petLogs');
+    const logs = existingLogs ? JSON.parse(existingLogs) : [];
+    logs.push(log);
+    wx.setStorageSync('petLogs', JSON.stringify(logs));
     resolve(true);
   });
 };
 
 export const getPetLogs = (petId?: string): Promise<PetLog[]> => {
   return new Promise((resolve) => {
-    const logs = wx.getStorageSync('petLogs');
-    let result = logs ? JSON.parse(logs) : mockPetLogs;
-    if (petId) {
-      result = result.filter((log: PetLog) => log.petId === petId);
+    try {
+      const logs = wx.getStorageSync('petLogs');
+      let result = logs ? JSON.parse(logs) : [];
+      if (!Array.isArray(result)) result = [];
+      if (petId) {
+        result = result.filter((log: PetLog) => log.petId === petId);
+      }
+      resolve(result);
+    } catch (e) {
+      console.log('读取日志失败', e);
+      resolve([]);
     }
-    resolve(result);
   });
 };
 
 export const generateAiReport = (petId: string): Promise<AiReport> => {
   return new Promise((resolve) => {
-    const logs = wx.getStorageSync('petLogs');
-    const petLogs = logs ? JSON.parse(logs) : mockPetLogs;
-    const petLogsForPet = petLogs.filter((log: PetLog) => log.petId === petId);
-    const petList = wx.getStorageSync('petList');
-    const petInfo = petList ? JSON.parse(petList).find((p: PetInfo) => p.id === petId) : null;
+    try {
+      const logs = wx.getStorageSync('petLogs');
+      const petLogs = logs ? JSON.parse(logs) : [];
+      if (!Array.isArray(petLogs)) {
+        resolve({
+          id: `report_${Date.now()}`,
+          petId,
+          petName: '宠物',
+          createdAt: new Date().toISOString(),
+          riskLevel: 'low',
+          possibleDiseases: [],
+          tips: ['暂无日志数据']
+        });
+        return;
+      }
+      const petLogsForPet = petLogs.filter((log: PetLog) => log.petId === petId);
+      const petList = wx.getStorageSync('petList');
+      let petInfo: PetInfo | null = null;
+      if (petList) {
+        const parsed = JSON.parse(petList);
+        petInfo = Array.isArray(parsed) ? parsed.find((p: PetInfo) => p.id === petId) : null;
+      }
 
-    const report: AiReport = {
-      petId,
-      petName: petInfo?.petName || '宠物',
-      riskLevel: 'low',
-      possibleDiseases: [],
-      tips: ['当前宠物状态良好，继续保持哦~']
-    };
+      const report: AiReport = {
+        id: `report_${Date.now()}`,
+        petId,
+        petName: petInfo?.petName || '宠物',
+        createdAt: new Date().toISOString(),
+        riskLevel: 'low',
+        possibleDiseases: [],
+        tips: ['当前宠物状态良好，继续保持哦~']
+      };
 
     const symptoms: string[] = [];
     petLogsForPet.forEach(log => {
@@ -146,6 +204,18 @@ export const generateAiReport = (petId: string): Promise<AiReport> => {
       recommendDoctors,
       recommendHospitals
     });
+    } catch (e) {
+      console.log('生成AI报告失败', e);
+      resolve({
+        id: `report_${Date.now()}`,
+        petId,
+        petName: '宠物',
+        createdAt: new Date().toISOString(),
+        riskLevel: 'low',
+        possibleDiseases: [],
+        tips: ['数据读取失败，请稍后重试']
+      });
+    }
   });
 };
 

@@ -1,172 +1,133 @@
-.container {
-  min-height: 100vh;
-  background: linear-gradient(180deg, #f0fdf4 0%, #f5f5f5 100%);
-  padding: 30rpx;
-  padding-bottom: 140rpx;
+/* pages/service/service.less - 统一设计规范 */
+@import '../../styles/design-system.less';
+
+.container { 
+  min-height: 100vh; 
+  background: @base-bg; 
+  padding: @spacing-lg @spacing-xxl 140rpx; 
 }
 
-.pet-selector {
-  margin-bottom: 30rpx;
+/* ============ 顶部标签栏 ============ */
+.top-tabs { 
+  display: flex; 
+  gap: @spacing-sm; 
+  background: @card-bg; 
+  border-radius: @radius-lg; 
+  padding: @spacing-sm; 
+  box-shadow: @shadow-sm;
 }
 
-.tag-list {
-  display: flex;
-  gap: 16rpx;
-  overflow-x: auto;
-  padding: 8rpx 0;
+.top-tab { 
+  flex: 1; 
+  text-align: center; 
+  padding: @spacing-md 0; 
+  font-size: @font-md; 
+  color: @text-secondary; 
+  border-radius: @radius-md;
+  transition: all @transition-normal;
 }
 
-.tag {
-  padding: 16rpx 32rpx;
-  background: #fff;
-  border-radius: 40rpx;
-  font-size: 26rpx;
-  color: #666;
-  white-space: nowrap;
-  border: 1rpx solid #e5e5e5;
+.top-tab.active { 
+  background: @primary-gradient; 
+  color: #ffffff; 
 }
 
-.tag.active {
-  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
-  color: #fff;
-  border: none;
+/* ============ 搜索栏 ============ */
+.search-row { 
+  margin-top: @spacing-md; 
 }
 
-// 服务入口网格
-.service-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24rpx;
-  margin-bottom: 40rpx;
+.search-input { 
+  height: 72rpx; 
+  background: @card-bg; 
+  border-radius: @radius-lg; 
+  padding: 0 @spacing-lg; 
+  font-size: @font-md;
+  box-shadow: @shadow-sm;
 }
 
-.service-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40rpx 20rpx;
-  background: #fff;
-  border-radius: 20rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+/* ============ 筛选标签 ============ */
+.filter-row { 
+  margin: @spacing-md 0; 
+  display: flex; 
+  gap: @spacing-md; 
+  overflow-x: auto; 
 }
 
-.service-icon {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
-  margin-bottom: 20rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 50rpx;
+.chip { 
+  padding: @spacing-sm @spacing-lg; 
+  background: @card-bg; 
+  border-radius: @radius-full; 
+  font-size: @font-base; 
+  color: @text-secondary;
+  white-space: nowrap; 
+  box-shadow: @shadow-sm;
+  transition: all @transition-normal;
 }
 
-.mall-icon {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+.chip.active { 
+  background: @primary-light; 
+  color: @primary-color; 
 }
 
-.consult-icon {
-  background: linear-gradient(135deg, #4ecdc4 0%, #6ee7de 100%);
+/* ============ 网格布局 ============ */
+.grid.two-col { 
+  display: grid; 
+  grid-template-columns: 48% 48%; 
+  justify-content: space-between; 
+  gap: @spacing-lg; 
 }
 
-.reservation-icon {
-  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+.card { 
+  background: @card-bg; 
+  border-radius: @radius-lg; 
+  padding: @spacing-lg; 
+  box-shadow: @shadow-sm;
 }
 
-.service-text {
-  font-size: 28rpx;
-  color: #333;
-  font-weight: 500;
+.card-title { 
+  font-size: @font-lg; 
+  color: @text-primary; 
+  font-weight: 600; 
 }
 
-// 推荐区域
-.recommendation-section {
-  margin-bottom: 30rpx;
-  background: #fff;
-  border-radius: 20rpx;
-  padding: 30rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+.card-sub { 
+  font-size: @font-base; 
+  color: @text-tertiary; 
+  margin-top: @spacing-sm; 
+  min-height: 64rpx; 
+  line-height: 1.4;
 }
 
-.section-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 24rpx;
-  padding-bottom: 20rpx;
-  border-bottom: 1rpx solid #f0f0f0;
+.card-meta { 
+  font-size: @font-base; 
+  color: @primary-color; 
+  margin-top: @spacing-md; 
 }
 
-.product-list,
-.doctor-list,
-.hospital-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
+/* ============ 列表布局 ============ */
+.list { 
+  display: flex; 
+  flex-direction: column; 
+  gap: @spacing-md; 
 }
 
-.product-item,
-.doctor-item,
-.hospital-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24rpx;
-  background: #f8f9fa;
-  border-radius: 16rpx;
+.list-card { 
+  background: @card-bg; 
+  border-radius: @radius-lg; 
+  padding: @spacing-lg; 
+  box-shadow: @shadow-sm;
 }
 
-.product-info,
-.doctor-info,
-.hospital-info {
-  flex: 1;
+.row { 
+  display: flex; 
+  justify-content: space-between; 
+  font-size: @font-md; 
+  color: @text-primary; 
 }
 
-.product-name,
-.doctor-name,
-.hospital-name {
-  font-size: 28rpx;
-  color: #333;
-  margin-bottom: 8rpx;
-  font-weight: 500;
-}
-
-.product-reason,
-.doctor-specialty,
-.hospital-distance {
-  font-size: 24rpx;
-  color: #999;
-}
-
-.product-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12rpx;
-}
-
-.product-price {
-  font-size: 32rpx;
-  color: #ff4d4f;
-  font-weight: bold;
-}
-
-.buy-btn,
-.consult-btn,
-.reserve-btn {
-  padding: 16rpx 32rpx;
-  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
-  color: #fff;
-  border: none;
-  border-radius: 30rpx;
-  font-size: 24rpx;
-  font-weight: 500;
-}
-
-.consult-btn {
-  background: linear-gradient(135deg, #4ecdc4 0%, #6ee7de 100%);
-}
-
-.reserve-btn {
-  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+.row.sub { 
+  margin-top: @spacing-sm; 
+  font-size: @font-base; 
+  color: @text-tertiary; 
 }

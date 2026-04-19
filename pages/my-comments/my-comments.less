@@ -1,0 +1,188 @@
+// 我的评论页面样式
+@primary-color: #52c41a;
+@text-primary: #333333;
+@text-secondary: #666666;
+@text-tertiary: #999999;
+@bg-color: #f5f7fa;
+@card-bg: #ffffff;
+@border-color: #f0f0f0;
+@danger-color: #f5222d;
+
+.my-comments-page {
+  min-height: 100vh;
+  background: @bg-color;
+  box-sizing: border-box;
+}
+
+// 统计栏
+.stats-bar {
+  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+  
+  .stats-text {
+    font-size: 26rpx;
+    color: @text-secondary;
+    padding: 8rpx 24rpx;
+    background: @card-bg;
+    border-radius: 20rpx;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  }
+}
+
+// 空状态
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200rpx 0;
+
+  .empty-icon {
+    font-size: 120rpx;
+    margin-bottom: 40rpx;
+    opacity: 0.8;
+  }
+
+  .empty-text {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: @text-primary;
+    margin-bottom: 16rpx;
+  }
+
+  .empty-desc {
+    font-size: 26rpx;
+    color: @text-secondary;
+    margin-bottom: 50rpx;
+    text-align: center;
+  }
+}
+
+// 评论列表
+.comments-list {
+  padding: 20rpx 30rpx;
+}
+
+// 评论项
+.comment-item {
+  background: @card-bg;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  position: relative;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+
+  // 评论头部
+  .comment-header {
+    display: flex;
+    align-items: center;
+
+    .comment-avatar {
+      width: 64rpx;
+      height: 64rpx;
+      border-radius: 50%;
+      margin-right: 16rpx;
+      background: @bg-color;
+      border: 2rpx solid @border-color;
+    }
+
+    .header-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .comment-username {
+      font-size: 28rpx;
+      font-weight: 600;
+      color: @text-primary;
+    }
+
+    .comment-date {
+      font-size: 22rpx;
+      color: @text-tertiary;
+      margin-top: 4rpx;
+    }
+  }
+
+  // 评论内容
+  .comment-content {
+    font-size: 28rpx;
+    color: @text-primary;
+    margin-top: 20rpx;
+    line-height: 1.7;
+    padding-left: 80rpx;
+  }
+
+  // 原帖子卡片
+  .post-card {
+    display: flex;
+    align-items: center;
+    background: @bg-color;
+    border-radius: 16rpx;
+    padding: 16rpx;
+    margin-top: 20rpx;
+    margin-left: 80rpx;
+    transition: all 0.2s ease;
+
+    &:active {
+      background: darken(@bg-color, 2%);
+    }
+
+    .post-thumb {
+      width: 88rpx;
+      height: 88rpx;
+      border-radius: 12rpx;
+      margin-right: 16rpx;
+      flex-shrink: 0;
+      background: #e8e8e8;
+    }
+
+    .post-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .post-title {
+      flex: 1;
+      font-size: 24rpx;
+      color: @text-secondary;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-height: 1.5;
+    }
+
+    .post-arrow {
+      font-size: 32rpx;
+      color: @text-tertiary;
+      margin-left: 12rpx;
+    }
+  }
+
+  // 删除按钮
+  .comment-delete {
+    position: absolute;
+    right: 24rpx;
+    bottom: 24rpx;
+    font-size: 24rpx;
+    color: @danger-color;
+    padding: 8rpx 20rpx;
+    border-radius: 20rpx;
+    background: rgba(245, 34, 45, 0.08);
+    transition: all 0.2s ease;
+
+    &:active {
+      background: rgba(245, 34, 45, 0.15);
+    }
+  }
+}

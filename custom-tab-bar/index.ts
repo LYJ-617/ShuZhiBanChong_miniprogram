@@ -17,7 +17,7 @@ Component({
         selectedIcon: "/static/images/community-active.png"
       },
       {
-        pagePath: "/pages/log/log",
+        pagePath: "/pages/record/record",
         text: "记录",
         icon: "/static/images/log.png",
         selectedIcon: "/static/images/log-active.png"
@@ -41,7 +41,7 @@ Component({
     // tab切换逻辑
     switchTab(e: WechatMiniprogram.TouchEvent) {
       const path = e.currentTarget.dataset.path;
-      const index = e.currentTarget.dataset.index;
+      const index = Number(e.currentTarget.dataset.index);
       
       wx.switchTab({ url: path });
       this.setData({ selected: index });

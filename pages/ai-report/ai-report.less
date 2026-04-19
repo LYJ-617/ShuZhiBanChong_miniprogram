@@ -1,169 +1,19 @@
-.container {
-  padding: 20rpx;
-}
-
-.pet-selector {
-  margin-bottom: 30rpx;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 12px;
-}
-
-.tag-list {
-  display: flex;
-  gap: 16rpx;
-  overflow-x: auto;
-  padding: 8rpx 0;
-}
-
-.tag {
-  padding: 12rpx 24rpx;
-  background: #f5f5f5;
-  border-radius: 30rpx;
-  font-size: 26rpx;
-  color: #666;
-  white-space: nowrap;
-}
-
-.tag.active {
-  background: #3cc51f;
-  color: #fff;
-}
-
-.report-container {
-  background: #fff;
-  border-radius: 12rpx;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-}
-
-.report-header {
-  margin-bottom: 30rpx;
-  text-align: center;
-}
-
-.report-title {
-  display: block;
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 16rpx;
-}
-
-.risk-level {
-  display: inline-block;
-  padding: 12rpx 32rpx;
-  border-radius: 30rpx;
-  font-size: 26rpx;
-  font-weight: bold;
-}
-
-.risk-level.level-low {
-  background: #E6F7E6;
-  color: #3cc51f;
-}
-
-.risk-level.level-medium {
-  background: #FFF7E6;
-  color: #FA8C16;
-}
-
-.risk-level.level-high {
-  background: #FFF1F0;
-  color: #F5222D;
-}
-
-.report-section {
-  margin-bottom: 30rpx;
-}
-
-.section-title {
-  font-size: 28rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 16rpx;
-}
-
-.tips-list,
-.disease-list,
-.product-list,
-.doctor-list,
-.hospital-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12rpx;
-}
-
-.tip-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8rpx;
-}
-
-.tip-dot {
-  color: #3cc51f;
-  font-size: 32rpx;
-  line-height: 1;
-  margin-top: 4rpx;
-}
-
-.tip-text {
-  flex: 1;
-  font-size: 26rpx;
-  color: #666;
-  line-height: 1.6;
-}
-
-.disease-item,
-.product-tag,
-.doctor-tag,
-.hospital-tag {
-  padding: 16rpx 24rpx;
-  background: #f5f5f5;
-  border-radius: 8rpx;
-  font-size: 26rpx;
-  color: #666;
-}
-
-.disclaimer {
-  margin-top: 40rpx;
-  padding: 24rpx;
-  background: #FFF7E6;
-  border-radius: 12rpx;
-  border-left: 4rpx solid #FA8C16;
-}
-
-.disclaimer-title {
-  font-size: 26rpx;
-  font-weight: bold;
-  color: #FA8C16;
-  margin-bottom: 12rpx;
-}
-
-.disclaimer-text {
-  font-size: 24rpx;
-  color: #999;
-  line-height: 1.6;
-}
-
-.empty-tip {
-  text-align: center;
-  padding: 60rpx 0;
-  color: #999;
-  font-size: 28rpx;
-}
-
-.btn {
-  width: 100%;
-  padding: 28rpx;
-  background: #3cc51f;
-  color: #fff;
-  border: none;
-  border-radius: 12rpx;
-  font-size: 32rpx;
-  font-weight: bold;
-}
-
-.btn[disabled] {
-  background: #ccc;
-}
+.container { padding: 20rpx; background: #f6f7f9; min-height: 100vh; }
+.pet-selector { display: flex; gap: 12rpx; overflow-x: auto; margin-bottom: 20rpx; }
+.pet-tag { padding: 10rpx 20rpx; border-radius: 24rpx; background: #fff; color: #666; font-size: 24rpx; white-space: nowrap; }
+.pet-tag.active { background: #52c41a; color: #fff; }
+.panel { background: #fff; border-radius: 16rpx; padding: 20rpx 30rpx; margin-bottom: 16rpx; }
+.pet-info { background: #52c41a; color: #fff; font-size: 28rpx; line-height: 1.8; }
+.title { font-size: 32rpx; font-weight: 600; color: #333; margin-bottom: 14rpx; }
+.keyword-wrap { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.keyword { background: #f5f5f5; border-radius: 20rpx; padding: 6rpx 14rpx; font-size: 24rpx; color: #666; }
+.risk-low { background: #e6f8f3; }
+.risk-medium { background: #fff9e6; }
+.risk-high { background: #fff1f0; }
+.desc { font-size: 28rpx; color: #666; line-height: 1.6; }
+.line { padding: 14rpx 0; border-bottom: 1rpx solid #f5f5f5; font-size: 28rpx; color: #333; display: flex; justify-content: space-between; gap: 10rpx; }
+.muted { color: #999; font-size: 24rpx; }
+.actions { display: flex; gap: 12rpx; margin-top: 8rpx; }
+.btn { flex: 1; background: #52c41a; color: #fff; border-radius: 12rpx; font-size: 28rpx; }
+.btn.ghost { background: #f1f2f4; color: #666; }
+.disclaimer { background: #f5f5f5; border-radius: 16rpx; padding: 20rpx 30rpx; color: #999; font-size: 24rpx; text-align: center; }

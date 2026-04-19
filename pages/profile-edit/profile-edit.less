@@ -1,0 +1,446 @@
+// pages/profile-edit/profile-edit.less
+@primary-color: #52c41a;
+@text-primary: #333333;
+@text-secondary: #666666;
+@text-tertiary: #999999;
+@bg-color: #f5f7fa;
+@border-color: #f0f0f0;
+@danger-color: #f5222d;
+
+.profile-edit-page {
+  min-height: 100vh;
+  background: @bg-color;
+  padding-bottom: 120rpx;
+}
+
+// ============ 顶部导航栏 ============
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30rpx;
+  background: @primary-color;
+  
+  .nav-back {
+    width: 60rpx;
+    height: 60rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .back-icon {
+      font-size: 48rpx;
+      color: #ffffff;
+      font-weight: 300;
+    }
+  }
+  
+  .nav-title {
+    font-size: 32rpx;
+    font-weight: 500;
+    color: #ffffff;
+  }
+  
+  .nav-right {
+    width: 60rpx;
+  }
+}
+
+// ============ 用户卡片 ============
+.user-card {
+  background: linear-gradient(135deg, @primary-color 0%, #73d13d 100%);
+  padding: 40rpx 30rpx;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  
+  .avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    .avatar-img {
+      width: 140rpx;
+      height: 140rpx;
+      border-radius: 50%;
+      border: 6rpx solid rgba(255, 255, 255, 0.5);
+    }
+    
+    .avatar-placeholder {
+      width: 140rpx;
+      height: 140rpx;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 6rpx solid rgba(255, 255, 255, 0.5);
+      
+      .paw-icon {
+        font-size: 60rpx;
+      }
+    }
+    
+    .avatar-tip {
+      margin-top: 16rpx;
+      font-size: 24rpx;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+// ============ 表单区域 ============
+.form-section {
+  background: #ffffff;
+  margin: 20rpx;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  
+  .form-title {
+    font-size: 30rpx;
+    font-weight: 600;
+    color: @text-primary;
+    margin-bottom: 30rpx;
+    padding-left: 16rpx;
+    border-left: 6rpx solid @primary-color;
+  }
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid @border-color;
+  position: relative;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &.intro-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .form-label {
+    width: 160rpx;
+    font-size: 28rpx;
+    color: @text-primary;
+    flex-shrink: 0;
+  }
+  
+  .form-input {
+    flex: 1;
+    font-size: 28rpx;
+    color: @text-primary;
+    text-align: right;
+    
+    &.placeholder {
+      color: @text-tertiary;
+    }
+  }
+  
+  .form-value {
+    flex: 1;
+    font-size: 28rpx;
+    color: @text-primary;
+    text-align: right;
+    
+    &.placeholder {
+      color: @text-tertiary;
+    }
+  }
+  
+  .word-count {
+    position: absolute;
+    right: 0;
+    bottom: 16rpx;
+    font-size: 22rpx;
+    color: @text-tertiary;
+  }
+  
+  .arrow {
+    font-size: 32rpx;
+    color: @text-tertiary;
+    margin-left: 16rpx;
+  }
+}
+
+// 手机号区域
+.phone-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  
+  .form-input {
+    flex: 1;
+    text-align: right;
+  }
+  
+  .verify-btn {
+    margin-left: 20rpx;
+    padding: 12rpx 24rpx;
+    background: @primary-color;
+    color: #ffffff;
+    font-size: 24rpx;
+    border-radius: 30rpx;
+    flex-shrink: 0;
+    
+    &.disabled {
+      background: #cccccc;
+      color: #ffffff;
+    }
+  }
+}
+
+// 性别选择
+.gender-section {
+  flex: 1;
+  display: flex;
+  gap: 30rpx;
+  justify-content: flex-end;
+  
+  .gender-option {
+    padding: 16rpx 40rpx;
+    border-radius: 30rpx;
+    background: @bg-color;
+    display: flex;
+    align-items: center;
+    gap: 8rpx;
+    transition: all 0.2s ease;
+    
+    .gender-icon {
+      font-size: 28rpx;
+    }
+    
+    .gender-text {
+      font-size: 26rpx;
+      color: @text-secondary;
+    }
+    
+    &.active {
+      background: @primary-color;
+      
+      .gender-text {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+// 宠物偏好
+.pet-preference {
+  flex: 1;
+  display: flex;
+  gap: 16rpx;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  
+  .pet-tag {
+    padding: 12rpx 24rpx;
+    border-radius: 30rpx;
+    background: @bg-color;
+    font-size: 24rpx;
+    color: @text-secondary;
+    transition: all 0.2s ease;
+    
+    &.active {
+      background: @primary-color;
+      color: #ffffff;
+    }
+  }
+}
+
+// 个人简介
+.form-textarea {
+  width: 100%;
+  min-height: 160rpx;
+  padding: 20rpx;
+  background: @bg-color;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: @text-primary;
+  line-height: 1.5;
+  margin-top: 16rpx;
+  box-sizing: border-box;
+}
+
+// 养宠时长
+.pet-duration {
+  flex: 1;
+  display: flex;
+  gap: 16rpx;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  
+  .duration-option {
+    padding: 12rpx 24rpx;
+    border-radius: 30rpx;
+    background: @bg-color;
+    transition: all 0.2s ease;
+    
+    .duration-text {
+      font-size: 24rpx;
+      color: @text-secondary;
+    }
+    
+    &.active {
+      background: @primary-color;
+      
+      .duration-text {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+// 养宠数量
+.pet-count {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 30rpx;
+  
+  .count-btn {
+    width: 56rpx;
+    height: 56rpx;
+    border-radius: 50%;
+    background: @primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36rpx;
+    color: #ffffff;
+    
+    &.disabled {
+      background: #e0e0e0;
+      color: #b0b0b0;
+    }
+  }
+  
+  .count-value {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: @text-primary;
+    min-width: 40rpx;
+    text-align: center;
+  }
+}
+
+// ============ 操作按钮 ============
+.action-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  background: #ffffff;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  display: flex;
+  gap: 24rpx;
+  
+  .btn-save {
+    flex: 1;
+    height: 88rpx;
+    background: @primary-color;
+    color: #ffffff;
+    font-size: 32rpx;
+    font-weight: 500;
+    border-radius: 44rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    
+    &:active {
+      opacity: 0.8;
+      transform: scale(0.98);
+    }
+  }
+  
+  .btn-cancel {
+    flex: 1;
+    height: 88rpx;
+    background: #f5f5f5;
+    color: @text-secondary;
+    font-size: 32rpx;
+    font-weight: 500;
+    border-radius: 44rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    
+    &:active {
+      background: #e8e8e8;
+    }
+  }
+}
+
+// ============ 地区选择器 ============
+.region-picker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  
+  .picker-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .picker-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-radius: 32rpx 32rpx 0 0;
+    overflow: hidden;
+  }
+  
+  .picker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100rpx;
+    padding: 0 30rpx;
+    border-bottom: 1rpx solid @border-color;
+    
+    .picker-cancel {
+      font-size: 28rpx;
+      color: @text-tertiary;
+    }
+    
+    .picker-title {
+      font-size: 32rpx;
+      font-weight: 500;
+      color: @text-primary;
+    }
+    
+    .picker-confirm {
+      font-size: 28rpx;
+      color: @primary-color;
+    }
+  }
+  
+  .picker-view {
+    height: 500rpx;
+  }
+  
+  .picker-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28rpx;
+    color: @text-primary;
+  }
+}

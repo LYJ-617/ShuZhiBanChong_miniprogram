@@ -2,5 +2,8 @@
   "navigationBarTitleText": "数智伴宠",
   "enablePullDownRefresh": true,
   "backgroundColor": "#F8F9FA",
-  "usingComponents": {}
+  "usingComponents": {
+    "empty-state": "../../components/empty-state/empty-state",
+    "loading-state": "../../components/loading-state/loading-state"
+  }
 }

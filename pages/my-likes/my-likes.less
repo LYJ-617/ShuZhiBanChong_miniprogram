@@ -1,0 +1,176 @@
+// 我的点赞页面样式
+@primary-color: #52c41a;
+@text-primary: #333333;
+@text-secondary: #666666;
+@text-tertiary: #999999;
+@bg-color: #f5f7fa;
+@card-bg: #ffffff;
+@border-color: #f0f0f0;
+@danger-color: #f5222d;
+@like-color: #ff6b6b;
+
+.my-likes-page {
+  min-height: 100vh;
+  background: @bg-color;
+  box-sizing: border-box;
+}
+
+// 统计栏
+.stats-bar {
+  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+  
+  .stats-text {
+    font-size: 26rpx;
+    color: @text-secondary;
+    padding: 8rpx 24rpx;
+    background: @card-bg;
+    border-radius: 20rpx;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  }
+}
+
+// 空状态
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200rpx 0;
+
+  .empty-icon {
+    font-size: 120rpx;
+    margin-bottom: 40rpx;
+    opacity: 0.8;
+  }
+
+  .empty-text {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: @text-primary;
+    margin-bottom: 16rpx;
+  }
+
+  .empty-desc {
+    font-size: 26rpx;
+    color: @text-secondary;
+    margin-bottom: 50rpx;
+    text-align: center;
+  }
+
+  .empty-btn {
+    padding: 24rpx 80rpx;
+    background: linear-gradient(135deg, @primary-color, #73d13d);
+    color: #ffffff;
+    font-size: 28rpx;
+    font-weight: 500;
+    border-radius: 50rpx;
+    box-shadow: 0 8rpx 24rpx rgba(82, 196, 26, 0.3);
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: scale(0.96);
+      box-shadow: 0 4rpx 12rpx rgba(82, 196, 26, 0.3);
+    }
+  }
+}
+
+// 帖子容器 - 瀑布流
+.posts-container {
+  display: flex;
+  padding: 20rpx;
+  gap: 20rpx;
+
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20rpx;
+  }
+}
+
+// 帖子卡片
+.post-card {
+  background: @card-bg;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  }
+
+  .post-image {
+    width: 100%;
+    display: block;
+    background: #f5f7fa;
+  }
+
+  .post-content {
+    padding: 20rpx;
+
+    .post-text {
+      font-size: 28rpx;
+      color: @text-primary;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+    }
+
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12rpx;
+      margin-top: 16rpx;
+
+      .tag {
+        padding: 6rpx 16rpx;
+        background: linear-gradient(135deg, rgba(82, 196, 26, 0.1), rgba(82, 196, 26, 0.05));
+        font-size: 22rpx;
+        color: @primary-color;
+        border-radius: 8rpx;
+        border: 1rpx solid rgba(82, 196, 26, 0.2);
+      }
+    }
+
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20rpx;
+      padding-top: 16rpx;
+      border-top: 1rpx solid @border-color;
+
+      .post-stats {
+        display: flex;
+        gap: 24rpx;
+        font-size: 24rpx;
+        color: @text-tertiary;
+
+        text {
+          display: flex;
+          align-items: center;
+          gap: 6rpx;
+        }
+      }
+
+      .post-unlike {
+        font-size: 24rpx;
+        color: @like-color;
+        padding: 8rpx 20rpx;
+        border-radius: 20rpx;
+        background: rgba(255, 107, 107, 0.08);
+        transition: all 0.2s ease;
+
+        &:active {
+          background: rgba(255, 107, 107, 0.15);
+        }
+      }
+    }
+  }
+}

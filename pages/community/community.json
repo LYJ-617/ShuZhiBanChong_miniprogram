@@ -1,6 +1,10 @@
 {
   "navigationBarTitleText": "社区",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 100,
   "usingComponents": {
-    "community-publish": "../../components/community-publish/community-publish"
+    "community-publish": "../../components/community-publish/community-publish",
+    "loading-state": "../../components/loading-state/loading-state",
+    "empty-state": "../../components/empty-state/empty-state"
   }
 }
